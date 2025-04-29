@@ -1,5 +1,5 @@
-#include "include/ListaAdjacencia.hpp"
-#include "include/ListaEncadeada.hpp"
+#include "ListaEncadeada.hpp"
+#include "ListaAdjacencia.hpp"
 
 NodeAdj::NodeAdj()
 {
@@ -30,8 +30,8 @@ ListaAdjacencia::~ListaAdjacencia()
 NodeAdj* ListaAdjacencia::PosicionaAntesAdj(int pos)
 {
     NodeAdj *p; int i;
-    if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception
+    /*if((pos > tamanho) || (pos < 0))
+        throw "Posição inválida!"; //talvez usar exception*/
     p = head;
     for(i = 0; i < pos; i++)
     {
@@ -43,8 +43,8 @@ NodeAdj* ListaAdjacencia::PosicionaAntesAdj(int pos)
 NodeAdj* ListaAdjacencia::PosicionaEmAdj(int pos)
 {
     NodeAdj *p; int i;
-    if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception
+    /*if((pos > tamanho) || (pos < 0))
+        throw "Posição inválida!"; //talvez usar exception*/
     p = head;
     for(i = 0; i <= pos; i++)
     {
@@ -85,8 +85,8 @@ void ListaAdjacencia::InsereAresta(int v, int e)
 int ListaAdjacencia::pesquisaVert(int pesquisado)
 {
     int aux = -1; NodeAdj *p;
-    if(tamanho == 0)
-        throw "ERRO: lista vazia!";
+    /*if(tamanho == 0)
+        throw "ERRO: lista vazia!";*/
     p = head->prox;
     while(p != nullptr)
     {
@@ -125,7 +125,8 @@ void ListaAdjacencia::LimpaAdj()
 
 int* ListaAdjacencia::geraVetorTam()
 {
-    int grauVert[tamanho];
+    int* grauVert = new int[tamanho];
+    //lembrar de dar delete no vetor criado
     NodeAdj* p = head; //como se fosse um iterador
     //preenche um vetor com o tamanho de cada lista
     for(int i = 0; i < tamanho; i++)
@@ -133,4 +134,5 @@ int* ListaAdjacencia::geraVetorTam()
         p = p->prox;
         grauVert[i] = p->listaArestas.tamanho;
     }
+    return grauVert;
 }

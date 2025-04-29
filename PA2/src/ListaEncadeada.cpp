@@ -1,5 +1,5 @@
-#include "include/ListaAdjacencia.hpp"
-#include "include/ListaEncadeada.hpp"
+//#include "include/ListaAdjacencia.hpp"
+#include "ListaEncadeada.hpp"
 #include <iostream>
 
 Node::Node()
@@ -30,8 +30,8 @@ ListaEncadeada::~ListaEncadeada()
 Node* ListaEncadeada::PosicionaAntes(int pos)
 {
     Node *p; int i;
-    if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception
+    /*if((pos > tamanho) || (pos < 0))
+        throw "Posição inválida!"; //talvez usar exception*/
     p = head;
     for(i = 0; i < pos; i++)
     {
@@ -43,8 +43,8 @@ Node* ListaEncadeada::PosicionaAntes(int pos)
 Node* ListaEncadeada::PosicionaEm(int pos)
 {
     Node *p; int i;
-    if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception
+    /*if((pos > tamanho) || (pos < 0))
+        throw "Posição inválida!"; //talvez usar */
     p = head;
     for(i = 0; i <= pos; i++)
     {
@@ -83,8 +83,8 @@ void ListaEncadeada::inserePosicao(int item, int pos)
 int ListaEncadeada::pesquisa(int pesquisado)
 {
     int aux = -1; Node *p;
-    if(tamanho == 0)
-        throw "ERRO: lista vazia!";
+    /*if(tamanho == 0)
+        throw "ERRO: lista vazia!";*/
     p = head->prox;
     while(p != nullptr)
     {
@@ -93,6 +93,7 @@ int ListaEncadeada::pesquisa(int pesquisado)
             aux = p->aresta;
             break;
         }
+        p = p->prox;
     }
     return aux;
 } 

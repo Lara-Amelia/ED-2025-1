@@ -1,5 +1,6 @@
-#include "include/ListaAdjacencia.hpp"
-#include "include/ListaEncadeada.hpp"
+#include "ListaAdjacencia.hpp"
+#include "ListaEncadeada.hpp"
+#include "graph.hpp"
 
 Grafo::Grafo()
 {}
@@ -39,4 +40,33 @@ int Grafo::GrauMinimo()
 {
     int* gVertex = vertices.geraVetorTam();
     //percorrer gVertex, encontrar o menor elemento e o vertice associado
+    int min = gVertex[0];
+    for(int i = 1; i < vertices.tamanho; i++)
+    {
+        if(gVertex[i] < min)
+        {
+            min = gVertex[i];
+        }
+    }
+    return min;
+}
+
+int Grafo::GrauMaximo()
+{
+    int* gVertex = vertices.geraVetorTam();
+    int max = gVertex[0];
+    for(int i = 0; i < vertices.tamanho; i++)
+    {
+        if(gVertex[i] > max)
+        {
+            max = gVertex[i];
+        }
+    }
+    return max;
+}
+
+void Grafo::ImprimeVizinhos(int v)
+{
+    NodeAdj *p = vertices.PosicionaEmAdj(v);
+    p->listaArestas.Imprime();
 }
