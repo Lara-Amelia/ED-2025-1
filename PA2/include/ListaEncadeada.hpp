@@ -4,7 +4,7 @@
 class Node
 {
     private:
-    int nroVertice;
+    int aresta;
     Node *prox;
 
     public:
@@ -27,8 +27,8 @@ class ListaEncadeada
     public:
     ListaEncadeada();
     ~ListaEncadeada();
-    void setVert(int pos, int novoNode);
-    int getVert(int pos);
+    void setAresta(int pos, int novoNode);
+    int getAresta(int pos);
     //void insereInicio(int item);
     //void insereFinal(int item);
     void inserePosicao(int item, int pos);

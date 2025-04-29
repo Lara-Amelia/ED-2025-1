@@ -4,13 +4,13 @@
 
 Node::Node()
 {
-    nroVertice = -1;
+    aresta = -1;
     prox = nullptr;
 }
 
 Node::Node(int valor)
 {
-    nroVertice = valor;
+    aresta = valor;
     prox = nullptr;
 }
 
@@ -53,18 +53,18 @@ Node* ListaEncadeada::PosicionaEm(int pos)
     return p;
 }
 
-void ListaEncadeada::setVert(int pos, int novoVertice)
+void ListaEncadeada::setAresta(int pos, int novoVertice)
 {
     Node *p;
     p = PosicionaEm(pos);
-    p->nroVertice = novoVertice; 
+    p->aresta = novoVertice; 
 }
 
-int ListaEncadeada::getVert(int pos)
+int ListaEncadeada::getAresta(int pos)
 {
     Node *p;
     p = PosicionaEm(pos);
-    return p->nroVertice;
+    return p->aresta;
 }
 
 void ListaEncadeada::inserePosicao(int item, int pos)
@@ -88,9 +88,9 @@ int ListaEncadeada::pesquisa(int pesquisado)
     p = head->prox;
     while(p != nullptr)
     {
-        if(p->nroVertice == pesquisado)
+        if(p->aresta == pesquisado)
         {
-            aux = p->nroVertice;
+            aux = p->aresta;
             break;
         }
     }
@@ -104,7 +104,7 @@ void ListaEncadeada::Imprime()
     p = head->prox;
     while(p != nullptr)
     {
-        std::cout << p->nroVertice << " ";
+        std::cout << p->aresta << " ";
         p = p->prox;
     }
     std::cout << std::endl;
