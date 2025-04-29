@@ -1,8 +1,7 @@
 #ifndef LISTAADJACENCIA_HPP
 #define LISTAADJACENCIA_HPP
 
-#include "include/ListaEncadeada.hpp"
-#include "include/graph.hpp"
+#include "ListaEncadeada.hpp"
 
 class NodeAdj
 {

@@ -1,8 +1,8 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
-#include "include/ListaAdjacencia.hpp"
-#include "include/ListaEncadeada.hpp"
+#include "ListaAdjacencia.hpp"
+#include "ListaEncadeada.hpp"
 
 /*  Você pode inserir os includes necessários para que sua classe funcione.
  * Nenhuma outra alteração neste arquivo é permitida
