@@ -122,3 +122,15 @@ void ListaAdjacencia::LimpaAdj()
     tail = head;
     tamanho = 0;
 }
+
+int* ListaAdjacencia::geraVetorTam()
+{
+    int grauVert[tamanho];
+    NodeAdj* p = head; //como se fosse um iterador
+    //preenche um vetor com o tamanho de cada lista
+    for(int i = 0; i < tamanho; i++)
+    {
+        p = p->prox;
+        grauVert[i] = p->listaArestas.tamanho;
+    }
+}

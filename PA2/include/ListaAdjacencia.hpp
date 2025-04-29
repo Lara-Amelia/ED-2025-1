@@ -16,6 +16,8 @@ class NodeAdj
     NodeAdj(int nroVer);
     void setVer(int nroVer);
     int getVer(int pos);
+
+    friend class Grafo;
     friend class ListaAdjacencia;
 };
 
@@ -37,7 +39,8 @@ class ListaAdjacencia
     //int pesquisaAresta(int pesquisado); veremos se é útil
     void ImprimeAdj();
     void LimpaAdj();
-    
+    int* geraVetorTam();
+
     friend class Grafo;
 };
 

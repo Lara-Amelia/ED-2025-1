@@ -36,6 +36,7 @@ class ListaEncadeada
     void Imprime();
     void Limpa();
 
+    friend class Grafo;
     friend class ListaAdjacencia;
 };
 
