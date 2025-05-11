@@ -2,6 +2,13 @@
 #define ORDENADORUNIVERSAL_HPP
 #include "ordenadores.hpp"
 
+typedef struct estatistica 
+{
+    double custo;
+    int limParticao;
+    contador_t stats;
+} estatisticas_t;
+
 class ordUniversal
 {
     private:
@@ -25,6 +32,9 @@ class ordUniversal
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
     int menorCusto(double* custo);
     int getMPS(int indice, int minMPS, int passoMPS);
+
+    int determinaLimiarQuebras(int* v, int tam, int limiarCusto);
+
 };
 
 /* antes de invocar o ordenador universal, determinamos os limiares de quebras e tamanho de partição,
@@ -40,6 +50,8 @@ class ordUniversal
    um vetor com k quebras está dividido em k+1 segmentos já ordenados - podemos os ordenar cada segmento
    separadamente com cada um dos algoritmos e combinar os custos, como feito para o limiar de partição
    (é semelhante a simular a ordenação para um número x de quebras)
+   para o limite de quebras, também faremos a divisão em 5 intervalos e, para cada um deles, 
+   aplicaremos diretamente o qs e o is, comparando os custos obtidos e usando isso para o refinamento
 */
 
 /*#include <iostream>

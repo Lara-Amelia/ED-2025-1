@@ -137,3 +137,33 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, in
     if(passoMPS == 0) 
         passoMPS++;
 }
+
+//antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
+int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto)
+{
+    int minLQ = 1; //menor quantidade de quebras
+    int maxLQ = tam - 1; //maior quantidade de quebras
+    int passoLQ = (maxLQ - minLQ)/5; //divisão em 5 intervalos equidistantes
+    int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
+    double custo[6];
+    contador_t stats[6];
+    int limQB = 1;
+    int numLQ = 6; //tamanho máximo de numMPS
+    //mps na impressão será o valor de t, nro da iteração será numMPS
+    while((diffCusto > limiarCusto) && (numLQ >= 5))
+    {
+        numLQ=0;
+        for(int t=minLQ; t<=maxLQ; t+=passoLQ) //para cada tamanho possível de partição
+        {
+            ordenadorUniversal(v, tam , t , limQB, &stats[numLQ]);
+            registraEstatisticas(&custo[numLQ], &stats[numLQ]); //passa um ponteiro para a posição no array custo
+            imprimeEstatisticas(&custo[numLQ], stats, limQB, numLQ, diffCusto); //modificaremos o seu valor
+            numLQ++;
+            //imprimeEstatisticas provavelmente será alterado
+        }
+        limQB = menorCusto(custo);
+        calculaNovaFaixa(limQB, minLQ, maxLQ, passoLQ, numLQ);
+        diffCusto = fabs(custo[minLQ] - custo[maxLQ]); //provavelmente devemos usar 
+    }
+    return limQB;
+}
