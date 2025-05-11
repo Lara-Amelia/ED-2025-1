@@ -1,5 +1,6 @@
 #ifndef ORDENADORUNIVERSAL_HPP
 #define ORDENADORUNIVERSAL_HPP
+#include "ordenadores.hpp"
 
 class ordUniversal
 {
@@ -16,12 +17,12 @@ class ordUniversal
     void setnroQuebras(int qtQuebras);
 
     ordUniversal(int A, int B, int C, int limCusto); //os demais serão definidos depois
-    void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras);
-    int calculaQuebras(int* vetor);
+    void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t* s);
+    int calculaQuebras(int* vetor, int tam);
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
     void calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, int passoMPS);
-    void registraEstatisticas(double* custo);
-    void imprimeEstatisticas(double* custo);
+    void registraEstatisticas(double* custo, contador_t* stats);
+    void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
 
 };
 
