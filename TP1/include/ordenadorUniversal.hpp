@@ -20,13 +20,12 @@ class ordUniversal
     void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t* s);
     int calculaQuebras(int* vetor, int tam);
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
-    void calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, int passoMPS);
+    void calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, int passoMPS, int numMPS);
     void registraEstatisticas(double* custo, contador_t* stats);
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
-
+    int menorCusto(double* custo);
+    int getMPS(int indice, int minMPS, int passoMPS);
 };
-
-int menorCusto();
 
 /* antes de invocar o ordenador universal, determinamos os limiares de quebras e tamanho de partição,
    que são passados como parâmetros para o ordenador (será um método da classe)
