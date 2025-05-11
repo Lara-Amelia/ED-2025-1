@@ -61,6 +61,21 @@ void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, 
     }         
 }
 
+int ordUniversal::menorCusto(double* custo)
+{
+    double min = custo[0];
+    int indiceMin = 0;
+    for(int i = 1; i < 6; i++)
+    {
+        if(custo[i] < min)
+        {
+            min = custo[i];
+            indiceMin = i;
+        }
+    }
+    return indiceMin;
+}
+
 //ACHO que está pronto
 int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 {
@@ -83,15 +98,21 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
             imprimeEstatisticas(&custo[numMPS], stats, limParticao, numMPS, diffCusto); //modificaremos o seu valor
             numMPS++;
         }
-        limParticao = menorCusto();
-        calculaNovaFaixa(limParticao, minMPS, maxMPS, passoMPS);
+        limParticao = menorCusto(custo);
+        calculaNovaFaixa(limParticao, minMPS, maxMPS, passoMPS, numMPS);
         diffCusto = fabs(custo[minMPS] - custo[maxMPS]);
     }
     return limParticao;
 }
 
+int ordUniversal::getMPS(int indice, int minMPS, int passoMPS)
+{
+    return minMPS + (indice*passoMPS);
+}
+
 //limParticao é a partição melhor/de menor custo encontrada em determinarLimiarParticao
-void ordUniversal::calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, int passoMPS)
+//talvez tenhamos de passar parâmetros dinamicamente, visando a atualizá-los
+void ordUniversal::calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, int passoMPS, int numMPS)
 {
     int newMin, newMax;
     if(limParticao == 0)
@@ -109,9 +130,10 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, in
         newMin = limParticao - 1;
         newMax= limParticao + 1;
     }
-    minMPS = getMPS(newMin); //calcula o novo tamanho de partição
-    maxMPS = getMPS(newMax);
+    int oldminMPS = minMPS;
+    minMPS = getMPS(newMin, oldminMPS, passoMPS); //calcula o novo tamanho de partição
+    maxMPS = getMPS(newMax, oldminMPS, passoMPS);
     passoMPS = (int) (maxMPS - minMPS) / 5 ;
-    if (passoMPS == 0) passoMPS++;
+    if(passoMPS == 0) 
+        passoMPS++;
 }
-
