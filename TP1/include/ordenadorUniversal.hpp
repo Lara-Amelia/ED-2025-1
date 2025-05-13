@@ -12,9 +12,9 @@ typedef struct estatistica
 class ordUniversal
 {
     private:
-    int coefA; //comps
-    int coefB; //movs
-    int coefC; //calls
+    float coefA; //comps
+    float coefB; //movs
+    float coefC; //calls
     int limiarCusto;
     int nroQuebras;
     int limiarQuebras;
@@ -23,14 +23,14 @@ class ordUniversal
     public:
     void setnroQuebras(int qtQuebras);
 
-    ordUniversal(int A, int B, int C, int limCusto); //os demais serão definidos depois
+    ordUniversal(float A, float B, float C, int limCusto); //os demais serão definidos depois
     void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t* s);
     int calculaQuebras(int* vetor, int tam);
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
-    void calculaNovaFaixa(int limParticao , int minMPS, int maxMPS, int passoMPS, int numMPS);
+    void calculaNovaFaixa(int limParticao , int* minMPS, int* maxMPS, int* passoMPS, int numMPS);
     void registraEstatisticas(double* custo, contador_t* stats);
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
-    int menorCusto(double* custo);
+    int menorCusto(estatisticas_t* stats);
     int getMPS(int indice, int minMPS, int passoMPS);
 
     int determinaLimiarQuebras(int* v, int tam, int limiarCusto);
