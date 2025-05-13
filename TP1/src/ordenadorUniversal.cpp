@@ -100,6 +100,8 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
                 vTemp[i] = v[i];
             }
             estatisticas[numMPS].limParticao = t;
+            estatisticas[numMPS].custo = 0.0;
+            resetcounter(estatisticas[numMPS].stats);
             ordenadorUniversal(vTemp, tam , t , tam, estatisticas[numMPS].stats);
             registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
             imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto); //modificaremos o seu valor
