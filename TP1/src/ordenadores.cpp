@@ -1,30 +1,28 @@
 #include "ordenadores.hpp"
 
-
-
-void resetcounter(contador_t * s)
+void resetcounter(contador_t &s)
 {
-    s->cmp = 0;  
-    s->move = 0;
-    s->calls = 0;
+    s.cmp = 0;  
+    s.move = 0;
+    s.calls = 0;
 }
 
-void inccmp(contador_t * s, int num)
+void inccmp(contador_t &s, int num)
 {
-    s->cmp += num;
+    s.cmp += num;
 }
 
-void incmove(contador_t * s, int num)
+void incmove(contador_t &s, int num)
 {
-    s->move += num;
+    s.move += num;
 }
 
-void inccalls(contador_t * s, int num)
+void inccalls(contador_t &s, int num)
 {
-    s->calls += num;
+    s.calls += num;
 }
 
-void swap(int *xp, int *yp, contador_t *s)
+void swap(int *xp, int *yp, contador_t &s)
 {
     int temp = *xp;
     *xp = *yp;
@@ -42,7 +40,7 @@ int median (int a, int b, int c)
     return b;                            // c b a
 }
 
-void partition3(int * A, int l, int r, int *i, int *j, contador_t *s) 
+void partition3(int *A, int l, int r, int *i, int *j, contador_t &s) 
 {
     inccalls(s, 1);    
     *i = l;
@@ -82,7 +80,7 @@ void partition3(int * A, int l, int r, int *i, int *j, contador_t *s)
     } while ((*j) >= (*i));   
 }
 
-void quickSort(int * A, int l, int r, contador_t *s) 
+void quickSort(int *A, int l, int r, contador_t &s) 
 {
     //l = limite inferior = 0; r = limite superior = tam-1
     int i, j;
@@ -99,7 +97,7 @@ void quickSort(int * A, int l, int r, contador_t *s)
     return;  
 }
 
-void insercao(int v[], int tam, contador_t * s) 
+void insercao(int v[], int tam, contador_t &s) 
 {
     //l = 0 (limite inferior) e r = v.size - 1 (limite superior)
     int i, j, comparado;

@@ -25,7 +25,7 @@ int ordUniversal:: calculaQuebras(int* vetor, int tam)
     return nroQuebras;
 }
 
-void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t* s)
+void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s)
 {
     if(nroQuebras < limiarQuebras)
     {
@@ -45,15 +45,15 @@ void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int l
 }
 
 //fará o cálculo do custo com base nos stats obtidos
-void ordUniversal::registraEstatisticas(double* custo, contador_t* stats)
+void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
 {
-    *(custo) = (double)(coefA*stats->cmp) + (coefB*stats->move) + (coefC*stats->calls);
+    custo = (double)(coefA*stats.cmp) + (coefB*stats.move) + (coefC*stats.calls);
 }
 
 void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
 {
-    std::cout << "iter " << numMPS << " " << std::endl;
-    std::cout << "mps " << t << "cost " << *(custo) << " cmp " << stats->cmp 
+    //std::cout << "iter " << numMPS << " " << std::endl;
+    std::cout << "mps " << t << " cost " << *(custo) << " cmp " << stats->cmp 
               << " move " << stats->move << " calls " << stats->calls << " " << std::endl;
     if(numMPS == 5)
     {
@@ -89,6 +89,8 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
     //mps na impressão será o valor de t, nro da iteração será numMPS
     while((diffCusto > limiarCusto) && (numMPS >= 5))
     {
+        int iter = 0;
+        std::cout << "iter " << iter << " " << std::endl;
         numMPS=0;
         for(int t=minMPS; t<=maxMPS; t+=passoMPS) //para cada tamanho possível de partição
         {
@@ -98,16 +100,18 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
                 vTemp[i] = v[i];
             }
             estatisticas[numMPS].limParticao = t;
-            ordenadorUniversal(vTemp, tam , t , tam, &estatisticas[numMPS].stats);
-            registraEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
+            ordenadorUniversal(vTemp, tam , t , tam, estatisticas[numMPS].stats);
+            registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
             imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto); //modificaremos o seu valor
             numMPS++;
             delete[] vTemp;
         }
         int limMinPartIndex = menorCusto(estatisticas); //obteremos o valor explícito do limP, depois o seu índice
         limParticao = estatisticas[limMinPartIndex].limParticao;
-        calculaNovaFaixa(limMinPartIndex, &minMPS, &maxMPS, &passoMPS, numMPS);
+        calculaNovaFaixa(limMinPartIndex, minMPS, maxMPS, passoMPS, numMPS);
+        //mudar para indices do maior e menor custo
         diffCusto = fabs(estatisticas[minMPS].custo - estatisticas[maxMPS].custo);
+        iter++;
     }
     return limParticao;
 }
@@ -119,7 +123,7 @@ int ordUniversal::getMPS(int indice, int minMPS, int passoMPS)
 
 //limParticao é a partição melhor/de menor custo encontrada em determinarLimiarParticao
 //talvez tenhamos de passar parâmetros dinamicamente, visando a atualizá-los
-void ordUniversal::calculaNovaFaixa(int limParticao , int* minMPS, int* maxMPS, int* passoMPS, int numMPS)
+void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS)
 {
     int newMin, newMax;
     if(limParticao == 0)
@@ -137,10 +141,11 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int* minMPS, int* maxMPS, 
         newMin = limParticao - 1;
         newMax= limParticao + 1;
     }
-    int oldminMPS = *(minMPS);
-    *(minMPS) = getMPS(newMin, oldminMPS, *(passoMPS)); //calcula o novo tamanho de partição
-    *(maxMPS) = getMPS(newMax, oldminMPS, *(passoMPS));
-    *(passoMPS) = (int) (maxMPS - minMPS) / 5 ;
+    int oldminMPS = minMPS;
+    //mudar getMPS para obter o valor limParticao (t) armazenado nas posições indicadas do vetor
+    minMPS = getMPS(newMin, oldminMPS, (passoMPS)); //calcula o novo tamanho de partição
+    maxMPS = getMPS(newMax, oldminMPS, (passoMPS));
+    passoMPS = (int) (maxMPS - minMPS) / 5 ;
     if(passoMPS == 0) 
         passoMPS++;
 }

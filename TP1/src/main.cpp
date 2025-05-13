@@ -14,9 +14,35 @@ int main(int agrc, char** argv)
     //adicionar exceção caso o arquivo não seja aberto
     std::string linha; 
     int lCusto, qtChaves;
-    float A, B, C;
+    double A, B, C;
     //melhorar leitura
-    arquivo >> lCusto >> A >> B >> C >> qtChaves;
+    if (std::getline(arquivo, linha)) {
+        std::istringstream iss(linha);
+        iss >> lCusto;
+    }
+
+    if (std::getline(arquivo, linha)) {
+        std::istringstream iss(linha);
+        iss >> A;
+    }
+
+    if (std::getline(arquivo, linha)) {
+        std::istringstream iss(linha);
+        iss >> B;
+    }
+
+    if (std::getline(arquivo, linha)) {
+        std::istringstream iss(linha);
+        iss >> C;
+    }
+
+    if (std::getline(arquivo, linha)) {
+        std::istringstream iss(linha);
+        iss >> qtChaves;
+    } 
+
+
+    /*arquivo >> lCusto >> A >> B >> C >> qtChaves;*/
 
 
     std::cout << "lCusto: " << lCusto << "\n";
@@ -37,6 +63,7 @@ int main(int agrc, char** argv)
             {
                 //fazer checagens extras de tamanho
                 vetor[i] = value;
+                std::cout << "valor na posição i do vetor: " << vetor[i] << std::endl;
             }
         }
         else
