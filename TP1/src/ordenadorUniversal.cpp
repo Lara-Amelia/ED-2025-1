@@ -102,7 +102,8 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
             estatisticas[numMPS].limParticao = t;
             estatisticas[numMPS].custo = 0.0;
             resetcounter(estatisticas[numMPS].stats);
-            ordenadorUniversal(vTemp, tam , t , tam, estatisticas[numMPS].stats);
+            //está chamando sempre só o insertion
+            ordenadorUniversal(vTemp, tam , t, tam, estatisticas[numMPS].stats);
             registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
             imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto); //modificaremos o seu valor
             numMPS++;
@@ -150,6 +151,7 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
     passoMPS = (int) (maxMPS - minMPS) / 5 ;
     if(passoMPS == 0) 
         passoMPS++;
+    //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin
 }
 
 //antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
