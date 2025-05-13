@@ -81,7 +81,8 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 {
     int minMPS = 2; //menor partição possível
     int maxMPS = tam; //maior partição possível
-    int passoMPS = (maxMPS - minMPS )/5; //divisão em 5 intervalos equidistantes
+    //usar função teto? CONSERTAR getMPS antes para checar (provavelmente não precisa)
+    int passoMPS = static_cast<int>(ceil((maxMPS - minMPS )/5.0)); //divisão em 5 intervalos equidistantes
     int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     estatisticas_t estatisticas[6];
     int limParticao = 2;
@@ -102,7 +103,7 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
             estatisticas[numMPS].limParticao = t;
             estatisticas[numMPS].custo = 0.0;
             resetcounter(estatisticas[numMPS].stats);
-            //está chamando sempre só o insertion
+            //está chamando sempre só o insertion - condição estúpida para quebras
             ordenadorUniversal(vTemp, tam , t, tam, estatisticas[numMPS].stats);
             registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
             imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto); //modificaremos o seu valor
