@@ -99,6 +99,7 @@ void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao)
         }  
         //quickSort(A, l, j, s, limTamParticao);
     }    
+    //voltar a ins original
     if(i < r)
     {
         if((r-i) < limTamParticao)
