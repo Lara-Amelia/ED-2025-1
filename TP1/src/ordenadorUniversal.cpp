@@ -3,8 +3,9 @@
 #include <iostream>
 #include <exception>
 #include <cmath>
+#include <iomanip>
 
-ordUniversal::ordUniversal(float A, float B, float C, int limCusto, int seedArquivo)
+ordUniversal::ordUniversal(double A, double B, double C, int limCusto, int seedArquivo)
 {
     coefA = A; coefB = B; coefC = C;
     limiarCusto = limCusto;
@@ -40,7 +41,7 @@ void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int l
         } 
         else
         {
-            insercao (V, 0, tam, s);
+            insercao(V, 0, tam, s);
         }
     }
 }
@@ -53,6 +54,7 @@ void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
 
 void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
 {
+    std::cout << std::fixed << std::setprecision(9);
     //std::cout << "iter " << numMPS << " " << std::endl;
     std::cout << "mps " << t << " cost " << *(custo) << " cmp " << stats->cmp 
               << " move " << stats->move << " calls " << stats->calls << " " << std::endl;
@@ -98,7 +100,7 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
     int maxMPS = tam; //maior partição possível
     //usar função teto? CONSERTAR getMPS antes para checar (provavelmente não precisa)
     int passoMPS = (maxMPS - minMPS )/5.0; //divisão em 5 intervalos equidistantes
-    int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
+    double diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     estatisticas_t estatisticas[6];
     int limParticao = 2;
     int numMPS = 6; //tamanho máximo de numMPS
@@ -142,6 +144,7 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
     return limParticao;
 }
 
+//está pegando o limite errado na última iteração
 int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
 {
     return stats[indice].limParticao;

@@ -59,23 +59,23 @@ void partition3(int *A, int l, int r, int *i, int *j, contador_t &s)
     {
         while(A[*i] < pivo)
         {
-        inccmp(s,1);
-        (*i)++;
+            inccmp(s,1);
+            (*i)++;
         }
         inccmp(s,1);
         
         while(A[*j] > pivo)
         {
-        inccmp(s,1);    
-        (*j)--;
+            inccmp(s,1);    
+            (*j)--;
         }
         inccmp(s,1);
         
         if((*j) >= (*i))
         {
-        swap(&A[*j], &A[*i], s);
-        (*i)++;
-        (*j)--;
+            swap(&A[*j], &A[*i], s);
+            (*i)++;
+            (*j)--;
         }    
     } while ((*j) >= (*i));   
 }
@@ -91,26 +91,24 @@ void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao)
         if((j-l) < limTamParticao)
         {
             //checar se é isso mesmo e talvez adaptar para receber limites left e right
-            insercao(A, l, j, s);
+            insercao(A, l, j+1, s); //foi alterado chat - voltar para j+1 se piorar
         }  
         else
         {
             quickSort(A, l, j, s, limTamParticao); 
         }  
-        //quickSort(A, l, j, s, limTamParticao);
     }    
     //voltar a ins original
     if(i < r)
     {
         if((r-i) < limTamParticao)
         {
-            insercao(A, i, r, s);
+            insercao(A, i, r+1, s);
         }  
         else  
         {
             quickSort(A, i, r, s, limTamParticao); 
         }  
-        //quickSort(A, i, r, s, limTamParticao);
     }
     return;  
 }
@@ -120,11 +118,11 @@ void insercao(int v[], int tam, int r, contador_t &s)
     //l = 0 (limite inferior) e r = v.size - 1 (limite superior)
     int i, j, comparado;
     inccalls(s,1);
-    for(i = 1; i <= r-1; i++)
+    for(i = tam+1; i < r; i++)
     {
         comparado = v[i];
         j = i - 1; //percorremos o subarray de 0 a i - 1
-        while((j >= 0) && (comparado < v[j])) 
+        while((j >= tam) && (comparado < v[j])) 
         {
             inccmp(s,1);
             v[j+1] = v[j];
