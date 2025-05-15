@@ -4,10 +4,11 @@
 #include <exception>
 #include <cmath>
 
-ordUniversal::ordUniversal(float A, float B, float C, int limCusto)
+ordUniversal::ordUniversal(float A, float B, float C, int limCusto, int seedArquivo)
 {
     coefA = A; coefB = B; coefC = C;
     limiarCusto = limCusto;
+    seed = seedArquivo;
     //inicializamos os valores que ainda serão definidos como 0
     limiarQuebras = 0;
     minTamParticao = 0;
@@ -29,17 +30,17 @@ void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int l
 {
     if(nroQuebras < limiarQuebras)
     {
-        insercao (V, tam, s);
+        insercao (V, 0, tam, s);
     } 
     else 
     {
         if(tam > minTamParticao)
         {
-            quickSort(V, 0, (tam-1), s) ;
+            quickSort(V, 0, (tam-1), s, MinTamParticao);
         } 
         else
         {
-            insercao (V, tam, s) ;
+            insercao (V, 0, tam, s);
         }
     }
 }
@@ -76,21 +77,35 @@ int ordUniversal::menorCusto(estatisticas_t* stats)
     return indiceMin;
 }
 
+int encontraElemento(estatisticas_t* stats, int particao, int numMPS)
+{
+    int index = 0;
+    for(int i = 0; i < numMPS; i++)
+    {
+        if(stats[i].limParticao == particao)
+        {
+            index = i;
+            break;
+        }
+    }   
+    return index;
+}
+
 //ACHO que está pronto
 int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 {
     int minMPS = 2; //menor partição possível
     int maxMPS = tam; //maior partição possível
     //usar função teto? CONSERTAR getMPS antes para checar (provavelmente não precisa)
-    int passoMPS = static_cast<int>(ceil((maxMPS - minMPS )/5.0)); //divisão em 5 intervalos equidistantes
+    int passoMPS = (maxMPS - minMPS )/5.0; //divisão em 5 intervalos equidistantes
     int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     estatisticas_t estatisticas[6];
     int limParticao = 2;
     int numMPS = 6; //tamanho máximo de numMPS
     //mps na impressão será o valor de t, nro da iteração será numMPS
+    int iter = 0;
     while((diffCusto > limiarCusto) && (numMPS >= 5))
     {
-        int iter = 0;
         std::cout << "iter " << iter << " " << std::endl;
         numMPS=0;
         for(int t=minMPS; t<=maxMPS; t+=passoMPS) //para cada tamanho possível de partição
@@ -104,30 +119,35 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
             estatisticas[numMPS].custo = 0.0;
             resetcounter(estatisticas[numMPS].stats);
             //está chamando sempre só o insertion - condição estúpida para quebras
-            ordenadorUniversal(vTemp, tam , t, tam, estatisticas[numMPS].stats);
+            ordenadorUniversal(vTemp, tam , t, -1, estatisticas[numMPS].stats);
             registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
+            //std::cout << "iter " << iter << " " << std::endl;
             imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto); //modificaremos o seu valor
             numMPS++;
             delete[] vTemp;
         }
         int limMinPartIndex = menorCusto(estatisticas); //obteremos o valor explícito do limP, depois o seu índice
         limParticao = estatisticas[limMinPartIndex].limParticao;
-        calculaNovaFaixa(limMinPartIndex, minMPS, maxMPS, passoMPS, numMPS);
-        //mudar para indices do maior e menor custo
-        diffCusto = fabs(estatisticas[minMPS].custo - estatisticas[maxMPS].custo);
+        calculaNovaFaixa(limMinPartIndex, minMPS, maxMPS, passoMPS, numMPS, estatisticas);
+        //mudar para indices do maior e menor MPS
+        int indexminMPS = encontraElemento(estatisticas, minMPS, numMPS);
+        std::cout << "indexminMPS: " << indexminMPS << std::endl;
+        int indexmaxMPS = encontraElemento(estatisticas, maxMPS, numMPS);
+        std::cout << "indexmaxMPS: " << indexmaxMPS << std::endl;
+        diffCusto = fabs(estatisticas[indexminMPS].custo - estatisticas[indexmaxMPS].custo);
         iter++;
     }
     return limParticao;
 }
 
-int ordUniversal::getMPS(int indice, int minMPS, int passoMPS)
+int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
 {
-    return minMPS + (indice*passoMPS);
+    return stats[indice].limParticao;
 }
 
 //limParticao é a partição melhor/de menor custo encontrada em determinarLimiarParticao
 //talvez tenhamos de passar parâmetros dinamicamente, visando a atualizá-los
-void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS)
+void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats)
 {
     int newMin, newMax;
     if(limParticao == 0)
@@ -145,11 +165,14 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
         newMin = limParticao - 1;
         newMax= limParticao + 1;
     }
-    int oldminMPS = minMPS;
     //mudar getMPS para obter o valor limParticao (t) armazenado nas posições indicadas do vetor
-    minMPS = getMPS(newMin, oldminMPS, (passoMPS)); //calcula o novo tamanho de partição
-    maxMPS = getMPS(newMax, oldminMPS, (passoMPS));
-    passoMPS = (int) (maxMPS - minMPS) / 5 ;
+    std::cout << "newMin: " << newMin << std::endl;
+    std::cout << "newMax: " << newMax << std::endl;
+    minMPS = getMPS(newMin, stats, numMPS); //calcula o novo tamanho de partição
+    maxMPS = getMPS(newMax, stats, numMPS);
+    std::cout << "minMPS nova faixa: " << minMPS << std::endl;
+    std::cout << "maxMPS nova faixa: " << maxMPS << std::endl;
+    passoMPS = (int)(maxMPS - minMPS)/5;
     if(passoMPS == 0) 
         passoMPS++;
     //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin

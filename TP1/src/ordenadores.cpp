@@ -80,7 +80,7 @@ void partition3(int *A, int l, int r, int *i, int *j, contador_t &s)
     } while ((*j) >= (*i));   
 }
 
-void quickSort(int *A, int l, int r, contador_t &s) 
+void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao) 
 {
     //l = limite inferior = 0; r = limite superior = tam-1
     int i, j;
@@ -88,21 +88,38 @@ void quickSort(int *A, int l, int r, contador_t &s)
     partition3(A, l, r, &i, &j, s);
     if(l < j)
     {
-        quickSort(A, l, j, s);
+        if((j-l) < limTamParticao)
+        {
+            //checar se é isso mesmo e talvez adaptar para receber limites left e right
+            insercao(A, l, j, s);
+        }  
+        else
+        {
+            quickSort(A, l, j, s, limTamParticao); 
+        }  
+        //quickSort(A, l, j, s, limTamParticao);
     }    
     if(i < r)
     {
-        quickSort(A, i, r, s);
+        if((r-i) < limTamParticao)
+        {
+            insercao(A, i, r, s);
+        }  
+        else  
+        {
+            quickSort(A, i, r, s, limTamParticao); 
+        }  
+        //quickSort(A, i, r, s, limTamParticao);
     }
     return;  
 }
 
-void insercao(int v[], int tam, contador_t &s) 
+void insercao(int v[], int tam, int r, contador_t &s) 
 {
     //l = 0 (limite inferior) e r = v.size - 1 (limite superior)
     int i, j, comparado;
     inccalls(s,1);
-    for(i = 1; i < tam; i++)
+    for(i = 1; i <= r-1; i++)
     {
         comparado = v[i];
         j = i - 1; //percorremos o subarray de 0 a i - 1

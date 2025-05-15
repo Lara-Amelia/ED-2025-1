@@ -13,9 +13,15 @@ int main(int agrc, char** argv)
     std::ifstream arquivo(nomeArquivo);
     //adicionar exceção caso o arquivo não seja aberto
     std::string linha; 
-    int lCusto, qtChaves;
+    int lCusto, qtChaves, seedArquivo;
     double A, B, C;
     //melhorar leitura
+     if (std::getline(arquivo, linha)) {
+        std::istringstream iss(linha);
+        iss >> seedArquivo;
+    }
+
+
     if (std::getline(arquivo, linha)) {
         std::istringstream iss(linha);
         iss >> lCusto;
@@ -44,13 +50,13 @@ int main(int agrc, char** argv)
 
     /*arquivo >> lCusto >> A >> B >> C >> qtChaves;*/
 
-
+    std::cout << "seed: " << seedArquivo << std::endl;
     std::cout << "lCusto: " << lCusto << "\n";
     std::cout << "A: " << A << "\n";
     std::cout << "B: " << B << "\n";
     std::cout << "C: " << C << "\n";
     std::cout << "qtChaves: " << qtChaves << "\n";
-    ordUniversal ordUN(A, B, C, lCusto);
+    ordUniversal ordUN(A, B, C, lCusto, seedArquivo);
 
     int vetor[qtChaves];
     for(int i = 0; i < qtChaves; i++)
@@ -63,14 +69,8 @@ int main(int agrc, char** argv)
             {
                 //fazer checagens extras de tamanho
                 vetor[i] = value;
-                std::cout << "valor na posição i do vetor: " << vetor[i] << std::endl;
+                //std::cout << "valor na posição i do vetor: " << vetor[i] << std::endl;
             }
-        }
-        else
-        {
-            //lançar exceção erro de leitura
-            std::cerr << "Error: File has fewer vector lines than expected.\n";
-            return 1;
         }
     }
     arquivo.close();
