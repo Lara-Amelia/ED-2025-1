@@ -54,7 +54,7 @@ void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
 
 void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
 {
-    std::cout << std::fixed << std::setprecision(9);
+    std::cout << std::fixed << std::setprecision(6);
     //std::cout << "iter " << numMPS << " " << std::endl;
     std::cout << "mps " << t << " cost " << *(custo) << " cmp " << stats->cmp 
               << " move " << stats->move << " calls " << stats->calls << " " << std::endl;
