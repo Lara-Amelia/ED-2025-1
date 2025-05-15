@@ -54,7 +54,7 @@ void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
 
 void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
 {
-    std::cout << std::fixed << std::setprecision(6);
+    std::cout << std::fixed << std::setprecision(9);
     //std::cout << "iter " << numMPS << " " << std::endl;
     std::cout << "mps " << t << " cost " << *(custo) << " cmp " << stats->cmp 
               << " move " << stats->move << " calls " << stats->calls << " " << std::endl;
@@ -138,6 +138,7 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
         std::cout << "indexmaxMPS: " << indexmaxMPS << std::endl;
         diffCusto = fabs(estatisticas[indexminMPS].custo - estatisticas[indexmaxMPS].custo);
         std::cout << "diffCusto final: " << diffCusto << std::endl;
+        std::cout << std::fixed << std::setprecision(6);
         std::cout << "nummps " << numMPS << " limParticao " << minMPS << " mpsdiff " << diffCusto << std::endl;
         iter++;
     }
