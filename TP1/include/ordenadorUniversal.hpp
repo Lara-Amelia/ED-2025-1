@@ -19,19 +19,21 @@ class ordUniversal
     int nroQuebras;
     int limiarQuebras;
     int minTamParticao;
+    int seed;
 
     public:
     void setnroQuebras(int qtQuebras);
 
-    ordUniversal(float A, float B, float C, int limCusto); //os demais serão definidos depois
+    ordUniversal(float A, float B, float C, int limCusto, int seed); //os demais serão definidos depois
     void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s);
     int calculaQuebras(int* vetor, int tam);
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
-    void calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS);
+    void calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats);
     void registraEstatisticas(double &custo, contador_t &stats);
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
     int menorCusto(estatisticas_t* stats);
-    int getMPS(int indice, int minMPS, int passoMPS);
+    int getMPS(int indice, estatisticas_t* stats, int numMPS);
+    //int encontraElemento(estatisticas_t* stats, int particao, int numMPS);
 
     int determinaLimiarQuebras(int* v, int tam, int limiarCusto);
 

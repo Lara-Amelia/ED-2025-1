@@ -18,7 +18,7 @@ void inccalls(contador_t &s, int num);
 
 void swap(int *xp, int *yp, contador_t &s);
 
-void insercao(int v[], int tam, contador_t &s);
+void insercao(int v[], int tam, int r, contador_t &s);
 
 int median (int a, int b, int c);
 
@@ -26,6 +26,6 @@ int median (int a, int b, int c);
 void partition3(int * A, int l, int r, int *i, int *j, contador_t &s);
 
 // quicksort with median of 3
-void quickSort(int * A, int l, int r, contador_t &s);
+void quickSort(int * A, int l, int r, contador_t &s, int limTamParticao);
 
 #endif
