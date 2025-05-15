@@ -142,6 +142,8 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
         std::cout << "nummps " << numMPS << " limParticao " << minMPS << " mpsdiff " << diffCusto << std::endl;
         iter++;
     }
+    //para que a saída na última iteração fique correta, temos de checar se haverá ou não uma nova iter
+    //caso contrário temos de usar como minMPS o valor anterior ao da última atualização
     return limParticao;
 }
 
