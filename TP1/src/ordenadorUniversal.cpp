@@ -5,7 +5,7 @@
 #include <cmath>
 #include <iomanip>
 
-ordUniversal::ordUniversal(double A, double B, double C, int limCusto, int seedArquivo)
+ordUniversal::ordUniversal(double A, double B, double C, float limCusto, int seedArquivo)
 {
     coefA = A; coefB = B; coefC = C;
     limiarCusto = limCusto;
@@ -98,14 +98,14 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 {
     int minMPS = 2; //menor partição possível
     int maxMPS = tam; //maior partição possível
-    //usar função teto? CONSERTAR getMPS antes para checar (provavelmente não precisa)
     int passoMPS = (maxMPS - minMPS )/5.0; //divisão em 5 intervalos equidistantes
-    double diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
+    float diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     estatisticas_t estatisticas[6];
     int limParticao = 2;
     int numMPS = 6; //tamanho máximo de numMPS
     //mps na impressão será o valor de t, nro da iteração será numMPS
     int iter = 0;
+    int oldminMPS = 0;
     while((diffCusto > limiarCusto) && (numMPS >= 5))
     {
         std::cout << "iter " << iter << " " << std::endl;
@@ -120,26 +120,29 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
             estatisticas[numMPS].limParticao = t;
             estatisticas[numMPS].custo = 0.0;
             resetcounter(estatisticas[numMPS].stats);
-            //está chamando sempre só o insertion - condição estúpida para quebras
+
             ordenadorUniversal(vTemp, tam , t, -1, estatisticas[numMPS].stats);
-            registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats); //passa um ponteiro para a posição no array custo
-            //std::cout << "iter " << iter << " " << std::endl;
-            imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto); //modificaremos o seu valor
+            registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats);
+            
+            imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto);
             numMPS++;
             delete[] vTemp;
         }
         int limMinPartIndex = menorCusto(estatisticas); //obteremos o valor explícito do limP, depois o seu índice
         limParticao = estatisticas[limMinPartIndex].limParticao;
+
+        oldminMPS = estatisticas[minMPS].limParticao;
+        std::cout << "oldminMPS: " << oldminMPS << std::endl;
         calculaNovaFaixa(limMinPartIndex, minMPS, maxMPS, passoMPS, numMPS, estatisticas);
-        //mudar para indices do maior e menor MPS
+
         int indexminMPS = encontraElemento(estatisticas, minMPS, numMPS);
         std::cout << "indexminMPS: " << indexminMPS << std::endl;
         int indexmaxMPS = encontraElemento(estatisticas, maxMPS, numMPS);
         std::cout << "indexmaxMPS: " << indexmaxMPS << std::endl;
-        diffCusto = fabs(estatisticas[indexminMPS].custo - estatisticas[indexmaxMPS].custo);
+        diffCusto = /*static_cast<float>*/(fabs(estatisticas[indexminMPS].custo - estatisticas[indexmaxMPS].custo));
         std::cout << "diffCusto final: " << diffCusto << std::endl;
         std::cout << std::fixed << std::setprecision(6);
-        std::cout << "nummps " << numMPS << " limParticao " << minMPS << " mpsdiff " << diffCusto << std::endl;
+        std::cout << "nummps " << numMPS << " limParticao " << limParticao << " mpsdiff " << diffCusto << std::endl;
         iter++;
     }
     //para que a saída na última iteração fique correta, temos de checar se haverá ou não uma nova iter
@@ -186,24 +189,47 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
     //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin
 }
 
-//antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
-/*int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto)
+//antes de cada chamada para embaralhamento do vetor (presumivelmente no método determinaLimQuebras),
+//devemos chamar srand48(seed)
+//numShuffle será o número de quebras que queremos gerar no vetor previamente ordenado
+int shuffleVector(int* vetor, int size, int numShuffle)
 {
-    int minLQ = 1; //menor quantidade de quebras
-    int maxLQ = tam - 1; //maior quantidade de quebras
+    int p1 = 0, p2 = 0, temp;
+    for (int t = 0; t < numShuffle; t++) 
+    {
+        /* Gera dois índices distintos no intervalo [0..size-1] */
+        while (p1 == p2) 
+        {
+            p1 = (int)(drand48() * size);
+            p2 = (int)(drand48() * size);
+        }
+        /* Realiza a troca para introduzir uma quebra */
+        temp = vetor[p1];
+        vetor[p1] = vetor[p2];
+        vetor[p2] = temp;
+        p1 = p2 = 0;
+    }
+    return 0;
+}
+
+//antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
+int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto)
+{
+    int minLQ = 1;                   //menor quantidade de quebras 
+    int maxLQ = tam - 1;             //maior quantidade de quebras
     int passoLQ = (maxLQ - minLQ)/5; //divisão em 5 intervalos equidistantes
     int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
-    estatisticas_t estatisticasQS[6];
-    estatisticas_t estatisticasIN[6];
+    estatisticasLQ estatisticasLQ[6];
     int limQB = 1;
     int numLQ = 6; //tamanho máximo de numMPS
     //mps na impressão será o valor de t, nro da iteração será numMPS
+    //minLQ será para o valor de limiar que tem a menor diferença absoluta entre IN e QS
     while((diffCusto > limiarCusto) && (numLQ >= 5))
     {
         numLQ=0;
         for(int t=minLQ; t<=maxLQ; t+=passoLQ) //para cada tamanho possível de partição
         {
-            ordenadorUniversal(v, tam , t , limQB, &stats[numLQ]);
+            
             registraEstatisticas(&custo[numLQ], &stats[numLQ]); //passa um ponteiro para a posição no array custo
             imprimeEstatisticas(&custo[numLQ], stats, limQB, numLQ, diffCusto); //modificaremos o seu valor
             numLQ++;
@@ -214,4 +240,4 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
         diffCusto = fabs(custo[minLQ] - custo[maxLQ]); //provavelmente devemos usar 
     }
     return limQB;
-}*/
+}
