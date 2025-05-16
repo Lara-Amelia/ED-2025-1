@@ -9,13 +9,23 @@ typedef struct estatistica
     contador_t stats;
 } estatisticas_t;
 
+typedef struct stat
+{
+    double custoIN;
+    double custoQS;
+    int limQuebras;
+    double diffCusto;
+    contador_t statsIN;
+    contador_t statsQS;
+} estatisticasLQ;
+
 class ordUniversal
 {
     private:
-    double coefA; //comps
+    double coefA; //comps - talvez voltar para double depois
     double coefB; //movs
     double coefC; //calls
-    int limiarCusto;
+    float limiarCusto;
     int nroQuebras;
     int limiarQuebras;
     int minTamParticao;
@@ -24,18 +34,21 @@ class ordUniversal
     public:
     void setnroQuebras(int qtQuebras);
 
-    ordUniversal(double A, double B, double C, int limCusto, int seed); //os demais serão definidos depois
+    ordUniversal(double A, double B, double C, float limCusto, int seed); //os demais serão definidos depois
     void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s);
     int calculaQuebras(int* vetor, int tam);
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
     void calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats);
     void registraEstatisticas(double &custo, contador_t &stats);
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
+    void imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ);
+    //void imprimeEstatistica(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
     int menorCusto(estatisticas_t* stats);
     int getMPS(int indice, estatisticas_t* stats, int numMPS);
     //int encontraElemento(estatisticas_t* stats, int particao, int numMPS);
+    void calculaNovaFaixaLQ(int limQB, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats);
 
-    int determinaLimiarQuebras(int* v, int tam, int limiarCusto);
+    int determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao);
 
 };
 
