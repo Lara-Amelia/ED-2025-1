@@ -79,7 +79,7 @@ int ordUniversal::menorCusto(estatisticas_t* stats)
     return indiceMin;
 }
 
-int encontraElemento(estatisticas_t* stats, int particao, int numMPS)
+int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numMPS)
 {
     int index = 0;
     for(int i = 0; i < numMPS; i++)
@@ -192,7 +192,7 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
 //antes de cada chamada para embaralhamento do vetor (presumivelmente no método determinaLimQuebras),
 //devemos chamar srand48(seed)
 //numShuffle será o número de quebras que queremos gerar no vetor previamente ordenado
-int shuffleVector(int* vetor, int size, int numShuffle)
+int ordUniversal::shuffleVector(int* vetor, int size, int numShuffle)
 {
     int p1 = 0, p2 = 0, temp;
     for (int t = 0; t < numShuffle; t++) 
@@ -221,15 +221,54 @@ void ordUniversal::imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ)
               << " calls " << stats.statsIN.calls << std::endl;
 }
 
+void ordUniversal::calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ)
+{
+    //CHECAR TIPOS PARA SAÍDA
+    for(int i = 0; i < numLQ; i++)
+    {
+        stats[i].diffCusto = fabs(stats[i].custoQS - stats[i].custoIN);
+        std::cout << "diffCusto " << i << ": " << stats[i].diffCusto << std::endl;
+    }
+}
+
+int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
+{
+    int min = stats[0].diffCusto;
+    int indexMin = 0;
+    for(int i = 0; i < numLQ; i++)
+    {
+        if(stats[i].diffCusto < min)
+        {
+            min = stats[i].diffCusto;
+            indexMin = i;
+        }
+    }
+    return indexMin;
+}
+
+int ordUniversal::encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ)
+{
+    int index = 0;
+    for(int i = 0; i < numLQ; i++)
+    {
+        if(stats[i].limQuebras == quebras)
+        {
+            index = i;
+            break;
+        }
+    }   
+    return index;
+}
+
 //antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
 int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao)
 {
     int minLQ = 1;                   //menor quantidade de quebras 
     int maxLQ = tam/2;  //como já sabemos que in é ineficiente para nros grandes de quebras, usamos metade do intervalo
     int passoLQ = (maxLQ - minLQ)/5; //divisão em 5 intervalos equidistantes
-    int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
-    estatisticasLQ statsLQ[6];
-    int limQB = 1;
+    float diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
+    estatisticasLQ statsLQ[7]; //talvez voltar para 6
+    int limQuebras = 1;
     int numLQ = 6; //tamanho máximo de numLQ
     int iter = 0;
     //minLQ será o valor de limiar que tem a menor diferença absoluta entre IN e QS
@@ -267,31 +306,69 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
             //calcula o custo individual do QS
             registraEstatisticas(statsLQ[numLQ].custoQS, statsLQ[numLQ].statsQS);
 
-            //HÁ ALGUM PROBLEMA COM A CÓPIA VTEMPIN
             //passamos com tam e não tam-1 como tamanho
             insercao(vTemp, 0, tam, statsLQ[numLQ].statsIN);
             registraEstatisticas(statsLQ[numLQ].custoIN, statsLQ[numLQ].statsIN);
 
             imprimeEstatisticasLQ(statsLQ[numLQ], t, numLQ);
 
-
-            //registraEstatisticas(&custo[numLQ], &stats[numLQ]); //passa um ponteiro para a posição no array custo
-            //imprimeEstatisticas(&custo[numLQ], stats, limQB, numLQ, diffCusto); //modificaremos o seu valor
             numLQ++;
-            //imprimeEstatisticas provavelmente será alterado
-            delete[] vTemp;
             delete[] vTempIN;
         }
-        //limQB = menorCusto(custo);
-        //calculaNovaFaixa(limQB, minLQ, maxLQ, passoLQ, numLQ);
-        //diffCusto = fabs(custo[minLQ] - custo[maxLQ]); //provavelmente devemos usar 
+        calculaDiffCustosLQ(statsLQ, numLQ);
+        int limMinQBIndex = menorCustoLQ(statsLQ, numLQ); //obteremos o valor explícito do limP, depois o seu índice
+        limiarQuebras = statsLQ[limMinQBIndex].limQuebras;
+        std::cout << "limMinQBIndex: " << limMinQBIndex << std::endl;
+        std::cout << "limiarQuebras: " << limiarQuebras << std::endl;
+
+        calculaNovaFaixaLQ(limMinQBIndex, minLQ, maxLQ, passoLQ, numLQ, statsLQ);
+
+        int indexminLQ = encontraElementoLQ(statsLQ, minLQ, numLQ);
+        std::cout << "indexminLQ: " << indexminLQ << std::endl;
+        int indexmaxLQ = encontraElementoLQ(statsLQ, maxLQ, numLQ);
+        std::cout << "indexmaxMPS: " << indexmaxLQ << std::endl;
+        diffCusto = static_cast<float>(fabs(statsLQ[indexminLQ].custoIN - statsLQ[indexmaxLQ].custoIN));
+        std::cout << "diffCusto final: " << diffCusto << std::endl;
+        std::cout << std::fixed << std::setprecision(6);
+        std::cout << "numlq " << numLQ << " limQuebras " << limiarQuebras << " lqdiff " << diffCusto << std::endl;
         iter++;
+        delete[] vTemp;
     }
-    return limQB;
+    return limQuebras;
 }
 
-void calculaNovaFaixaLQ(int limQB, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats)
+int ordUniversal::getLQ(int indice, estatisticasLQ* stats, int numLQ)
 {
+    return stats[indice].limQuebras;
+}
 
-
+void ordUniversal::calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats)
+{
+    int newMin, newMax;
+    if(limMinQBIndex == 0)
+    {
+        newMin = 0 ;
+        newMax = 2 ;
+    } 
+    else if(limMinQBIndex == numLQ-1)
+    {
+        newMin = numLQ-3;
+        newMax= numLQ-1;
+    } 
+    else 
+    {
+        newMin = limMinQBIndex - 1;
+        newMax= limMinQBIndex + 1;
+    }
+    //mudar getMPS para obter o valor limParticao (t) armazenado nas posições indicadas do vetor
+    std::cout << "newMin: " << newMin << std::endl;
+    std::cout << "newMax: " << newMax << std::endl;
+    minLQ = getLQ(newMin, stats, numLQ); //calcula o novo tamanho de partição
+    maxLQ = getLQ(newMax, stats, numLQ);
+    std::cout << "minLQ nova faixa: " << minLQ << std::endl;
+    std::cout << "maxLQ nova faixa: " << maxLQ << std::endl;
+    passoLQ = (int)(maxLQ - minLQ)/5;
+    if(passoLQ == 0) 
+        passoLQ++;
+    //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin   
 }
