@@ -261,7 +261,7 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
             int* vTempIN = new int[tam];
             for(int i = 0; i < tam; i++)
             {
-                vTempIN[i] = v[i];
+                vTempIN[i] = vTemp[i];
             }            
             quickSort(vTempIN, 0, tam-1, statsLQ[numLQ].statsQS, limTamParticao);
             //calcula o custo individual do QS
