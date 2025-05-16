@@ -268,9 +268,9 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
     int passoLQ = (maxLQ - minLQ)/5; //divisão em 5 intervalos equidistantes
     float diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     //pode ter vários tamanhos, fazer alguma checagem/alocação dinâmica
-    estatisticasLQ statsLQ[10]; //talvez voltar para 6
+    estatisticasLQ statsLQ[10]; 
     int limQuebras = 1;
-    int numLQ = 6; //tamanho máximo de numLQ
+    int numLQ = 6; 
     int iter = 0;
     //minLQ será o valor de limiar que tem a menor diferença absoluta entre IN e QS
     while((diffCusto > limiarCusto) && (numLQ >= 5))
@@ -332,7 +332,12 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
         //std::cout << "diffCusto final: " << diffCusto << std::endl;
         std::cout << std::fixed << std::setprecision(6);
         std::cout << "numlq " << numLQ << " limQuebras " << limiarQuebras << " lqdiff " << diffCusto << std::endl;
-        std::cout << std::endl;
+        if ((diffCusto > limiarCusto) && (numLQ >= 5)) 
+        {
+             std::cout << std::endl;
+        }
+
+        //std::cout << std::endl;
         iter++;
         delete[] vTemp;
     }
