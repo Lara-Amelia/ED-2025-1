@@ -5,6 +5,9 @@
 #include <cmath>
 #include <iomanip>
 
+//FALTA ADICIONAR TRATAMENTO DE EXCEÇÕES, VERIFICAÇÕES DE ESPAÇO/TAMANHO 
+//ALOCAÇÃO DINÂMICA NO VETOR DE ESTATISTICAS PARA O LIMIAR DE QUEBRAS
+
 ordUniversal::ordUniversal(double A, double B, double C, float limCusto, int seedArquivo)
 {
     coefA = A; coefB = B; coefC = C;
