@@ -50,13 +50,13 @@ int main(int agrc, char** argv)
 
     /*arquivo >> lCusto >> A >> B >> C >> qtChaves;*/
 
-    std::cout << "seed: " << seedArquivo << std::endl;
+    ordUniversal ordUN(A, B, C, lCusto, seedArquivo);
+    /*std::cout << "seed: " << seedArquivo << std::endl;
     std::cout << "lCusto: " << lCusto << "\n";
     std::cout << "A: " << A << "\n";
     std::cout << "B: " << B << "\n";
     std::cout << "C: " << C << "\n";
-    std::cout << "qtChaves: " << qtChaves << "\n";
-    ordUniversal ordUN(A, B, C, lCusto, seedArquivo);
+    std::cout << "qtChaves: " << qtChaves << "\n";*/
 
     int vetor[qtChaves];
     for(int i = 0; i < qtChaves; i++)
@@ -73,6 +73,8 @@ int main(int agrc, char** argv)
             }
         }
     }
+    std::cout << "size " << qtChaves << " seed " << seedArquivo << " breaks " << ordUN.calculaQuebras(vetor, qtChaves);
+    std::cout << std::endl << std::endl;
     arquivo.close();
     int limtamParticao = ordUN.determinaLimiarParticao(vetor, qtChaves, lCusto);
     ordUN.determinaLimiarQuebras(vetor, qtChaves, lCusto, limtamParticao);
