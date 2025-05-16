@@ -74,6 +74,7 @@ int main(int agrc, char** argv)
         }
     }
     arquivo.close();
-    ordUN.determinaLimiarParticao(vetor, qtChaves, lCusto);
+    int limtamParticao = ordUN.determinaLimiarParticao(vetor, qtChaves, lCusto);
+    ordUN.determinaLimiarQuebras(vetor, qtChaves, lCusto, limtamParticao);
     return 0;
 }

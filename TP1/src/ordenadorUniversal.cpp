@@ -212,32 +212,86 @@ int shuffleVector(int* vetor, int size, int numShuffle)
     return 0;
 }
 
+void ordUniversal::imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ)
+{
+    std::cout << std::fixed << std::setprecision(9);
+    std::cout << "qs lq " << t << " cost " << stats.custoQS << " cmp " << stats.statsQS.cmp << " move " << stats.statsQS.move 
+              << " calls " << stats.statsQS.calls << std::endl;
+    std::cout << "in lq " << t << " cost " << stats.custoIN << " cmp " << stats.statsIN.cmp << " move " << stats.statsIN.move 
+              << " calls " << stats.statsIN.calls << std::endl;
+}
+
 //antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
-int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto)
+int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao)
 {
     int minLQ = 1;                   //menor quantidade de quebras 
-    int maxLQ = tam - 1;             //maior quantidade de quebras
+    int maxLQ = tam/2;  //como já sabemos que in é ineficiente para nros grandes de quebras, usamos metade do intervalo
     int passoLQ = (maxLQ - minLQ)/5; //divisão em 5 intervalos equidistantes
     int diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
-    estatisticasLQ estatisticasLQ[6];
+    estatisticasLQ statsLQ[6];
     int limQB = 1;
-    int numLQ = 6; //tamanho máximo de numMPS
-    //mps na impressão será o valor de t, nro da iteração será numMPS
-    //minLQ será para o valor de limiar que tem a menor diferença absoluta entre IN e QS
+    int numLQ = 6; //tamanho máximo de numLQ
+    int iter = 0;
+    //minLQ será o valor de limiar que tem a menor diferença absoluta entre IN e QS
     while((diffCusto > limiarCusto) && (numLQ >= 5))
     {
+        std::cout << "iter " << iter << " " << std::endl;
         numLQ=0;
+        estatisticas_t ordenacao;
+        int* vTemp = new int[tam];
+        for(int i = 0; i < tam; i++)
+        {
+            vTemp[i] = v[i];
+        }
+        //faz a ordenação do vetor original temporário
+        quickSort(vTemp, 0, tam-1, ordenacao.stats, limTamParticao);
+        //t será o valor de cada limiar de quebra testado por iteração
         for(int t=minLQ; t<=maxLQ; t+=passoLQ) //para cada tamanho possível de partição
         {
-            
-            registraEstatisticas(&custo[numLQ], &stats[numLQ]); //passa um ponteiro para a posição no array custo
-            imprimeEstatisticas(&custo[numLQ], stats, limQB, numLQ, diffCusto); //modificaremos o seu valor
+            //reset estatísticas a cada iteração
+            statsLQ[numLQ].limQuebras = t;
+            statsLQ[numLQ].custoIN = 0.0;
+            statsLQ[numLQ].custoQS = 0.0;
+            resetcounter(statsLQ[numLQ].statsIN);
+            resetcounter(statsLQ[numLQ].statsQS);
+
+            //chama shuffle, chama INS e QS e registra seus custos separadamente
+            srand48(seed);
+            shuffleVector(vTemp, tam, t); //vTemp é retornado com o número desejado de quebras
+            int* vTempIN = new int[tam];
+            for(int i = 0; i < tam; i++)
+            {
+                vTempIN[i] = v[i];
+            }            
+            quickSort(vTempIN, 0, tam-1, statsLQ[numLQ].statsQS, limTamParticao);
+            //calcula o custo individual do QS
+            registraEstatisticas(statsLQ[numLQ].custoQS, statsLQ[numLQ].statsQS);
+
+            //HÁ ALGUM PROBLEMA COM A CÓPIA VTEMPIN
+            //passamos com tam e não tam-1 como tamanho
+            insercao(vTemp, 0, tam, statsLQ[numLQ].statsIN);
+            registraEstatisticas(statsLQ[numLQ].custoIN, statsLQ[numLQ].statsIN);
+
+            imprimeEstatisticasLQ(statsLQ[numLQ], t, numLQ);
+
+
+            //registraEstatisticas(&custo[numLQ], &stats[numLQ]); //passa um ponteiro para a posição no array custo
+            //imprimeEstatisticas(&custo[numLQ], stats, limQB, numLQ, diffCusto); //modificaremos o seu valor
             numLQ++;
             //imprimeEstatisticas provavelmente será alterado
+            delete[] vTemp;
+            delete[] vTempIN;
         }
         //limQB = menorCusto(custo);
         //calculaNovaFaixa(limQB, minLQ, maxLQ, passoLQ, numLQ);
-        diffCusto = fabs(custo[minLQ] - custo[maxLQ]); //provavelmente devemos usar 
+        //diffCusto = fabs(custo[minLQ] - custo[maxLQ]); //provavelmente devemos usar 
+        iter++;
     }
     return limQB;
+}
+
+void calculaNovaFaixaLQ(int limQB, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats)
+{
+
+
 }
