@@ -1,5 +1,11 @@
 #include "ordenadores.hpp"
 
+/* 
+   Arquivo contendo as implementações dos algoritmos de ordenação utilizados 
+   (insertion sort e quicksort com mediana de 3 e insertion para partições pequenas)
+   e os métodos/estruturas relacionados ao registro de estatísticas (cmp, mv, calls)
+*/
+
 void resetcounter(contador_t &s)
 {
     s.cmp = 0;  
@@ -90,15 +96,13 @@ void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao)
     {
         if((j-l) < limTamParticao)
         {
-            //checar se é isso mesmo e talvez adaptar para receber limites left e right
-            insercao(A, l, j+1, s); //foi alterado chat - voltar para j+1 se piorar
+            insercao(A, l, j+1, s);
         }  
         else
         {
             quickSort(A, l, j, s, limTamParticao); 
         }  
     }    
-    //voltar a ins original
     if(i < r)
     {
         if((r-i) < limTamParticao)
@@ -115,19 +119,17 @@ void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao)
 
 void insercao(int v[], int tam, int r, contador_t &s) 
 {
-    //l = 0 (limite inferior) e r = v.size - 1 (limite superior)
     int i, j, comparado;
     inccalls(s,1);
     for(i = tam+1; i < r; i++)
     {
         comparado = v[i];
-        j = i - 1; //percorremos o subarray de 0 a i - 1
+        j = i - 1; 
         while((j >= tam) && (comparado < v[j])) 
         {
             inccmp(s,1);
             v[j+1] = v[j];
             incmove(s, 1);
-            //"abrimos espaço" ao longo do vetor
             j--;
         }
         inccmp(s,1);

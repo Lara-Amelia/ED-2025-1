@@ -22,10 +22,8 @@ void insercao(int v[], int tam, int r, contador_t &s);
 
 int median (int a, int b, int c);
 
-// quicksort partition using median of 3
 void partition3(int * A, int l, int r, int *i, int *j, contador_t &s);
 
-// quicksort with median of 3
 void quickSort(int * A, int l, int r, contador_t &s, int limTamParticao);
 
 #endif
