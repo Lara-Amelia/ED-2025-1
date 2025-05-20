@@ -110,8 +110,13 @@ int main(int argc, char** argv)
         arquivo.close();
         std::cout << "size " << qtChaves << " seed " << seedArquivo << " breaks " << ordUN.calculaQuebras(vetor, qtChaves);
         std::cout << std::endl << std::endl;
+        int qtQuebras = ordUN.calculaQuebras(vetor, qtChaves);
+        ordUN.setnroQuebras(qtQuebras);
+
         int limtamParticao = ordUN.determinaLimiarParticao(vetor, qtChaves, lCusto);
-        ordUN.determinaLimiarQuebras(vetor, qtChaves, lCusto, limtamParticao);
+        ordUN.setMinTamParticao(limtamParticao);
+        int limQuebras = ordUN.determinaLimiarQuebras(vetor, qtChaves, lCusto, limtamParticao);
+        ordUN.setLimiarQuebras(limQuebras);
     }    
     catch(const std::exception& e)
     {
