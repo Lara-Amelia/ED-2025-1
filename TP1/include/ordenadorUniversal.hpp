@@ -2,6 +2,7 @@
 #define ORDENADORUNIVERSAL_HPP
 #include "ordenadores.hpp"
 
+//struct para registrar estatísticas no limiar de partição
 typedef struct estatistica 
 {
     double custo;
@@ -9,6 +10,7 @@ typedef struct estatistica
     contador_t stats;
 } estatisticas_t;
 
+//struct para registrar estatísticas no limiar de quebras 
 typedef struct stat
 {
     double custoIN;
@@ -22,40 +24,43 @@ typedef struct stat
 class ordUniversal
 {
     private:
-    double coefA; //comps - talvez voltar para double depois
-    double coefB; //movs
-    double coefC; //calls
-    float limiarCusto;
+    double coefA;       //comps
+    double coefB;       //movs
+    double coefC;       //calls
+    float limiarCusto;  
     int nroQuebras;
     int limiarQuebras;
     int minTamParticao;
     int seed;
 
     public:
-    void setnroQuebras(int qtQuebras);
-
-    ordUniversal(double A, double B, double C, float limCusto, int seed); //os demais serão definidos depois
+    ordUniversal(double A, double B, double C, float limCusto, int seed); //construtor para a classe
     void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s);
     int calculaQuebras(int* vetor, int tam);
+
+////métodos get e set para os atributos privados da classe///////////////////////////////////////////////////////////////////////// 
+    void setnroQuebras(int qtQuebras);
+    void setLimiarQuebras(int limQB);
+    void setMinTamParticao(int minTParticao);
+
+////métodos utilizados para obter o Limiar de Partição///////////////////////////////////////////////////////////////////////////////
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
     void calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats);
-    void registraEstatisticas(double &custo, contador_t &stats);
-    void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
-    void imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ);
-    //void imprimeEstatistica(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
-    int shuffleVector(int* vetor, int size, int numShuffle);
+    int getMPS(int indice, estatisticas_t* stats, int numMPS);
     int menorCusto(estatisticas_t* stats);
     int encontraElemento(estatisticas_t* stats, int particao, int numMPS);
-    int encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ);
-    int getMPS(int indice, estatisticas_t* stats, int numMPS);
-    int getLQ(int indice, estatisticasLQ* stats, int numLQ);
-    void calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ);
-    void calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats);
-    int menorCustoLQ(estatisticasLQ* stats, int numLQ);
-    //int encontraElemento(estatisticas_t* stats, int particao, int numMPS);
-
+    void registraEstatisticas(double &custo, contador_t &stats); //esta função também é utilizada para o limiar de quebras
+    void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
+    
+////métodos utilizados para obter o Limiar de Quebras////////////////////////////////////////////////////////////////////////////////
     int determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao);
-
+    void calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats);
+    int shuffleVector(int* vetor, int size, int numShuffle);
+    void calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ);
+    int encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ);
+    int getLQ(int indice, estatisticasLQ* stats, int numLQ);
+    int menorCustoLQ(estatisticasLQ* stats, int numLQ);
+    void imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ);
 };
 #endif
 

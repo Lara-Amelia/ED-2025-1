@@ -19,17 +19,6 @@ ordUniversal::ordUniversal(double A, double B, double C, float limCusto, int see
     nroQuebras = 0;
 }
 
-int ordUniversal:: calculaQuebras(int* vetor, int tam)
-{
-    int nroQuebras = 0;
-    for(int i = 1; i < tam; i++)
-    {
-        if(vetor[i] < vetor[i-1]) //se o atual for menor que o seu antecessor
-            nroQuebras++;
-    }
-    return nroQuebras;
-}
-
 void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s)
 {
     if(nroQuebras < limiarQuebras)
@@ -47,6 +36,32 @@ void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int l
             insercao(V, 0, tam, s);
         }
     }
+}
+
+int ordUniversal::calculaQuebras(int* vetor, int tam)
+{
+    int nroQuebras = 0;
+    for(int i = 1; i < tam; i++)
+    {
+        if(vetor[i] < vetor[i-1]) //se o atual for menor que o seu antecessor
+            nroQuebras++;
+    }
+    return nroQuebras;
+}
+
+void ordUniversal::setnroQuebras(int qtQuebras)
+{
+    nroQuebras = qtQuebras;
+}
+
+void ordUniversal::setLimiarQuebras(int limQB)
+{
+    limiarQuebras = limQB;
+}
+
+void ordUniversal::setMinTamParticao(int minTParticao)
+{
+    minTamParticao = minTParticao;
 }
 
 //fará o cálculo do custo com base nos stats obtidos
@@ -96,7 +111,6 @@ int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numM
     return index;
 }
 
-//ACHO que está pronto
 int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 {
     int minMPS = 2; //menor partição possível
@@ -152,7 +166,6 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
     return limParticao;
 }
 
-//está pegando o limite errado na última iteração
 int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
 {
     return stats[indice].limParticao;
