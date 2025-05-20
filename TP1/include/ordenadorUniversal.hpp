@@ -57,9 +57,9 @@ class ordUniversal
     void calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats);
     int shuffleVector(int* vetor, int size, int numShuffle);
     void calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ);
-    int encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ);
     int getLQ(int indice, estatisticasLQ* stats, int numLQ);
     int menorCustoLQ(estatisticasLQ* stats, int numLQ);
+    int encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ);
     void imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ);
 };
 #endif

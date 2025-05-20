@@ -64,53 +64,6 @@ void ordUniversal::setMinTamParticao(int minTParticao)
     minTamParticao = minTParticao;
 }
 
-//fará o cálculo do custo com base nos stats obtidos
-void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
-{
-    custo = (double)(coefA*stats.cmp) + (coefB*stats.move) + (coefC*stats.calls);
-}
-
-void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
-{
-    std::cout << std::fixed << std::setprecision(9);
-    //std::cout << "iter " << numMPS << " " << std::endl;
-    std::cout << "mps " << t << " cost " << *(custo) << " cmp " << stats->cmp 
-              << " move " << stats->move << " calls " << stats->calls << " " << std::endl;
-    /*if(i == numMPS)
-    {
-        std::cout << "nummps 6 limParticao " << t << " mpsdiff " << diffCusto << std::endl;
-    }*/    
-}
-
-int ordUniversal::menorCusto(estatisticas_t* stats)
-{
-    double min = stats[0].custo;
-    int indiceMin = 0;
-    for(int i = 1; i < 6; i++)
-    {
-        if(stats[i].custo < min)
-        {
-            min = stats[i].custo;
-            indiceMin = i;
-        }
-    }
-    return indiceMin;
-}
-
-int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numMPS)
-{
-    int index = 0;
-    for(int i = 0; i < numMPS; i++)
-    {
-        if(stats[i].limParticao == particao)
-        {
-            index = i;
-            break;
-        }
-    }   
-    return index;
-}
-
 int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 {
     int minMPS = 2; //menor partição possível
@@ -161,15 +114,9 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
         std::cout << std::endl;
         iter++;
     }
-    //para que a saída na última iteração fique correta, temos de checar se haverá ou não uma nova iter
-    //caso contrário temos de usar como minMPS o valor anterior ao da última atualização
     return limParticao;
 }
 
-int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
-{
-    return stats[indice].limParticao;
-}
 
 //limParticao é a partição melhor/de menor custo encontrada em determinarLimiarParticao
 //talvez tenhamos de passar parâmetros dinamicamente, visando a atualizá-los
@@ -204,76 +151,51 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
     //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin
 }
 
-//antes de cada chamada para embaralhamento do vetor (presumivelmente no método determinaLimQuebras),
-//devemos chamar srand48(seed)
-//numShuffle será o número de quebras que queremos gerar no vetor previamente ordenado
-int ordUniversal::shuffleVector(int* vetor, int size, int numShuffle)
+int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
 {
-    int p1 = 0, p2 = 0, temp;
-    for (int t = 0; t < numShuffle; t++) 
+    return stats[indice].limParticao;
+}
+
+int ordUniversal::menorCusto(estatisticas_t* stats)
+{
+    double min = stats[0].custo;
+    int indiceMin = 0;
+    for(int i = 1; i < 6; i++)
     {
-        /* Gera dois índices distintos no intervalo [0..size-1] */
-        while (p1 == p2) 
+        if(stats[i].custo < min)
         {
-            p1 = (int)(drand48() * size);
-            p2 = (int)(drand48() * size);
-        }
-        /* Realiza a troca para introduzir uma quebra */
-        temp = vetor[p1];
-        vetor[p1] = vetor[p2];
-        vetor[p2] = temp;
-        p1 = p2 = 0;
-    }
-    return 0;
-}
-
-void ordUniversal::imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ)
-{
-    std::cout << std::fixed << std::setprecision(9);
-    std::cout << "qs lq " << t << " cost " << stats.custoQS << " cmp " << stats.statsQS.cmp << " move " << stats.statsQS.move 
-              << " calls " << stats.statsQS.calls << std::endl;
-    std::cout << "in lq " << t << " cost " << stats.custoIN << " cmp " << stats.statsIN.cmp << " move " << stats.statsIN.move 
-              << " calls " << stats.statsIN.calls << std::endl;
-}
-
-void ordUniversal::calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ)
-{
-    //CHECAR TIPOS PARA SAÍDA
-    for(int i = 0; i < numLQ; i++)
-    {
-        stats[i].diffCusto = fabs(stats[i].custoQS - stats[i].custoIN);
-        //std::cout << "diffCusto " << i << ": " << stats[i].diffCusto << std::endl;
-    }
-}
-
-int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
-{
-    double min = stats[0].diffCusto;
-    int indexMin = 0;
-    for(int i = 0; i < numLQ; i++)
-    {
-        //std::cout << "diffCusto na posição " << i << " " << stats[i].diffCusto << std::endl;
-        if(stats[i].diffCusto < min)
-        {
-            min = stats[i].diffCusto;
-            indexMin = i;
+            min = stats[i].custo;
+            indiceMin = i;
         }
     }
-    return indexMin;
+    return indiceMin;
 }
 
-int ordUniversal::encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ)
+int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numMPS)
 {
     int index = 0;
-    for(int i = 0; i < numLQ; i++)
+    for(int i = 0; i < numMPS; i++)
     {
-        if(stats[i].limQuebras == quebras)
+        if(stats[i].limParticao == particao)
         {
             index = i;
             break;
         }
     }   
     return index;
+}
+
+//fará o cálculo do custo com base nos stats obtidos
+void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
+{
+    custo = (double)(coefA*stats.cmp) + (coefB*stats.move) + (coefC*stats.calls);
+}
+
+void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
+{
+    std::cout << std::fixed << std::setprecision(9);
+    std::cout << "mps " << t << " cost " << *(custo) << " cmp " << stats->cmp 
+              << " move " << stats->move << " calls " << stats->calls << " " << std::endl;
 }
 
 //antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
@@ -360,11 +282,6 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
     return limQuebras;
 }
 
-int ordUniversal::getLQ(int indice, estatisticasLQ* stats, int numLQ)
-{
-    return stats[indice].limQuebras;
-}
-
 void ordUniversal::calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats)
 {
     int newMin, newMax;
@@ -394,4 +311,79 @@ void ordUniversal::calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ,
     if(passoLQ == 0) 
         passoLQ++;
     //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin   
+}
+
+//antes de cada chamada para embaralhamento do vetor (presumivelmente no método determinaLimQuebras),
+//devemos chamar srand48(seed)
+//numShuffle será o número de quebras que queremos gerar no vetor previamente ordenado
+int ordUniversal::shuffleVector(int* vetor, int size, int numShuffle)
+{
+    int p1 = 0, p2 = 0, temp;
+    for (int t = 0; t < numShuffle; t++) 
+    {
+        /* Gera dois índices distintos no intervalo [0..size-1] */
+        while (p1 == p2) 
+        {
+            p1 = (int)(drand48() * size);
+            p2 = (int)(drand48() * size);
+        }
+        /* Realiza a troca para introduzir uma quebra */
+        temp = vetor[p1];
+        vetor[p1] = vetor[p2];
+        vetor[p2] = temp;
+        p1 = p2 = 0;
+    }
+    return 0;
+}
+
+void ordUniversal::calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ)
+{
+    for(int i = 0; i < numLQ; i++)
+    {
+        stats[i].diffCusto = fabs(stats[i].custoQS - stats[i].custoIN);
+    }
+}
+
+int ordUniversal::getLQ(int indice, estatisticasLQ* stats, int numLQ)
+{
+    return stats[indice].limQuebras;
+}
+
+int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
+{
+    double min = stats[0].diffCusto;
+    int indexMin = 0;
+    for(int i = 0; i < numLQ; i++)
+    {
+        //std::cout << "diffCusto na posição " << i << " " << stats[i].diffCusto << std::endl;
+        if(stats[i].diffCusto < min)
+        {
+            min = stats[i].diffCusto;
+            indexMin = i;
+        }
+    }
+    return indexMin;
+}
+
+int ordUniversal::encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ)
+{
+    int index = 0;
+    for(int i = 0; i < numLQ; i++)
+    {
+        if(stats[i].limQuebras == quebras)
+        {
+            index = i;
+            break;
+        }
+    }   
+    return index;
+}
+
+void ordUniversal::imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ)
+{
+    std::cout << std::fixed << std::setprecision(9);
+    std::cout << "qs lq " << t << " cost " << stats.custoQS << " cmp " << stats.statsQS.cmp << " move " << stats.statsQS.move 
+              << " calls " << stats.statsQS.calls << std::endl;
+    std::cout << "in lq " << t << " cost " << stats.custoIN << " cmp " << stats.statsIN.cmp << " move " << stats.statsIN.move 
+              << " calls " << stats.statsIN.calls << std::endl;
 }
