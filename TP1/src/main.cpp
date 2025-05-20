@@ -106,9 +106,10 @@ int main(int argc, char** argv)
                 throw std::runtime_error("ERRO: fim da leitura, não há linhas suficientes no arquivo de entrada");
         }
 
+        //Imprime as infos necessárias e chama os métodos da classe rdenadorUniversal
+        arquivo.close();
         std::cout << "size " << qtChaves << " seed " << seedArquivo << " breaks " << ordUN.calculaQuebras(vetor, qtChaves);
         std::cout << std::endl << std::endl;
-        arquivo.close();
         int limtamParticao = ordUN.determinaLimiarParticao(vetor, qtChaves, lCusto);
         ordUN.determinaLimiarQuebras(vetor, qtChaves, lCusto, limtamParticao);
     }    
