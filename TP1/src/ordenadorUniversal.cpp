@@ -250,7 +250,6 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
             //estatisticasLQ* statsLQ = nullptr;
             statsLQ = nullptr;
             statsLQ = new estatisticasLQ[numLQ];
-            std::cout << "numLQ para alocação de memória: " << numLQ << std::endl;
             numLQ=0;
             estatisticas_t ordenacao;
             //int *vTemp = nullptr;
