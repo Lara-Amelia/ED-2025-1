@@ -47,7 +47,7 @@ class ordUniversal
     int determinaLimiarParticao(int* v, int tam, int limiarCusto);
     void calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats);
     int getMPS(int indice, estatisticas_t* stats, int numMPS);
-    int menorCusto(estatisticas_t* stats);
+    int menorCusto(estatisticas_t* stats, int numMPS);
     int encontraElemento(estatisticas_t* stats, int particao, int numMPS);
     void registraEstatisticas(double &custo, contador_t &stats); //esta função também é utilizada para o limiar de quebras
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);

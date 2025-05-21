@@ -77,42 +77,61 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
     int iter = 0;
     while((diffCusto > limiarCusto) && (numMPS >= 5))
     {
-        std::cout << "iter " << iter << " " << std::endl;
-        numMPS=0;
-        for(int t=minMPS; t<=maxMPS; t+=passoMPS) //para cada tamanho possível de partição
+        try
         {
-            int* vTemp = new int[tam];
-            for(int i = 0; i < tam; i++)
+            std::cout << "iter " << iter << " " << std::endl;
+            numMPS=0;
+            for(int t=minMPS; t<=maxMPS; t+=passoMPS) //para cada tamanho possível de partição
             {
-                vTemp[i] = v[i];
+                int* vTemp = new int[tam];
+                for(int i = 0; i < tam; i++)
+                {
+                    vTemp[i] = v[i];
+                }
+                estatisticas[numMPS].limParticao = t;
+                estatisticas[numMPS].custo = 0.0;
+                resetcounter(estatisticas[numMPS].stats);
+
+                ordenadorUniversal(vTemp, tam , t, -1, estatisticas[numMPS].stats);
+                registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats);
+                
+                imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto);
+                numMPS++;
+                delete[] vTemp;
             }
-            estatisticas[numMPS].limParticao = t;
-            estatisticas[numMPS].custo = 0.0;
-            resetcounter(estatisticas[numMPS].stats);
+            int limMinPartIndex = menorCusto(estatisticas, numMPS); //obteremos o valor explícito do limP, depois o seu índice
+            limParticao = estatisticas[limMinPartIndex].limParticao;
 
-            ordenadorUniversal(vTemp, tam , t, -1, estatisticas[numMPS].stats);
-            registraEstatisticas(estatisticas[numMPS].custo, estatisticas[numMPS].stats);
-            
-            imprimeEstatisticas(&estatisticas[numMPS].custo, &estatisticas[numMPS].stats, estatisticas[numMPS].limParticao, numMPS, diffCusto);
-            numMPS++;
-            delete[] vTemp;
+            //std::cout << "oldminMPS: " << oldminMPS << std::endl;
+            calculaNovaFaixa(limMinPartIndex, minMPS, maxMPS, passoMPS, numMPS, estatisticas);
+
+            int indexminMPS = encontraElemento(estatisticas, minMPS, numMPS);
+            //std::cout << "indexminMPS: " << indexminMPS << std::endl;
+            int indexmaxMPS = encontraElemento(estatisticas, maxMPS, numMPS);
+            //std::cout << "indexmaxMPS: " << indexmaxMPS << std::endl;
+            diffCusto = (fabs(estatisticas[indexminMPS].custo - estatisticas[indexmaxMPS].custo));
+            //std::cout << "diffCusto final: " << diffCusto << std::endl;
+            std::cout << std::fixed << std::setprecision(6);
+            std::cout << "nummps " << numMPS << " limParticao " << limParticao << " mpsdiff " << diffCusto << std::endl;
+            std::cout << std::endl;
+            iter++;
+        }    
+        catch (const std::bad_alloc& e) 
+        {
+            std::cerr << "Erro de alocação de memória em vTemp: " << e.what() << '\n';
         }
-        int limMinPartIndex = menorCusto(estatisticas); //obteremos o valor explícito do limP, depois o seu índice
-        limParticao = estatisticas[limMinPartIndex].limParticao;
-
-        //std::cout << "oldminMPS: " << oldminMPS << std::endl;
-        calculaNovaFaixa(limMinPartIndex, minMPS, maxMPS, passoMPS, numMPS, estatisticas);
-
-        int indexminMPS = encontraElemento(estatisticas, minMPS, numMPS);
-        //std::cout << "indexminMPS: " << indexminMPS << std::endl;
-        int indexmaxMPS = encontraElemento(estatisticas, maxMPS, numMPS);
-        //std::cout << "indexmaxMPS: " << indexmaxMPS << std::endl;
-        diffCusto = /*static_cast<float>*/(fabs(estatisticas[indexminMPS].custo - estatisticas[indexmaxMPS].custo));
-        //std::cout << "diffCusto final: " << diffCusto << std::endl;
-        std::cout << std::fixed << std::setprecision(6);
-        std::cout << "nummps " << numMPS << " limParticao " << limParticao << " mpsdiff " << diffCusto << std::endl;
-        std::cout << std::endl;
-        iter++;
+        catch(const std::invalid_argument& e) 
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        catch (const std::out_of_range& e) 
+        {
+            std::cerr << "Erro de índice fora do intervalo: " << e.what() << std::endl;
+        }
+        catch (const std::exception& e) 
+        {
+            std::cerr << "Erro inesperado: " << e.what() << std::endl;
+        }
     }
     return limParticao;
 }
@@ -141,23 +160,33 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
     //mudar getMPS para obter o valor limParticao (t) armazenado nas posições indicadas do vetor
     //std::cout << "newMin: " << newMin << std::endl;
     //std::cout << "newMax: " << newMax << std::endl;
+    
     minMPS = getMPS(newMin, stats, numMPS); //calcula o novo tamanho de partição
     maxMPS = getMPS(newMax, stats, numMPS);
-    //std::cout << "minMPS nova faixa: " << minMPS << std::endl;
-    //std::cout << "maxMPS nova faixa: " << maxMPS << std::endl;
+        //std::cout << "minMPS nova faixa: " << minMPS << std::endl;
+        //std::cout << "maxMPS nova faixa: " << maxMPS << std::endl;
     passoMPS = (int)(maxMPS - minMPS)/5;
     if(passoMPS == 0) 
         passoMPS++;
+
     //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin
 }
 
 int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
 {
-    return stats[indice].limParticao;
+    if((indice < 0) || (indice >= numMPS))
+        throw std::out_of_range("Índice fora do intervalo válido em getMPS: " + std::to_string(indice));
+    else
+        return stats[indice].limParticao;
 }
 
-int ordUniversal::menorCusto(estatisticas_t* stats)
+int ordUniversal::menorCusto(estatisticas_t* stats, int numMPS)
 {
+    //VERIFICAR NO VPL SE NÃO GEROU PROBLEMAS
+    if (numMPS <= 0) 
+    {
+        throw std::invalid_argument("menorCusto: vetor de estatísticas vazio ou tamanho inválido.");
+    }
     double min = stats[0].custo;
     int indiceMin = 0;
     for(int i = 1; i < 6; i++)
@@ -173,16 +202,14 @@ int ordUniversal::menorCusto(estatisticas_t* stats)
 
 int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numMPS)
 {
-    int index = 0;
     for(int i = 0; i < numMPS; i++)
     {
         if(stats[i].limParticao == particao)
         {
-            index = i;
-            break;
+             return i;
         }
     }   
-    return index;
+    throw std::out_of_range("Partição " + std::to_string(particao) + " não encontrada em encontraElemento.");
 }
 
 //fará o cálculo do custo com base nos stats obtidos
@@ -201,83 +228,119 @@ void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, 
 //antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
 int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao)
 {
-    int minLQ = 1;                   //menor quantidade de quebras 
-    int maxLQ = tam/2;  //como já sabemos que in é ineficiente para nros grandes de quebras, usamos metade do intervalo
+    int minLQ = 1;                     //menor quantidade de quebras 
+    int maxLQ = tam/2;                //como já sabemos que in é ineficiente para nros grandes de quebras, usamos metade do intervalo
     int passoLQ = (maxLQ - minLQ)/5; //divisão em 5 intervalos equidistantes
     float diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     //pode ter vários tamanhos, fazer alguma checagem/alocação dinâmica
-    estatisticasLQ statsLQ[10]; 
+    //estatisticasLQ statsLQ[10];
     int limQuebras = 1;
     int numLQ = 6; 
     int iter = 0;
+    estatisticasLQ* statsLQ = nullptr;
+    int *vTemp = nullptr;
     //minLQ será o valor de limiar que tem a menor diferença absoluta entre IN e QS
     while((diffCusto > limiarCusto) && (numLQ >= 5))
     {
-        std::cout << "iter " << iter << " " << std::endl;
-        numLQ=0;
-        estatisticas_t ordenacao;
-        int* vTemp = new int[tam];
-        for(int i = 0; i < tam; i++)
+        try
         {
-            vTemp[i] = v[i];
-        }
-        //faz a ordenação do vetor original temporário
-        quickSort(vTemp, 0, tam-1, ordenacao.stats, limTamParticao);
-        //t será o valor de cada limiar de quebra testado por iteração
-        for(int t=minLQ; t<=maxLQ; t+=passoLQ) //para cada tamanho possível de partição
-        {
-            //reset estatísticas a cada iteração
-            statsLQ[numLQ].limQuebras = t;
-            statsLQ[numLQ].custoIN = 0.0;
-            statsLQ[numLQ].custoQS = 0.0;
-            resetcounter(statsLQ[numLQ].statsIN);
-            resetcounter(statsLQ[numLQ].statsQS);
-
-            //chama shuffle, chama INS e QS e registra seus custos separadamente
-            srand48(seed);
-            shuffleVector(vTemp, tam, t); //vTemp é retornado com o número desejado de quebras
-            int* vTempIN = new int[tam];
+            std::cout << "iter " << iter << " " << std::endl;
+            numLQ = (((maxLQ-minLQ))/passoLQ) + 1;
+            //já que o valor de numLQ não é fixo, alocamos dinamicamente
+            //estatisticasLQ* statsLQ = nullptr;
+            statsLQ = nullptr;
+            statsLQ = new estatisticasLQ[numLQ];
+            std::cout << "numLQ para alocação de memória: " << numLQ << std::endl;
+            numLQ=0;
+            estatisticas_t ordenacao;
+            //int *vTemp = nullptr;
+            vTemp = nullptr;
+            vTemp = new int[tam];
             for(int i = 0; i < tam; i++)
             {
-                vTempIN[i] = vTemp[i];
-            }            
-            quickSort(vTempIN, 0, tam-1, statsLQ[numLQ].statsQS, limTamParticao);
-            //calcula o custo individual do QS
-            registraEstatisticas(statsLQ[numLQ].custoQS, statsLQ[numLQ].statsQS);
+                vTemp[i] = v[i];
+            }
+            //faz a ordenação do vetor original temporário
+            quickSort(vTemp, 0, tam-1, ordenacao.stats, limTamParticao);
+            //t será o valor de cada limiar de quebra testado por iteração
+            for(int t=minLQ; t<=maxLQ; t+=passoLQ) //para cada tamanho possível de partição
+            {
+                //reset estatísticas a cada iteração
+                statsLQ[numLQ].limQuebras = t;
+                statsLQ[numLQ].custoIN = 0.0;
+                statsLQ[numLQ].custoQS = 0.0;
+                resetcounter(statsLQ[numLQ].statsIN);
+                resetcounter(statsLQ[numLQ].statsQS);
 
-            //passamos com tam e não tam-1 como tamanho
-            insercao(vTemp, 0, tam, statsLQ[numLQ].statsIN);
-            registraEstatisticas(statsLQ[numLQ].custoIN, statsLQ[numLQ].statsIN);
+                //chama shuffle, chama INS e QS e registra seus custos separadamente
+                srand48(seed);
+                shuffleVector(vTemp, tam, t); //vTemp é retornado com o número desejado de quebras
+                int* vTempIN = new int[tam];
+                for(int i = 0; i < tam; i++)
+                {
+                    vTempIN[i] = vTemp[i];
+                }            
+                quickSort(vTempIN, 0, tam-1, statsLQ[numLQ].statsQS, limTamParticao);
+                //calcula o custo individual do QS
+                registraEstatisticas(statsLQ[numLQ].custoQS, statsLQ[numLQ].statsQS);
 
-            imprimeEstatisticasLQ(statsLQ[numLQ], t, numLQ);
+                //passamos com tam e não tam-1 como tamanho
+                insercao(vTemp, 0, tam, statsLQ[numLQ].statsIN);
+                registraEstatisticas(statsLQ[numLQ].custoIN, statsLQ[numLQ].statsIN);
 
-            numLQ++;
-            delete[] vTempIN;
+                imprimeEstatisticasLQ(statsLQ[numLQ], t, numLQ);
+
+                numLQ++;
+                delete[] vTempIN;
+            }
+            calculaDiffCustosLQ(statsLQ, numLQ);
+            int limMinQBIndex = menorCustoLQ(statsLQ, numLQ); //obteremos o valor explícito do limP, depois o seu índice
+            limiarQuebras = statsLQ[limMinQBIndex].limQuebras;
+            //std::cout << "limMinQBIndex: " << limMinQBIndex << std::endl;
+            //std::cout << "limiarQuebras: " << limiarQuebras << std::endl;
+
+            calculaNovaFaixaLQ(limMinQBIndex, minLQ, maxLQ, passoLQ, numLQ, statsLQ);
+
+            int indexminLQ = encontraElementoLQ(statsLQ, minLQ, numLQ);
+            //std::cout << "indexminLQ: " << indexminLQ << std::endl;
+            int indexmaxLQ = encontraElementoLQ(statsLQ, maxLQ, numLQ);
+            //std::cout << "indexmaxMPS: " << indexmaxLQ << std::endl;
+            diffCusto = static_cast<float>(fabs(statsLQ[indexminLQ].custoIN - statsLQ[indexmaxLQ].custoIN));
+            //std::cout << "diffCusto final: " << diffCusto << std::endl;
+            std::cout << std::fixed << std::setprecision(6);
+            std::cout << "numlq " << numLQ << " limQuebras " << limiarQuebras << " lqdiff " << diffCusto << std::endl;
+            if ((diffCusto > limiarCusto) && (numLQ >= 5)) 
+            {
+                std::cout << std::endl;
+            }
+            //std::cout << std::endl;
+            iter++;
+            //delete[] vTemp;
+            //delete[] statsLQ;
         }
-        calculaDiffCustosLQ(statsLQ, numLQ);
-        int limMinQBIndex = menorCustoLQ(statsLQ, numLQ); //obteremos o valor explícito do limP, depois o seu índice
-        limiarQuebras = statsLQ[limMinQBIndex].limQuebras;
-        //std::cout << "limMinQBIndex: " << limMinQBIndex << std::endl;
-        //std::cout << "limiarQuebras: " << limiarQuebras << std::endl;
-
-        calculaNovaFaixaLQ(limMinQBIndex, minLQ, maxLQ, passoLQ, numLQ, statsLQ);
-
-        int indexminLQ = encontraElementoLQ(statsLQ, minLQ, numLQ);
-        //std::cout << "indexminLQ: " << indexminLQ << std::endl;
-        int indexmaxLQ = encontraElementoLQ(statsLQ, maxLQ, numLQ);
-        //std::cout << "indexmaxMPS: " << indexmaxLQ << std::endl;
-        diffCusto = static_cast<float>(fabs(statsLQ[indexminLQ].custoIN - statsLQ[indexmaxLQ].custoIN));
-        //std::cout << "diffCusto final: " << diffCusto << std::endl;
-        std::cout << std::fixed << std::setprecision(6);
-        std::cout << "numlq " << numLQ << " limQuebras " << limiarQuebras << " lqdiff " << diffCusto << std::endl;
-        if ((diffCusto > limiarCusto) && (numLQ >= 5)) 
+        catch(const std::invalid_argument& e)
         {
-             std::cout << std::endl;
+            std::cerr << "Erro de argumento inválido: " << e.what() << std::endl;
+            
+            return -1;
         }
-
-        //std::cout << std::endl;
-        iter++;
+        catch(const std::out_of_range& e)
+        {
+            std::cerr << "Erro de acesso a posições inválidas: " << e.what() << std::endl;
+            return -2;
+        }
+        catch(const std::bad_alloc& e)
+        {
+            std::cerr << "Erro: falha na alocação de memória: " << e.what() << std::endl;
+            return -3;
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Erro inesperado: " << e.what() << std::endl;
+            return -4;
+        }    
         delete[] vTemp;
+        delete[] statsLQ;
     }
     return limQuebras;
 }
@@ -346,11 +409,19 @@ void ordUniversal::calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ)
 
 int ordUniversal::getLQ(int indice, estatisticasLQ* stats, int numLQ)
 {
+    if (indice < 0 || indice >= numLQ) 
+    {
+        throw std::out_of_range("getLQ: índice fora do intervalo");
+    }
     return stats[indice].limQuebras;
 }
 
 int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
 {
+    if (numLQ <= 0) 
+    {
+        throw std::invalid_argument("menorCustoLQ: vetor de estatísticas vazio ou tamanho inválido.");
+    }
     double min = stats[0].diffCusto;
     int indexMin = 0;
     for(int i = 0; i < numLQ; i++)
@@ -367,16 +438,18 @@ int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
 
 int ordUniversal::encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ)
 {
-    int index = 0;
+    if (numLQ <= 0) 
+    {
+        throw std::out_of_range("encontraElementoLQ: numLQ inválido");
+    }
     for(int i = 0; i < numLQ; i++)
     {
         if(stats[i].limQuebras == quebras)
         {
-            index = i;
-            break;
+            return i;
         }
     }   
-    return index;
+    throw std::out_of_range("encontraElementoLQ: elemento não encontrado");
 }
 
 void ordUniversal::imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ)
