@@ -341,7 +341,7 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
         delete[] vTemp;
         delete[] statsLQ;
     }
-    return limQuebras;
+    return limiarQuebras;
 }
 
 void ordUniversal::calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats)
@@ -384,7 +384,7 @@ int ordUniversal::shuffleVector(int* vetor, int size, int numShuffle)
     for (int t = 0; t < numShuffle; t++) 
     {
         /* Gera dois índices distintos no intervalo [0..size-1] */
-        while (p1 == p2) 
+        while(p1 == p2) 
         {
             p1 = (int)(drand48() * size);
             p2 = (int)(drand48() * size);

@@ -232,7 +232,7 @@ int main(int argc, char** argv)
         }
         std::cout << std::endl;*/
 
-        ordUniversal ordUN(0, 0, 0, 0, 0);
+        ordUniversal ordUN(1, 1, 1, 0, 0);
         //quickSort(vetor, 0, qtChaves - 1, s, 50);
         //ordUN.shuffleVector(vetor, qtChaves, qtQuebras);
         std::cout << "size " << qtChaves << " breaks " << ordUN.calculaQuebras(vetor, qtChaves) << std::endl;
@@ -240,10 +240,12 @@ int main(int argc, char** argv)
         auto start = std::chrono::high_resolution_clock::now();
 
         contador_t s;
-        
         resetcounter(s);
-        quickSort(vetor, 0, qtChaves - 1, s, 50);
+        //resetcounter(s);
+        //quickSort(vetor, 0, qtChaves - 1, s, 50);
         //quickSort3Ins(vetor, 0, qtChaves-1, s);
+        //std::cout << "cmp: " << s.cmp << " moves: " << s.move << " calls: " << s.calls << std::endl;
+        ordUN.ordenadorUniversal(vetor, qtChaves, 50, -1, s);
         std::cout << "cmp: " << s.cmp << " moves: " << s.move << " calls: " << s.calls << std::endl;
 
         auto end = std::chrono::high_resolution_clock::now();
