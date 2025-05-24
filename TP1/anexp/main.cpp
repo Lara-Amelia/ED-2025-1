@@ -77,10 +77,18 @@ int main(int argc, char** argv)
         else
             throw std::runtime_error("ERRO: não foi possível ler o valor do tamanho do vetor");
 
+        /*arquivo >> lCusto >> A >> B >> C >> qtChaves;*/
+
         ordUniversal ordUN(A, B, C, lCusto, seedArquivo);
+        /*std::cout << "seed: " << seedArquivo << std::endl;
+        std::cout << "lCusto: " << lCusto << "\n";
+        std::cout << "A: " << A << "\n";
+        std::cout << "B: " << B << "\n";
+        std::cout << "C: " << C << "\n";
+        std::cout << "qtChaves: " << qtChaves << "\n";*/
 
         //Faz a leitura das qtChaves linhas do arquivo contendo os elementos do vetor
-        int vetor[qtChaves];
+        inventado vetor[qtChaves];
         for(int i = 0; i < qtChaves; i++)
         {
             if (std::getline(arquivo, linha))
@@ -89,14 +97,18 @@ int main(int argc, char** argv)
                 int value;
                 if(iss >> value)
                 {
-                    vetor[i] = value;
+                    //fazer checagens extras de tamanho
+                    vetor[i].chave = value;
+                    //vetor[i].nada = 0;
+                    //vetor[i].nadashort = 0;
+                    //std::cout << "valor na posição i do vetor: " << vetor[i] << std::endl;
                 }
             }
             else
                 throw std::runtime_error("ERRO: fim da leitura, não há linhas suficientes no arquivo de entrada");
         }
 
-        //Imprime as infos necessárias e chama os métodos da classe ordenadorUniversal
+        //Imprime as infos necessárias e chama os métodos da classe rdenadorUniversal
         arquivo.close();
         std::cout << "size " << qtChaves << " seed " << seedArquivo << " breaks " << ordUN.calculaQuebras(vetor, qtChaves);
         std::cout << std::endl << std::endl;
