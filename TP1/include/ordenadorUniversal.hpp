@@ -21,6 +21,7 @@ typedef struct stat
     contador_t statsQS;
 } estatisticasLQ;
 
+//template <typename T>
 class ordUniversal
 {
     private:
@@ -35,8 +36,8 @@ class ordUniversal
 
     public:
     ordUniversal(double A, double B, double C, float limCusto, int seed); //construtor para a classe
-    void ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s);
-    int calculaQuebras(int* vetor, int tam);
+    void ordenadorUniversal(inventado* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s);
+    int calculaQuebras(inventado* vetor, int tam);
 
 ////métodos get e set para os atributos privados da classe///////////////////////////////////////////////////////////////////////// 
     void setnroQuebras(int qtQuebras);
@@ -44,7 +45,7 @@ class ordUniversal
     void setMinTamParticao(int minTParticao);
 
 ////métodos utilizados para obter o Limiar de Partição///////////////////////////////////////////////////////////////////////////////
-    int determinaLimiarParticao(int* v, int tam, int limiarCusto);
+    int determinaLimiarParticao(inventado* v, int tam, int limiarCusto);
     void calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats);
     int getMPS(int indice, estatisticas_t* stats, int numMPS);
     int menorCusto(estatisticas_t* stats, int numMPS);
@@ -53,9 +54,9 @@ class ordUniversal
     void imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto);
     
 ////métodos utilizados para obter o Limiar de Quebras////////////////////////////////////////////////////////////////////////////////
-    int determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao);
+    int determinaLimiarQuebras(inventado* v, int tam, int limiarCusto, int limTamParticao);
     void calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats);
-    int shuffleVector(int* vetor, int size, int numShuffle);
+    int shuffleVector(inventado* vetor, int size, int numShuffle);
     void calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ);
     int getLQ(int indice, estatisticasLQ* stats, int numLQ);
     int menorCustoLQ(estatisticasLQ* stats, int numLQ);

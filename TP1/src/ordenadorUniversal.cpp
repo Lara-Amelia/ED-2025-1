@@ -7,7 +7,6 @@
 
 //FALTA ADICIONAR TRATAMENTO DE EXCEÇÕES, VERIFICAÇÕES DE ESPAÇO/TAMANHO 
 //ALOCAÇÃO DINÂMICA NO VETOR DE ESTATISTICAS PARA O LIMIAR DE QUEBRAS
-
 ordUniversal::ordUniversal(double A, double B, double C, float limCusto, int seedArquivo)
 {
     coefA = A; coefB = B; coefC = C;
@@ -19,7 +18,8 @@ ordUniversal::ordUniversal(double A, double B, double C, float limCusto, int see
     nroQuebras = 0;
 }
 
-void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s)
+//template <typename T>
+void ordUniversal::ordenadorUniversal(inventado* V, int tam, int MinTamParticao, int limiarQuebras, contador_t &s)
 {
     if(nroQuebras < limiarQuebras)
     {
@@ -38,33 +38,38 @@ void ordUniversal::ordenadorUniversal(int* V, int tam, int MinTamParticao, int l
     }
 }
 
-int ordUniversal::calculaQuebras(int* vetor, int tam)
+//template <typename T>
+int ordUniversal::calculaQuebras(inventado* vetor, int tam)
 {
     int nroQuebras = 0;
     for(int i = 1; i < tam; i++)
     {
-        if(vetor[i] < vetor[i-1]) //se o atual for menor que o seu antecessor
+        if(vetor[i].chave < vetor[i-1].chave) //se o atual for menor que o seu antecessor
             nroQuebras++;
     }
     return nroQuebras;
 }
 
+//template <typename T>
 void ordUniversal::setnroQuebras(int qtQuebras)
 {
     nroQuebras = qtQuebras;
 }
 
+//template <typename T>
 void ordUniversal::setLimiarQuebras(int limQB)
 {
     limiarQuebras = limQB;
 }
 
+//template <typename T>
 void ordUniversal::setMinTamParticao(int minTParticao)
 {
     minTamParticao = minTParticao;
 }
 
-int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
+//template <typename T>
+int ordUniversal::determinaLimiarParticao(inventado* v, int tam, int limiarCusto)
 {
     int minMPS = 2; //menor partição possível
     int maxMPS = tam; //maior partição possível
@@ -83,7 +88,7 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
             numMPS=0;
             for(int t=minMPS; t<=maxMPS; t+=passoMPS) //para cada tamanho possível de partição
             {
-                int* vTemp = new int[tam];
+                inventado* vTemp = new inventado[tam];
                 for(int i = 0; i < tam; i++)
                 {
                     vTemp[i] = v[i];
@@ -139,6 +144,7 @@ int ordUniversal::determinaLimiarParticao(int* v, int tam, int limiarCusto)
 
 //limParticao é a partição melhor/de menor custo encontrada em determinarLimiarParticao
 //talvez tenhamos de passar parâmetros dinamicamente, visando a atualizá-los
+//template <typename T>
 void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, int &passoMPS, int numMPS, estatisticas_t* stats)
 {
     int newMin, newMax;
@@ -172,6 +178,7 @@ void ordUniversal::calculaNovaFaixa(int limParticao , int &minMPS, int &maxMPS, 
     //na saída a cada iteração, mpsdiff é a diferença entre os custos de newMax e newMin
 }
 
+//template <typename T>
 int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
 {
     if((indice < 0) || (indice >= numMPS))
@@ -180,6 +187,7 @@ int ordUniversal::getMPS(int indice, estatisticas_t* stats, int numMPS)
         return stats[indice].limParticao;
 }
 
+//template <typename T>
 int ordUniversal::menorCusto(estatisticas_t* stats, int numMPS)
 {
     //VERIFICAR NO VPL SE NÃO GEROU PROBLEMAS
@@ -200,6 +208,7 @@ int ordUniversal::menorCusto(estatisticas_t* stats, int numMPS)
     return indiceMin;
 }
 
+//template <typename T>
 int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numMPS)
 {
     for(int i = 0; i < numMPS; i++)
@@ -213,11 +222,13 @@ int ordUniversal::encontraElemento(estatisticas_t* stats, int particao, int numM
 }
 
 //fará o cálculo do custo com base nos stats obtidos
+//template <typename T>
 void ordUniversal::registraEstatisticas(double &custo, contador_t &stats)
 {
     custo = (double)(coefA*stats.cmp) + (coefB*stats.move) + (coefC*stats.calls);
 }
 
+//template <typename T>
 void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, int numMPS, double diffCusto)
 {
     std::cout << std::fixed << std::setprecision(9);
@@ -226,7 +237,8 @@ void ordUniversal::imprimeEstatisticas(double* custo, contador_t* stats, int t, 
 }
 
 //antes de determinar o limiar de quebras, devemos obter o limiar de partição (será usado na chamada do ordenador)
-int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int limTamParticao)
+//template <typename T>
+int ordUniversal::determinaLimiarQuebras(inventado* v, int tam, int limiarCusto, int limTamParticao)
 {
     int minLQ = 1;                     //menor quantidade de quebras 
     int maxLQ = tam/2;                //como já sabemos que in é ineficiente para nros grandes de quebras, usamos metade do intervalo
@@ -234,11 +246,11 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
     float diffCusto = limiarCusto + 1; //iniciamos com um custo maior que o limiar - T na 1° iter
     //pode ter vários tamanhos, fazer alguma checagem/alocação dinâmica
     //estatisticasLQ statsLQ[10];
-    int limQuebras = 1;
+    //int limQuebras = 1;
     int numLQ = 6; 
     int iter = 0;
     estatisticasLQ* statsLQ = nullptr;
-    int *vTemp = nullptr;
+    inventado *vTemp = nullptr;
     //minLQ será o valor de limiar que tem a menor diferença absoluta entre IN e QS
     while((diffCusto > limiarCusto) && (numLQ >= 5))
     {
@@ -254,7 +266,7 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
             estatisticas_t ordenacao;
             //int *vTemp = nullptr;
             vTemp = nullptr;
-            vTemp = new int[tam];
+            vTemp = new inventado[tam];
             for(int i = 0; i < tam; i++)
             {
                 vTemp[i] = v[i];
@@ -274,7 +286,7 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
                 //chama shuffle, chama INS e QS e registra seus custos separadamente
                 srand48(seed);
                 shuffleVector(vTemp, tam, t); //vTemp é retornado com o número desejado de quebras
-                int* vTempIN = new int[tam];
+                inventado* vTempIN = new inventado[tam];
                 for(int i = 0; i < tam; i++)
                 {
                     vTempIN[i] = vTemp[i];
@@ -344,6 +356,7 @@ int ordUniversal::determinaLimiarQuebras(int* v, int tam, int limiarCusto, int l
     return limiarQuebras;
 }
 
+//template <typename T>
 void ordUniversal::calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ, int &passoLQ, int numLQ, estatisticasLQ* stats)
 {
     int newMin, newMax;
@@ -378,9 +391,10 @@ void ordUniversal::calculaNovaFaixaLQ(int limMinQBIndex, int &minLQ, int &maxLQ,
 //antes de cada chamada para embaralhamento do vetor (presumivelmente no método determinaLimQuebras),
 //devemos chamar srand48(seed)
 //numShuffle será o número de quebras que queremos gerar no vetor previamente ordenado
-int ordUniversal::shuffleVector(int* vetor, int size, int numShuffle)
+//template <typename T>
+int ordUniversal::shuffleVector(inventado* vetor, int size, int numShuffle)
 {
-    int p1 = 0, p2 = 0, temp;
+    int p1 = 0, p2 = 0; inventado temp;
     for (int t = 0; t < numShuffle; t++) 
     {
         /* Gera dois índices distintos no intervalo [0..size-1] */
@@ -398,6 +412,7 @@ int ordUniversal::shuffleVector(int* vetor, int size, int numShuffle)
     return 0;
 }
 
+//template <typename T>
 void ordUniversal::calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ)
 {
     for(int i = 0; i < numLQ; i++)
@@ -406,6 +421,7 @@ void ordUniversal::calculaDiffCustosLQ(estatisticasLQ* stats, int numLQ)
     }
 }
 
+//template <typename T>
 int ordUniversal::getLQ(int indice, estatisticasLQ* stats, int numLQ)
 {
     if (indice < 0 || indice >= numLQ) 
@@ -415,6 +431,7 @@ int ordUniversal::getLQ(int indice, estatisticasLQ* stats, int numLQ)
     return stats[indice].limQuebras;
 }
 
+//template <typename T>
 int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
 {
     if (numLQ <= 0) 
@@ -435,6 +452,7 @@ int ordUniversal::menorCustoLQ(estatisticasLQ* stats, int numLQ)
     return indexMin;
 }
 
+//template <typename T>
 int ordUniversal::encontraElementoLQ(estatisticasLQ* stats, int quebras, int numLQ)
 {
     if (numLQ <= 0) 
@@ -451,6 +469,7 @@ int ordUniversal::encontraElementoLQ(estatisticasLQ* stats, int quebras, int num
     throw std::out_of_range("encontraElementoLQ: elemento não encontrado");
 }
 
+//template <typename T>
 void ordUniversal::imprimeEstatisticasLQ(estatisticasLQ stats, int t, int numLQ)
 {
     std::cout << std::fixed << std::setprecision(9);

@@ -28,25 +28,25 @@ void inccalls(contador_t &s, int num)
     s.calls += num;
 }
 
-void swap(int *xp, int *yp, contador_t &s)
+void swap(inventado *xp, inventado *yp, contador_t &s)
 {
-    int temp = *xp;
+    inventado temp = *xp;
     *xp = *yp;
     *yp = temp;
     incmove(s,3);
 }
 
-int median (int a, int b, int c) 
+int median (inventado a, inventado b, inventado c) 
 {
-    if ((a <= b) && (b <= c)) return b;  // a b c
-    if ((a <= c) && (c <= b)) return c;  // a c b
-    if ((b <= a) && (a <= c)) return a;  // b a c
-    if ((b <= c) && (c <= a)) return c;  // b c a
-    if ((c <= a) && (a <= b)) return a;  // c a b
-    return b;                            // c b a
+    if ((a.chave <= b.chave) && (b.chave <= c.chave)) return b.chave;  // a b c
+    if ((a.chave <= c.chave) && (c.chave <= b.chave)) return c.chave;  // a c b
+    if ((b.chave <= a.chave) && (a.chave <= c.chave)) return a.chave;  // b a c
+    if ((b.chave <= c.chave) && (c.chave <= a.chave)) return c.chave;  // b c a
+    if ((c.chave <= a.chave) && (a.chave <= b.chave)) return a.chave;  // c a b
+    return b.chave;                            // c b a
 }
 
-void partition3(int *A, int l, int r, int *i, int *j, contador_t &s) 
+void partition3(inventado *A, int l, int r, int *i, int *j, contador_t &s) 
 {
     inccalls(s, 1);    
     *i = l;
@@ -56,21 +56,21 @@ void partition3(int *A, int l, int r, int *i, int *j, contador_t &s)
     int pivo;
     for(int k = l; k <= r; k++)
     {
-        if (A[k] == valorPivo)
+        if (A[k].chave == valorPivo)
         {
-            pivo = A[k];
+            pivo = A[k].chave;
         }
     }
     do
     {
-        while(A[*i] < pivo)
+        while(A[*i].chave < pivo)
         {
             inccmp(s,1);
             (*i)++;
         }
         inccmp(s,1);
         
-        while(A[*j] > pivo)
+        while(A[*j].chave > pivo)
         {
             inccmp(s,1);    
             (*j)--;
@@ -86,7 +86,7 @@ void partition3(int *A, int l, int r, int *i, int *j, contador_t &s)
     } while ((*j) >= (*i));   
 }
 
-void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao) 
+void quickSort(inventado *A, int l, int r, contador_t &s, int limTamParticao) 
 {
     //l = limite inferior = 0; r = limite superior = tam-1
     int i, j;
@@ -117,15 +117,15 @@ void quickSort(int *A, int l, int r, contador_t &s, int limTamParticao)
     return;  
 }
 
-void insercao(int v[], int tam, int r, contador_t &s) 
+void insercao(inventado v[], int tam, int r, contador_t &s) 
 {
     int i, j, comparado;
     inccalls(s,1);
     for(i = tam+1; i < r; i++)
     {
-        comparado = v[i];
+        comparado = v[i].chave;
         j = i - 1; 
-        while((j >= tam) && (comparado < v[j])) 
+        while((j >= tam) && (comparado < v[j].chave)) 
         {
             inccmp(s,1);
             v[j+1] = v[j];
@@ -133,7 +133,7 @@ void insercao(int v[], int tam, int r, contador_t &s)
             j--;
         }
         inccmp(s,1);
-        v[j+1] = comparado;
+        v[j+1].chave = comparado;
         incmove(s,2);
     }
   return;

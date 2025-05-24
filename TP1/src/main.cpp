@@ -88,7 +88,7 @@ int main(int argc, char** argv)
         std::cout << "qtChaves: " << qtChaves << "\n";*/
 
         //Faz a leitura das qtChaves linhas do arquivo contendo os elementos do vetor
-        int vetor[qtChaves];
+        inventado vetor[qtChaves];
         for(int i = 0; i < qtChaves; i++)
         {
             if (std::getline(arquivo, linha))
@@ -98,7 +98,9 @@ int main(int argc, char** argv)
                 if(iss >> value)
                 {
                     //fazer checagens extras de tamanho
-                    vetor[i] = value;
+                    vetor[i].chave = value;
+                    //vetor[i].nada = 0;
+                    //vetor[i].nadashort = 0;
                     //std::cout << "valor na posição i do vetor: " << vetor[i] << std::endl;
                 }
             }
