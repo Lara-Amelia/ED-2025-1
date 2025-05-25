@@ -5,6 +5,7 @@
 #include <sstream>
 #include <exception>
 #include <fstream>
+#include <chrono>
 
 int main(int argc, char** argv)
 {
@@ -107,6 +108,46 @@ int main(int argc, char** argv)
         ordUN.setMinTamParticao(limtamParticao);
         int limQuebras = ordUN.determinaLimiarQuebras(vetor, qtChaves, lCusto, limtamParticao);
         ordUN.setLimiarQuebras(limQuebras);
+        std::cout << "limtamParticao = " << limtamParticao << " limQuebras = " << limQuebras << std::endl;
+        contador_t s;
+        /*resetcounter(s);
+        quickSort(vetor, 0, qtChaves - 1, s, 0);
+        std::cout << " QS cmp: " << s.cmp << " move: " << s.move << " calls: " << s.calls << std::endl;*/
+
+        int copiaord[qtChaves];
+        for(int i = 0; i < qtChaves; i++)
+        {
+            copiaord[i] = vetor[i];
+        }
+
+        resetcounter(s);
+        std::cout << "nro quebras QS: " << ordUN.calculaQuebras(vetor, qtChaves) << std::endl;
+        
+        auto start1 = std::chrono::high_resolution_clock::now();
+
+        resetcounter(s);
+        quickSort(vetor, 0, qtChaves - 1, s, 0);
+        std::cout << "QS cmp: " << s.cmp << " move: " << s.move << " calls: " << s.calls << std::endl;
+        std::cout << "QS custo = " << A*s.cmp + B*s.move + C*s.calls << std::endl;
+        
+        auto end1 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration1 = end1 - start1;
+        std::cout << "Execution time QS: " << duration1.count() << " seconds" << std::endl;
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end1 - start1);
+        std::cout << "Execution time QS: " << duration_ms.count() << " ms" << std::endl;
+
+        auto start2 = std::chrono::high_resolution_clock::now();
+
+        resetcounter(s);
+        ordUN.ordenadorUniversal(copiaord, qtChaves, limtamParticao, limQuebras, s);
+        std::cout << "ordUN cmp: " << s.cmp << " move: " << s.move << " calls: " << s.calls << std::endl;
+        std::cout << "ordUN custo = " << A*s.cmp + B*s.move + C*s.calls << std::endl;
+        
+        auto end2 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration2 = end2 - start2;
+        std::cout << "Execution time ordUN: " << duration2.count() << " seconds" << std::endl;
+        auto duration_ms2 = std::chrono::duration_cast<std::chrono::milliseconds>(end2 - start2);
+        std::cout << "Execution time ordUN: " << duration_ms2.count() << " ms" << std::endl;
     }    
     catch(const std::exception& e)
     {
