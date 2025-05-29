@@ -26,5 +26,4 @@ class Heap{
         int* data; //vetor com a heap
 };
 
-
 #endif
