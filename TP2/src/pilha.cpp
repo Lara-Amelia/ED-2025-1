@@ -1,0 +1,65 @@
+#include "pilha.hpp"
+#include "pacote.hpp"
+
+tipoNo::tipoNo()
+{
+    item.setId(-1);
+    prox = NULL;
+}
+
+Pilha::Pilha()
+{
+    head = NULL;
+    tamanho = 0;
+}
+
+Pilha::~Pilha()
+{
+    Limpa();
+}
+
+int Pilha::getTam()
+{
+    return tamanho;
+}
+
+void Pilha::Empilha(Pacote item)
+{
+    tipoNo *nova;
+
+    nova = new tipoNo();
+    nova->item = item;
+    nova->prox = head;
+    head = nova;
+    tamanho++;
+}
+
+Pacote Pilha::Desempilha()
+{
+    Pacote aux;
+    tipoNo *p;
+
+    /*if(tamanho == 0)
+       throw "A pilha está vazia" - adicionar depois taratmento de exceções
+    */
+    aux = head->item;
+    p = head;
+    head = head->prox;
+    delete p;
+    tamanho--;
+
+    return aux; //retorna o item desempilhado
+}
+
+bool Pilha::Vazia()
+{
+    return tamanho == 0;    
+}
+
+void Pilha::Limpa()
+{
+    while(!Vazia())
+        Desempilha();
+}
+
+
