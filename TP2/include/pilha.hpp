@@ -14,6 +14,7 @@ class tipoNo
     tipoNo* prox;
 
     public:
+    tipoNo(Pacote inserido);
     tipoNo();
 
     friend class Pilha;

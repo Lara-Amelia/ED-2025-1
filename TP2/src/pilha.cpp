@@ -1,6 +1,13 @@
 #include "pilha.hpp"
 #include "pacote.hpp"
 
+//talvez receber o pacote quando o inserimos
+tipoNo::tipoNo(Pacote inserido)
+{
+    item = inserido;
+    prox = NULL;
+}
+
 tipoNo::tipoNo()
 {
     item.setId(-1);
