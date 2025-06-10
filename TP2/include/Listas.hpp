@@ -16,6 +16,7 @@ class Node
     Node();
     Node (int valor);
 
+    friend class Transporte;
     friend class ListaEncadeada;
 };
 
