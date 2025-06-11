@@ -5,7 +5,7 @@
 
 class Transporte{
     public:
-        Transporte();
+        Transporte(int capacidade, int latencia, int intervalo, int numVert);
         ~Transporte();
 
         void InsereVertice();
@@ -38,6 +38,8 @@ class Transporte{
 
         ListaAdjacencia armazens;
         //ListaEncadeada* rotas;
+
+    friend class Armazem;
 };
 
 #endif

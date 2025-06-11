@@ -2,8 +2,13 @@
 #include "transporte.hpp"
 #include "Fila.hpp"
 
-Transporte::Transporte()
-{}
+Transporte::Transporte(int capacidade, int latencia, int intervalo, int numVert)
+{
+    capacidadeTransporte = capacidade;
+    latenciaTransporte = latencia;
+    intervaloTransporte = intervalo;
+    numVertices = numVert;
+}
 
 Transporte::~Transporte()
 {}
