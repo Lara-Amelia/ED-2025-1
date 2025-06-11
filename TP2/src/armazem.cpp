@@ -1,4 +1,5 @@
 #include "armazem.hpp"
+#include "pilha.hpp"
 #include <iostream>
 
 Secao::Secao()
@@ -34,7 +35,11 @@ int Armazem::encontraSecao(int destino)
         if(this->secoes[i].destino == destino)
             return i;
     }
-    //throw "ERRO: secao não encontrada no armazém"
+    //throw "ERRO: secao não encontrada no armazém"   
+    //solução temporária para evitar erros de compilação. assim que tivermos a estrutura correta
+    //e soubermos onde o método será chamado para incluirmos o catch correspondente, implementaremos
+    //o tratamento de exceções utilizando try-throw-catch
+    return -1; 
 }
 
 //a seção passada será acessada no vetor secoes utilizando o índice fornecido pelo método encontraSecao
