@@ -62,8 +62,39 @@ Pacote::Pacote(int id, int hora, int origem, int destino)
     //o construtor para a lista encadeada é chamado automaticamente
 }
 
+Pacote::Pacote()
+{
+    identificador = -1;
+    horaPostagem = 0;
+    armazemOrigem = -1;
+    armazemDestino = -1;
+    
+    // 'rota' é um objeto ListaEncadeada. O construtor default de ListaEncadeada
+    // será chamado automaticamente para inicializar 'rota'.
+    
+    estadosPacote = nullptr; // MUITO IMPORTANTE: Inicializa o ponteiro para NULO.
+                             // Isso evita que o destrutor tente deletar um endereço de memória lixo.
+    tempoArmazenado = 0;
+    tempoTransporte = 0;
+}
+
 Pacote::~Pacote()
 {
     rota.Limpa();
     delete[] estadosPacote;
+}
+
+int Pacote::getId()
+{
+    return identificador;
+}
+
+void Pacote::setId(int n)
+{
+    identificador = n;
+}
+
+void Pacote::setRota(ListaEncadeada rotaCalculada)
+{
+    rota = rotaCalculada;
 }

@@ -56,6 +56,8 @@ class Pacote
     Pacote(int id, int hora, int origem, int destino); //construtor default
     ~Pacote();
 
+    int getId();
+    void setRota(ListaEncadeada rotaCalculada);
     void setId(int n);
     int calculaTempoArmazenado(registroEstado* estados);
     int calculaTempoTransporte(registroEstado* estados);
