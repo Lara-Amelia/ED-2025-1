@@ -114,6 +114,8 @@ void ListaEncadeada::Imprime()
 
 void ListaEncadeada::Limpa()
 {
+    if (head == nullptr) return; 
+
     Node *p = head->prox;
     while(p != nullptr)
     {
@@ -221,6 +223,7 @@ int ListaAdjacencia::pesquisaVert(int pesquisado)
             aux = p->vertice;
             break;
         }
+        p = p->prox;
     }
     return aux;
 }

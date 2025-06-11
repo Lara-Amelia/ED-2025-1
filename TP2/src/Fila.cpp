@@ -32,16 +32,31 @@ void Fila::Enfileira(int item)
 
 int Fila::Desenfileira()
 {
-    TipoCelula* p;
+    /*TipoCelula* p;
     int aux;
 
-    /*if(tamanho == 0)
-        throw "fila está vazia!"
-    */
+    //if(tamanho == 0)
+    //    throw "fila está vazia!"
+    
     aux = frente->prox->item;
     p = frente;
     frente = frente->prox;
     delete p;
+    tamanho--;
+    return aux;*/
+
+    //if(tamanho == 0)
+    //    throw std::runtime_error("Fila está vazia!");
+
+    TipoCelula* p = frente->prox; // nó que será removido (o primeiro elemento real)
+    int aux = p->item;
+
+    frente->prox = p->prox; // pula o nó removido
+
+    if (tras == p) // se o nó removido era o último, atualizar o ponteiro tras para dummy
+        tras = frente;
+
+    delete p; // deleta o nó removido
     tamanho--;
     return aux;
 }
