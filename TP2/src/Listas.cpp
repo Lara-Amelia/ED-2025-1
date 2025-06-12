@@ -127,6 +127,11 @@ void ListaEncadeada::Limpa()
     tamanho = 0;
 }
 
+int ListaEncadeada::getTamanho()
+{
+    return tamanho;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //Métodos associados à classe ListaAdjacencia e ao Node correspondente
 NodeAdj::NodeAdj()

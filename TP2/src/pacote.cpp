@@ -50,6 +50,11 @@ int registroEstado::getTempoPercorrido()
     return tempoPercorrido;
 }
 
+/*ListaEncadeada Pacote::getRota()
+{
+    return rota;
+}*/
+
 //constutor utilizado na leitura da main
 Pacote::Pacote(int id, int hora, int origem, int destino)
 {
@@ -71,7 +76,7 @@ Pacote::Pacote()
     
     // 'rota' é um objeto ListaEncadeada. O construtor default de ListaEncadeada
     // será chamado automaticamente para inicializar 'rota'.
-    
+
     estadosPacote = nullptr; // MUITO IMPORTANTE: Inicializa o ponteiro para NULO.
                              // Isso evita que o destrutor tente deletar um endereço de memória lixo.
     tempoArmazenado = 0;
@@ -94,7 +99,7 @@ void Pacote::setId(int n)
     identificador = n;
 }
 
-void Pacote::setRota(ListaEncadeada rotaCalculada)
+/*void Pacote::setRota(ListaEncadeada rotaCalculada)
 {
     rota = rotaCalculada;
-}
+}*/

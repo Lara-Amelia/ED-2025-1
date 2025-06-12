@@ -34,6 +34,7 @@ class ListaEncadeada
     ~ListaEncadeada();
     void setAresta(int pos, int novoNode);
     int getAresta(int pos);
+    int getTamanho();
     //void insereInicio(int item);
     //void insereFinal(int item);
     void inserePosicao(int item, int pos);

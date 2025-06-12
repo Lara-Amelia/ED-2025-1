@@ -1,6 +1,7 @@
 #include "Listas.hpp"
 #include "transporte.hpp"
 #include "Fila.hpp"
+#include <iostream>
 
 Transporte::Transporte(int capacidade, int latencia, int intervalo, int numVert)
 {
@@ -76,7 +77,18 @@ void Transporte::ImprimeVizinhos(int v)
     p->listaArestas.Imprime();
 }
 
-ListaEncadeada Transporte::buscaLargura(int origem, int destino)
+void Transporte::insereCaminhoRec(ListaEncadeada& lista, int* pai, int atual, int origem)
+{
+    if (atual == -1) return;
+
+    if (atual != origem)
+        insereCaminhoRec(lista, pai, pai[atual], origem);
+
+    // insere no fim da lista
+    lista.inserePosicao(atual, lista.getTamanho());
+}
+
+void Transporte::buscaLargura(int origem, int destino, ListaEncadeada& rota)
 {
     int n = numVertices;
 
@@ -88,9 +100,7 @@ ListaEncadeada Transporte::buscaLargura(int origem, int destino)
     }*/
     if (origem == destino)  
     {
-        ListaEncadeada rota_trivial;
-        rota_trivial.inserePosicao(origem, 0);
-        return rota_trivial;
+        rota.inserePosicao(origem, 0);
     }
 
     bool* visitado = new bool[n]; // Array para marcar vértices visitados
@@ -144,10 +154,10 @@ ListaEncadeada Transporte::buscaLargura(int origem, int destino)
             vizinho_atual = vizinho_atual->prox; // Move para o próximo vizinho na lista
         }
     }
+    insereCaminhoRec(rota, pai, destino, origem);
+    //ListaEncadeada rota_final; // A lista encadeada que conterá os IDs dos armazéns na rota
 
-    ListaEncadeada rota_final; // A lista encadeada que conterá os IDs dos armazéns na rota
-
-    if (destino_encontrado) 
+    /*if (destino_encontrado) 
     { 
         int atual = destino;
         // Percorre de destino para origem usando o array 'pai', adicionando no início da rota
@@ -160,15 +170,15 @@ ListaEncadeada Transporte::buscaLargura(int origem, int destino)
         {
             rota_final.inserePosicao(origem, 0);
         } 
-        /*else //tratamento de erros - erro na obtenção de algum item
+        else //tratamento de erros - erro na obtenção de algum item
         {
             // Se 'atual' se tornou -1 antes de atingir a origem, significa que o caminho estava quebrado
             // ou a origem não tinha pai (-1). Isso não deveria acontecer se destino_encontrado é true.
             std::cerr << "Erro: Reconstrucao de rota inconsistente para " << origem << "->" << destino << std::endl;
             rota_final.Limpa(); // Limpa rota se houver inconsistência
-        }*/
+        }
     } 
-    /*else  //tratamento de exceções, caso a rota não seja encontrada
+    else  //tratamento de exceções, caso a rota não seja encontrada
     {
         // O destino não foi alcançado a partir da origem.
         // A lista 'rota_final' já estará vazia.
@@ -176,8 +186,6 @@ ListaEncadeada Transporte::buscaLargura(int origem, int destino)
     }*/
     delete[] visitado;
     delete[] pai;
-
-    return rota_final; 
 }
 
 int Transporte::getCapacTransp()

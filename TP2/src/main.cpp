@@ -164,7 +164,7 @@ int main(int argc, char** argv)
             pacotes[k] = new Pacote(idPacote, tempoChegada, armazemInicial, armazemFinal);
             
             // Calcula e armazena a rota do pacote usando BFS no grafo de transporte 
-            //transporte.buscaLargura(armazemInicial, armazemFinal);
+            transporte.buscaLargura(armazemInicial, armazemFinal, pacotes[k]->rota);
             //pacotes[k]->setRota(aux); 
 
             // --- Crie e Agende o Evento Inicial de Chegada do Pacote (Postagem) ---
@@ -182,7 +182,7 @@ int main(int argc, char** argv)
 
             //std::cout << "  Pacote lido: Tempo=" << tempoChegada << ", ID=" << idPacote << ", Origem=" << armazemInicial << ", Destino=" << armazemFinal << ". Chave: " << chave_evento_chegada << std::endl;
             std::cout << "  Rota calculada para Pacote " << idPacote << ": ";
-            //pacotes[k]->rota.Imprime(); // Imprime a rota do pacote para verificação.
+            pacotes[k]->rota.Imprime(); // Imprime a rota do pacote para verificação.
         }
         arquivo.close();
     }

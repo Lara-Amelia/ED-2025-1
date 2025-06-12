@@ -13,7 +13,8 @@ class Transporte{
         //determina a rota entre 2 vértices para um certo pacote
         //utilizaremos uma fila para obter a rota com a busca em largura e, posteriormente, inseriremos
         //o resultado em uma Lista Encadeada
-        ListaEncadeada buscaLargura(int origem, int destino);
+        void buscaLargura(int origem, int destino, ListaEncadeada& rota);
+        void insereCaminhoRec(ListaEncadeada& lista, int* pai, int atual, int origem);
 
         //provavelmente não necessitaremos destes métodos
         int QuantidadeVertices();

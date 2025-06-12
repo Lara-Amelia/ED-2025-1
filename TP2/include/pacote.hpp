@@ -38,7 +38,7 @@ class Pacote
     int armazemOrigem;
     int armazemDestino;
   
-    ListaEncadeada rota; //rota a ser obtida via busca em largura no grafo
+     //rota a ser obtida via busca em largura no grafo
 
     //no construtor do TAD Pacote, deve ser inicializado de acordo com o tamanho da rota
     //a cada trânsito entre vértices, temos 2 estados e mais alguns extras
@@ -53,10 +53,12 @@ class Pacote
     //os valores não passados como parâmetro serão inicializados como 0 e preenchidos depois (sets)
     //construtor default oara inicialização de nós na fila - checar depois
     Pacote();
+    ListaEncadeada rota;
     Pacote(int id, int hora, int origem, int destino); //construtor default
     ~Pacote();
 
     int getId();
+    ListaEncadeada* getRota();
     void setRota(ListaEncadeada rotaCalculada);
     void setId(int n);
     int calculaTempoArmazenado(registroEstado* estados);
