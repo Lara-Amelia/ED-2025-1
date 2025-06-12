@@ -83,6 +83,26 @@ Pacote::Pacote()
     tempoTransporte = 0;
 }
 
+int Pacote::getArmDestino()
+{
+    return armazemDestino;
+}
+
+int Pacote::getArmOrigem()
+{
+    return armazemOrigem;
+}
+
+void Pacote::setArmAtual(int n)
+{
+    armazemAtual = n;
+}
+
+int Pacote::getArmAtual()
+{
+    return armazemAtual;
+}
+
 Pacote::~Pacote()
 {
     rota.Limpa();

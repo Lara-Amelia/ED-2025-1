@@ -1,11 +1,12 @@
 #include "escalonador.hpp"
+#include "evento.hpp"
 
 //talvez tenhamos de alterar para que lide com eventos em si, ou podemos utilizar somente as ids de eventos
 
 Heap::Heap(int maxsize)
 {
     tamanho = 0; //usaremos para medir onde/quantos elementos já foram inseridos
-    data = new int[maxsize];
+    data = new Evento*[maxsize];
 }
 
 Heap::~Heap()
@@ -36,18 +37,18 @@ bool Heap::Vazio()
         return false;    
 }
 
-void Heap::Inserir(int x)
+void Heap::Inserir(Evento* eventoPtr)
 {
-    data[tamanho] = x; //inserimos na última posição
+    data[tamanho] = eventoPtr; //inserimos na última posição
     int i = tamanho;
     //anteriores em nível/pais
     int p;
     while(i > 0)
     {
         p = GetAncestral(i);
-        if(data[i] < data[p])
+        if(data[i]->getChave() < data[p]->getChave())
         {
-            int aux = data[p];
+            Evento* aux = data[p];
             data[p] = data[i];
             data[i] = aux;
             i = p;
@@ -58,9 +59,9 @@ void Heap::Inserir(int x)
     tamanho++;
 }
 
-int Heap::Remover()
+Evento* Heap::Remover()
 {
-    int x = data[0];
+    Evento* x = data[0];
     data[0] = data[tamanho - 1];
     tamanho--;
     int i = 0;
@@ -81,11 +82,11 @@ int Heap::Remover()
         data[i] = aux;
         i = s;*/
         //checa se ambos os filhos existem e qual é o menor deles
-        if ((sEsq < tamanho) && (data[sEsq] < data[menor])) 
+        if ((sEsq < tamanho) && (data[sEsq]->getChave() < data[menor]->getChave())) 
         {
             menor = sEsq;
         }
-        if ((sDir < tamanho) && (data[sDir] < data[menor])) 
+        if ((sDir < tamanho) && (data[sDir]->getChave() < data[menor]->getChave())) 
         {
             menor = sDir;
         }
@@ -93,7 +94,7 @@ int Heap::Remover()
         //se o menor sucessor é menor que o atual, trocamos de posição
         if (menor != i)
         {
-            int aux = data[menor];
+            Evento* aux = data[menor];
             data[menor] = data[i];
             data[i] = aux;
             i = menor; 

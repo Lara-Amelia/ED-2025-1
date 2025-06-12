@@ -142,14 +142,17 @@ int main(int argc, char** argv)
         arquivo.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
 
         Pacote** pacotes = new Pacote*[numeroPacotes]; 
+        
         //Heap escalonador(numeroPacotes * 5); // Ex: 5 vezes o num de pacotes para começar
 
+        Heap escalonador(numeroPacotes*1000);
         for (int k = 0; k < numeroPacotes; ++k) 
         { // Loop para ler cada linha de pacote 
             std::string linha;
             if (!std::getline(arquivo, linha)) 
             {
                 throw std::runtime_error("ERRO: linhas com infos. de pacotes insuficientes");
+                for(int pk = 0; pk < k; ++pk) delete pacotes[pk];
                 delete[] pacotes; 
             }
 
@@ -165,7 +168,11 @@ int main(int argc, char** argv)
             
             // Calcula e armazena a rota do pacote usando BFS no grafo de transporte 
             transporte.buscaLargura(armazemInicial, armazemFinal, pacotes[k]->rota);
-            //pacotes[k]->setRota(aux); 
+
+            long long chave_evento_chegada = Evento::construirChavePacote(tempoChegada, idPacote); 
+            
+            Evento* novo_evento = new Evento(chave_evento_chegada, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, pacotes[k]);
+            escalonador.Inserir(novo_evento);
 
             // --- Crie e Agende o Evento Inicial de Chegada do Pacote (Postagem) ---
             // A chave de prioridade é crucial para a ordem na heap. 
@@ -183,8 +190,54 @@ int main(int argc, char** argv)
             //std::cout << "  Pacote lido: Tempo=" << tempoChegada << ", ID=" << idPacote << ", Origem=" << armazemInicial << ", Destino=" << armazemFinal << ". Chave: " << chave_evento_chegada << std::endl;
             std::cout << "  Rota calculada para Pacote " << idPacote << ": ";
             pacotes[k]->rota.Imprime(); // Imprime a rota do pacote para verificação.
+            //delete[] pacotes;
         }
         arquivo.close();
+
+        int relogioSimulacao = 0; // O relógio da simulação
+        std::cout << "\n--- INICIO DA SIMULACAO ---" << std::endl;
+
+        //condição de parada falsa - só será T quando a heap estiver vazia, ou seja, não houver mais eventos
+        while(!escalonador.Vazio())
+        {
+            Evento* proximoEvento = escalonador.Remover();
+            relogioSimulacao = proximoEvento->getTempoInicio();
+
+            int tipoEvento = proximoEvento->getTipoEvento();
+            Pacote* pacoteEvento = proximoEvento->getPacotePtr();
+            //se o evento é pacote
+            if(tipoEvento == 1)
+            {
+                //se chegou ao armazém de destino
+                if(pacoteEvento->getArmAtual() == pacoteEvento->getArmDestino())
+                {
+                    //registra entrega e deixa de existir no sistema
+                }
+                //se ainda não está no destino final
+                else if(pacoteEvento->getArmAtual() != pacoteEvento->getArmDestino())
+                {
+                    //armazena na secao correta do armazem atual
+                    //logica para encontrar qual é o próximo armazem na rota
+                    //logica para armazenar o pacote na seção correta (a do próximo destino)
+                    //do armazem atual
+                }
+            }
+            //se for um evento de transporte
+            else if(tipoEvento == 2)
+            {
+                /*if(secao não está vazia)
+                    {
+                    remove pacotes do fundo até a capacidade do transporte, após ter movido todos para a pilha auxiliar
+                    escalona chegada dos removidos no próximo armazem da rota
+                    }
+                  else
+                  {
+                    escalona próximo evento de transporte 
+                  }
+                */
+            }
+        }
+
     }
     catch(const std::exception& e)
     {

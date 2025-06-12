@@ -37,6 +37,7 @@ class Pacote
     int horaPostagem;
     int armazemOrigem;
     int armazemDestino;
+    int armazemAtual;
   
      //rota a ser obtida via busca em largura no grafo
 
@@ -59,6 +60,11 @@ class Pacote
 
     int getId();
     ListaEncadeada* getRota();
+    int getArmAtual();
+    void setArmAtual(int n);
+    int getArmDestino();
+    int getArmOrigem();
+    int getProximoRota();
     void setRota(ListaEncadeada rotaCalculada);
     void setId(int n);
     int calculaTempoArmazenado(registroEstado* estados);
