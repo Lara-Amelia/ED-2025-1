@@ -1,9 +1,12 @@
 #include "evento.hpp" // Inclui o cabeçalho da própria classe
 #include "pacote.hpp"
+#include <iomanip>
+#include <sstream>
+#include <string>
 //TODOS OS PRINTS DEVEM SER RELIZADOS NA CLASSE EVENTO
 
 // Implementação do construtor de Evento (permanece o mesmo)
-Evento::Evento(long long chave, int tipo, int t, int id_p, int a_orig, int a_dest, Pacote* ptr) :
+Evento::Evento(std::string chave, int tipo, int t, int id_p, int a_orig, int a_dest, Pacote* ptr) :
     chave_prioridade(chave),
     tipo_evento(tipo),
     tempoInicio(t),
@@ -21,7 +24,7 @@ void Evento::setTempoFim(int n)
 }
 
 // Implementações dos métodos Getters (permanecem os mesmos)
-long long Evento::getChave() const 
+std::string Evento::getChave() const 
 { 
     return chave_prioridade; 
 }
@@ -61,6 +64,101 @@ Pacote* Evento::getPacotePtr() const
     return pacote_ptr; 
 }
 
+std::string Evento::construirChavePacote(int tempo, int id_pacote) 
+{
+    std::stringstream ss;
+    ss << std::setfill('0'); // Preencher com zeros à esquerda
+
+    // Parte 1: Tempo (6 dígitos)
+    ss << std::setw(6) << tempo; 
+
+    // Parte 2: ID do Pacote (6 dígitos)
+    ss << std::setw(6) << id_pacote; 
+
+    // Parte 3: Tipo (1 dígito)
+    ss << std::setw(1) << 1; // Tipo 1 para Evento de Pacote
+
+    std::string resultado = ss.str();
+    // Converte a string formatada para long long
+    return resultado;
+}
+
+// Função para construir a chave de prioridade para um Evento de Transporte (Tipo 2)
+// Formato da Chave (13 dígitos): [Tempo(6)][Origem(3)][Destino(3)][Tipo(1)]
+// Exemplo: 000401 002 001 2  =>  0004010020012
+std::string Evento::construirChaveTransporte(int tempo, int origem_transp, int destino_transp) 
+{
+    std::stringstream ss;
+    ss << std::setfill('0'); // Preencher com zeros à esquerda
+
+    // Parte 1: Tempo (6 dígitos)
+    ss << std::setw(6) << tempo;
+
+    // Parte 2: Origem (3 dígitos)
+    ss << std::setw(3) << origem_transp;
+
+    // Parte 3: Destino (3 dígitos)
+    ss << std::setw(3) << destino_transp;
+
+    // Parte 4: Tipo (1 dígito)
+    ss << std::setw(1) << 2; // Tipo 2 para Evento de Transporte
+
+    std::string resultado = ss.str();
+    // Converte a string formatada para long long
+    return resultado;
+}
+
+// --- Funções para decodificar a chave (inverso das funções de construção) ---
+// Ajustadas para o formato: [Tempo(6)][Dados(6)][Tipo(1)]
+
+int Evento::decodificarTipoEvento(std::string chave) 
+{
+    // O tipo é o último dígito (o mais à direita)
+    return std::stoi(chave.substr(12, 1)); 
+}
+
+int Evento::decodificarTempoEvento(std::string chave) 
+{
+    // O tempo são os 6 dígitos mais à esquerda de uma chave de 13 dígitos
+    // Remover os 6 dígitos de dados e 1 dígito de tipo (total 7 dígitos da direita)
+    return std::stoi(chave.substr(0, 6));  // Divide por 10^7
+}
+
+// Para decodificar o ID do Pacote (para Tipo 1)
+// ID está nos 6 dígitos do meio (entre Tempo e Tipo)
+int Evento::decodificarIdPacote(std::string chave) 
+{
+    if (Evento::decodificarTipoEvento(chave) == 1) 
+    { 
+        return std::stoi(chave.substr(6, 6)); // 6 caracteres a partir do índice 6
+    }
+    return -1; // Retorna -1 se não for evento de pacote ou inválido
+}
+
+// Para decodificar Origem (para Tipo 2)
+// Origem está nos 3 dígitos antes do Destino (que está antes do Tipo)
+int Evento::decodificarOrigemTransporte(std::string chave) 
+{
+    if (Evento::decodificarTipoEvento(chave) == 2) 
+    { 
+        return std::stoi(chave.substr(6, 3)); // 3 caracteres a partir do índice 6
+    }
+    return -1;
+
+}
+
+// Para decodificar Destino (para Tipo 2)
+// Destino está nos 3 dígitos antes do Tipo
+int Evento::decodificarDestinoTransporte(std::string chave) 
+{
+    if (Evento::decodificarTipoEvento(chave) == 2) 
+    { 
+        return std::stoi(chave.substr(6, 3)); // 3 caracteres a partir do índice 6
+    }
+    return -1;
+}
+
+/*
 // Função para construir a chave de prioridade para um Evento de Pacote (Tipo 1)
 // Chave final: TT TTTT PP PPPP T (13 dígitos)
 // Tempo (6), Pacote ID (6), Tipo (1)
@@ -123,3 +221,4 @@ int Evento::decodificarDestinoTransporte(long long chave)
     }
     return -1;
 }
+*/

@@ -38,6 +38,7 @@ class Pacote
     int armazemOrigem;
     int armazemDestino;
     int armazemAtual;
+    int estadoAtual;
   
      //rota a ser obtida via busca em largura no grafo
 
@@ -55,7 +56,7 @@ class Pacote
     //construtor default oara inicialização de nós na fila - checar depois
     Pacote();
     ListaEncadeada rota;
-    Pacote(int id, int hora, int origem, int destino); //construtor default
+    Pacote(int id, int hora, int origem, int destino, int estado); //construtor default
     ~Pacote();
 
     int getId();

@@ -50,7 +50,7 @@ void Armazem::armazenaPacote(Pacote item, Secao secao)
     secao.principal.Empilha(item);
     //antes deste tipo de mensagem, também temos de imprimir o tempo em que ocorreu
     //provavelmente faremos isso no próprio escalonador
-    std::cout << "pacote " << item.getId() << " armazenado em " << idGrafo << " na secao " << secao.destino << std::endl;       
+    //std::cout << "pacote " << item.getId() << " armazenado em " << idGrafo << " na secao " << secao.destino << std::endl;       
 }
 
 
@@ -66,7 +66,7 @@ void Armazem::esvaziaPrincipal(Secao secao)
         secao.auxiliar.Empilha(aux);
         //talvez uma variável tempo para imprimir corretamente os tempos
         //o transporte só pode ocorrer após essa remoção
-        std::cout << "pacote " << aux.getId() << " removido de " << this->idGrafo << " na secao " << secao.destino << std::endl;
+        //std::cout << "pacote " << aux.getId() << " removido de " << this->idGrafo << " na secao " << secao.destino << std::endl;
     }
 }
 
@@ -77,7 +77,7 @@ void Armazem::carregaTransporte(int capacidade, int destino, Secao secao)
         Pacote aux = secao.auxiliar.Desempilha();
         capacidade--;
         //nesse método também devemos atualizar o estado do pacote
-        std::cout << "pacote " << aux.getId() << " em transito de " << this->idGrafo << " para " << secao.destino << std::endl;
+        //std::cout << "pacote " << aux.getId() << " em transito de " << this->idGrafo << " para " << secao.destino << std::endl;
     }
 }
 
@@ -89,6 +89,6 @@ void Armazem::retornaPrincipal(Secao secao)
         Pacote aux = secao.auxiliar.Desempilha();
         secao.principal.Empilha(aux);
         //também devemos alterar o estado do pacote nesse método
-        std::cout << "pacote " << aux.getId() << "rearmazenado em " << this->idGrafo << " na secao " << secao.destino << std::endl;
+        //std::cout << "pacote " << aux.getId() << "rearmazenado em " << this->idGrafo << " na secao " << secao.destino << std::endl;
     }
 }

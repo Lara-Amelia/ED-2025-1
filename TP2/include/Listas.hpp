@@ -18,6 +18,7 @@ class Node
 
     friend class Transporte;
     friend class ListaEncadeada;
+    friend class Pacote;
 };
 
 class ListaEncadeada
@@ -44,6 +45,7 @@ class ListaEncadeada
 
     friend class Transporte;
     friend class ListaAdjacencia;
+    friend class Pacote;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

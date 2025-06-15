@@ -56,7 +56,7 @@ int registroEstado::getTempoPercorrido()
 }*/
 
 //constutor utilizado na leitura da main
-Pacote::Pacote(int id, int hora, int origem, int destino)
+Pacote::Pacote(int id, int hora, int origem, int destino, int estado)
 {
     identificador = id;
     horaPostagem = hora;
@@ -64,6 +64,7 @@ Pacote::Pacote(int id, int hora, int origem, int destino)
     armazemDestino = destino;
     //será inicializado após o cálculo da rota
     estadosPacote = nullptr;
+    estadoAtual = estado;
     //o construtor para a lista encadeada é chamado automaticamente
 }
 
@@ -119,7 +120,35 @@ void Pacote::setId(int n)
     identificador = n;
 }
 
-/*void Pacote::setRota(ListaEncadeada rotaCalculada)
+int Pacote::getProximoRota()
 {
-    rota = rotaCalculada;
-}*/
+    //tratamento de exceções caso a rota do pacote esteja vazia
+    /*if (this->rota.getTamanho() == 0) 
+    {
+        std::cerr << "ERRO (Pacote " << identificador << "): Rota esta vazia. Nao ha proximo armazem." << std::endl;
+        return -1; // Retorna -1 para indicar que não há próximo na rota.
+    }*/
+    
+    Node* p = this->rota.head->prox;
+    while (p != nullptr) 
+    {
+        if (p->aresta == this->armazemAtual) 
+        { 
+            if (p->prox != nullptr) 
+            {
+                // Não é o último armazém, retorna o valor do próximo nó
+                return p->prox->aresta;
+            } 
+            else 
+            {
+                // É o último armazém na rota (o destino final).
+                // Não há mais armazéns na rota de TRÂNSITO.
+                return -1; // Retorna -1 para indicar que o pacote já está no destino final.
+            }
+        }
+        p = p->prox; // Move para o próximo nó na rota
+    }  
+    //substituir por tratamento de exceções depois 
+    std::cerr << "ERRO (Pacote " << identificador << "): Armazem atual (" << this->armazemAtual << ") nao encontrado na rota. Inconsistencia de dados." << std::endl;
+    return -1; // Retorna -1 para indicar erro. 
+}
