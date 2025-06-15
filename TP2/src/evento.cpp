@@ -6,9 +6,10 @@
 //TODOS OS PRINTS DEVEM SER RELIZADOS NA CLASSE EVENTO
 
 // Implementação do construtor de Evento (permanece o mesmo)
-Evento::Evento(std::string chave, int tipo, int t, int id_p, int a_orig, int a_dest, Pacote* ptr) :
+Evento::Evento(std::string chave, int tipo, int subtipo, int t, int id_p, int a_orig, int a_dest, Pacote& ptr) :
     chave_prioridade(chave),
     tipo_evento(tipo),
+    subTipoEvento(subtipo),
     tempoInicio(t),
     id_pacote(id_p),
     armazem_origem_evento(a_orig),
@@ -16,6 +17,11 @@ Evento::Evento(std::string chave, int tipo, int t, int id_p, int a_orig, int a_d
     pacote_ptr(ptr)
 {
     
+}
+
+int Evento::getSubtipoEvento() const
+{
+    return subTipoEvento;
 }
 
 void Evento::setTempoFim(int n)
@@ -59,7 +65,7 @@ int Evento::getArmazemDestino() const
     return armazem_destino_evento; 
 }
 
-Pacote* Evento::getPacotePtr() const 
+Pacote Evento::getPacotePtr() const 
 { 
     return pacote_ptr; 
 }
@@ -157,6 +163,72 @@ int Evento::decodificarDestinoTransporte(std::string chave)
     }
     return -1;
 }
+
+// Copy constructor
+Evento::Evento(const Evento& other) 
+{
+    // Copy all members, including deep copy if needed
+    chave_prioridade = other.chave_prioridade;
+    tipo_evento = other.tipo_evento;
+    subTipoEvento = other.subTipoEvento;
+    tempoInicio = other.tempoInicio;
+    tempoFim = other.tempoFim;
+    id_pacote = other.id_pacote;
+    armazem_origem_evento = other.armazem_origem_evento;
+    armazem_destino_evento = other.armazem_destino_evento;
+    pacote_ptr = other.pacote_ptr; // if Pacote supports copy ctor
+}
+
+// Copy assignment operator
+Evento& Evento::operator=(const Evento& other)
+{
+    if (this != &other) {
+        chave_prioridade = other.chave_prioridade;
+        tipo_evento = other.tipo_evento;
+        subTipoEvento = other.subTipoEvento;
+        tempoInicio = other.tempoInicio;
+        tempoFim = other.tempoFim;
+        id_pacote = other.id_pacote;
+        armazem_origem_evento = other.armazem_origem_evento;
+        armazem_destino_evento = other.armazem_destino_evento;
+        pacote_ptr = other.pacote_ptr;
+    }
+    return *this;
+}
+
+Evento::Evento() 
+{
+    chave_prioridade = "";
+    tipo_evento = 0;
+    subTipoEvento = 0;
+    tempoInicio = 0;
+    tempoFim = 0;
+    id_pacote = 0;
+    armazem_origem_evento = 0;
+    armazem_destino_evento = 0;
+    // pacote_ptr será inicializado pelo construtor padrão do Pacote automaticamente
+}
+
+void Evento::setEvento(
+    const std::string& chave, 
+    int tipo, 
+    int subtipo, 
+    int tInicio, 
+    int id_p, 
+    int a_orig, 
+    int a_dest, 
+    const Pacote& pacote)
+{
+    chave_prioridade = chave;
+    tipo_evento = tipo;
+    subTipoEvento = subtipo;
+    tempoInicio = tInicio;
+    id_pacote = id_p;
+    armazem_origem_evento = a_orig;
+    armazem_destino_evento = a_dest;
+    pacote_ptr = pacote; // supõe que Pacote tem copy constructor válido
+}
+
 
 /*
 // Função para construir a chave de prioridade para um Evento de Pacote (Tipo 1)

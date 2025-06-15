@@ -6,7 +6,7 @@
 Heap::Heap(int maxsize)
 {
     tamanho = 0; //usaremos para medir onde/quantos elementos já foram inseridos
-    data = new Evento*[maxsize];
+    data = new Evento[maxsize];
 }
 
 Heap::~Heap()
@@ -37,7 +37,7 @@ bool Heap::Vazio()
         return false;    
 }
 
-void Heap::Inserir(Evento* eventoPtr)
+void Heap::Inserir(Evento eventoPtr)
 {
     data[tamanho] = eventoPtr; //inserimos na última posição
     int i = tamanho;
@@ -46,9 +46,9 @@ void Heap::Inserir(Evento* eventoPtr)
     while(i > 0)
     {
         p = GetAncestral(i);
-        if(data[i]->getChave() < data[p]->getChave())
+        if(data[i].getChave() < data[p].getChave())
         {
-            Evento* aux = data[p];
+            Evento aux = data[p];
             data[p] = data[i];
             data[i] = aux;
             i = p;
@@ -59,9 +59,9 @@ void Heap::Inserir(Evento* eventoPtr)
     tamanho++;
 }
 
-Evento* Heap::Remover()
+Evento Heap::Remover()
 {
-    Evento* x = data[0];
+    Evento x = data[0];
     data[0] = data[tamanho - 1];
     tamanho--;
     int i = 0;
@@ -82,11 +82,11 @@ Evento* Heap::Remover()
         data[i] = aux;
         i = s;*/
         //checa se ambos os filhos existem e qual é o menor deles
-        if ((sEsq < tamanho) && (data[sEsq]->getChave() < data[menor]->getChave())) 
+        if ((sEsq < tamanho) && (data[sEsq].getChave() < data[menor].getChave())) 
         {
             menor = sEsq;
         }
-        if ((sDir < tamanho) && (data[sDir]->getChave() < data[menor]->getChave())) 
+        if ((sDir < tamanho) && (data[sDir].getChave() < data[menor].getChave())) 
         {
             menor = sDir;
         }
@@ -94,7 +94,7 @@ Evento* Heap::Remover()
         //se o menor sucessor é menor que o atual, trocamos de posição
         if (menor != i)
         {
-            Evento* aux = data[menor];
+            Evento aux = data[menor];
             data[menor] = data[i];
             data[i] = aux;
             i = menor; 

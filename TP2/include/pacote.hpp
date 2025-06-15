@@ -54,13 +54,19 @@ class Pacote
     public:
     //os valores não passados como parâmetro serão inicializados como 0 e preenchidos depois (sets)
     //construtor default oara inicialização de nós na fila - checar depois
-    Pacote();
     ListaEncadeada rota;
     Pacote(int id, int hora, int origem, int destino, int estado); //construtor default
     ~Pacote();
+    Pacote();
+
+    Pacote& operator=(const Pacote& outro);
+    Pacote(const Pacote& outro);
 
     int getId();
-    ListaEncadeada* getRota();
+    //será como um "construtor" default, mas utilizaremos após alocação
+    void setDados(int id, int hora, int origem, int destino, int estado);
+    void setEstadoAtual(int n);
+    //ListaEncadeada* getRota();
     int getArmAtual();
     void setArmAtual(int n);
     int getArmDestino();

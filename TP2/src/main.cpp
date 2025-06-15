@@ -94,10 +94,12 @@ int main(int argc, char** argv)
         std::cout << "  Numero de Armazens: " << nroArmazens << std::endl;
         std::cout << "---------------------------------------------------" << std::endl;
 
-        //insere a nroArmazens qt. de vértices no grafo
+        Armazem armazens[nroArmazens];
+        //insere a nroArmazens qt. de vértices no grafo e incializa um vetor de ponteiros para armazéns
         for(int i = 0; i < nroArmazens; i++)
         {
             transporte.InsereVertice();
+            armazens[i].setArmazem(nroArmazens, i, custoRemocao);
         }
 
         std::string linha_matriz; // Variável para ler cada linha da matriz
@@ -115,6 +117,7 @@ int main(int argc, char** argv)
             std::stringstream ss(linha_matriz);
             int valor_celula;
             int col_count = 0;
+            int qtAdj = 0;
 
             while (ss >> valor_celula) 
             {
@@ -125,6 +128,9 @@ int main(int argc, char** argv)
 
                 if (valor_celula == 1) 
                 {
+                    armazens[i].setVizinho(col_count, qtAdj);
+                    armazens[i].setDestinoSecao(col_count, qtAdj);
+                    qtAdj++;
                     transporte.InsereAresta(i, col_count);
                 }
                 col_count++;
@@ -141,12 +147,21 @@ int main(int argc, char** argv)
         // Consumir a quebra de linha pendente após a leitura de numeroPacotes
         arquivo.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
 
-        Pacote** pacotes = new Pacote*[numeroPacotes]; 
+        Pacote pacotes[numeroPacotes]; 
         //variavel que contará quantos pacotes ainda estão no sistema
         //deve ser decrementada sempre que marcamos um pacote como "entregue", o que indica que ele saiu do sistema
         int tamPacotes = numeroPacotes;
         
         //Heap escalonador(numeroPacotes * 5); // Ex: 5 vezes o num de pacotes para começar
+        
+        /*for(int i = 0; i < nroArmazens; i++) 
+        {
+            //transporte.InsereVertice(); // Insere o vértice (ID) no grafo (ListaAdjacencia)
+            // Cria o objeto Armazem. O construtor Armazem deve receber nAdj, idG, custo.
+            // Para nAdj, podemos usar o grau do vértice 'i' se a matriz já foi lida,
+            // ou passar o nroArmazens como um máximo.
+            armazens[i] = new Armazem(nroArmazens, i, custoRemocao);
+        }*/
 
         Heap escalonador(numeroPacotes*1000);
         for (int k = 0; k < numeroPacotes; ++k) 
@@ -156,8 +171,8 @@ int main(int argc, char** argv)
             if (!std::getline(arquivo, linha)) 
             {
                 throw std::runtime_error("ERRO: linhas com infos. de pacotes insuficientes");
-                for(int pk = 0; pk < k; ++pk) delete pacotes[pk];
-                delete[] pacotes; 
+                //for(int pk = 0; pk < k; ++pk) delete pacotes[pk];
+                //delete[] pacotes; 
             }
 
             std::stringstream ss_pacote(linha);
@@ -169,56 +184,89 @@ int main(int argc, char** argv)
 
             // Cria a instância do Pacote
             //estado 1 para ainda não postado
-            pacotes[k] = new Pacote(idPacote, tempoChegada, armazemInicial, armazemFinal, 1);
+            pacotes[k].setDados(idPacote, tempoChegada, armazemInicial, armazemFinal, 1);
             
             // Calcula e armazena a rota do pacote usando BFS no grafo de transporte 
-            transporte.buscaLargura(armazemInicial, armazemFinal, pacotes[k]->rota);
+            transporte.buscaLargura(armazemInicial, armazemFinal, pacotes[k].rota);
 
             std::string chave_evento_chegada = Evento::construirChavePacote(tempoChegada, idPacote); 
             
-            Evento* novo_evento = new Evento(chave_evento_chegada, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, pacotes[k]);
+            Evento novo_evento; 
+            novo_evento.setEvento(chave_evento_chegada, 1, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, pacotes[k]);
             escalonador.Inserir(novo_evento);
+            pacotes[k].setArmAtual(armazemInicial);
 
             std::cout << "  Pacote lido: Tempo=" << tempoChegada << ", ID=" << idPacote << ", Origem=" << armazemInicial << ", Destino=" << armazemFinal << ". Chave: " << chave_evento_chegada << std::endl;
             std::cout << "  Rota calculada para Pacote " << idPacote << ": ";
-            pacotes[k]->rota.Imprime(); // Imprime a rota do pacote para verificação.
+            pacotes[k].rota.Imprime(); // Imprime a rota do pacote para verificação.
             //delete[] pacotes;
         }
         arquivo.close();
 
         int relogioSimulacao = 0; // O relógio da simulação
         std::cout << "\n--- INICIO DA SIMULACAO ---" << std::endl;
-
+        int iteracoes = 1;
         //condição de parada falsa - só será T quando a heap estiver vazia (não há mais eventos)
         //ou enquanto tamPacotes aina não tiver sido zerado, o que indica que nem todos os pacotes foram entregues
-        while((!escalonador.Vazio()) || (tamPacotes > 0))
+        while(((!escalonador.Vazio()) || (tamPacotes > 0)) && (iteracoes <= numeroPacotes))
         {
-            Evento* proximoEvento = escalonador.Remover();
-            relogioSimulacao = proximoEvento->getTempoInicio();
+            Evento proximoEvento = escalonador.Remover();
+            relogioSimulacao = proximoEvento.getTempoInicio();
+            iteracoes++;
 
-            int tipoEvento = proximoEvento->getTipoEvento();
-            Pacote* pacoteEvento = proximoEvento->getPacotePtr();
+            //os subtipos de evento são: 1.armazenamento, 2.remoção, 3.transporte, 4.rearmazenamento, 5.entrega
+            //os possíveis estados de um pacote são: 1.não postado, 2.chegada escalonada a um armazém, 
+            //3.armazenado na seção do próximo destino em lagum armazém, 4.removido da seção para transporte
+            //5.entregue
+            int tipoEvento = proximoEvento.getTipoEvento();
+            int subtipo = proximoEvento.getSubtipoEvento();
+            Pacote pacoteEvento = proximoEvento.getPacotePtr();
             //se o evento é pacote
             if(tipoEvento == 1)
             {
                 //se chegou ao armazém de destino
-                if(pacoteEvento->getArmAtual() == pacoteEvento->getArmDestino())
+                //isso será checado quando formos escalonar o próximo transporte de pacote
+                //se o próximo armazem for o de destino, criaremos um evento com subtipo 5
+                //caso contrário, o evento terá subtipo 1 (armazenamento "simples")
+                /*if(pacoteEvento->getArmAtual() == pacoteEvento->getArmDestino())
                 {
 
                     //registra entrega e deixa de existir no sistema
+                }*/
+                if(subtipo == 5)
+                {
+                    //indica que o novo estado do pacote é entregue
+                    pacoteEvento.setEstadoAtual(5);
+                    //decrementa a variável que checa a quantidade de pacotes ainda no sistema
+                    numeroPacotes--;
+                    std::cout << relogioSimulacao << "pacote " << pacoteEvento.getId() << " entregue em " << pacoteEvento.getArmDestino() << std::endl;
                 }
                 //se ainda não está no destino final
-                else if(pacoteEvento->getArmAtual() != pacoteEvento->getArmDestino())
+                //else if(pacoteEvento->getArmAtual() != pacoteEvento->getArmDestino())
+                else if(subtipo == 1)
                 {
+                    //teremos que atualizar o armazematual para o seguinte quando fizermos o escalonamento do transporte para que funcione
+                    int armazemAtual = pacoteEvento.getArmAtual();
+                    int armazemSeguinte = pacoteEvento.getProximoRota();
+                    int posicaoSecao = armazens[armazemAtual].encontraSecao(armazemSeguinte);
+                   
+                    //CHECAR ISSO AQUI QUE PROVAVELMENTE VAI DAR PROBLEMA
+                    armazens[armazemAtual].armazenaPacote((pacoteEvento), posicaoSecao);
+                    std::cout << relogioSimulacao << " pacote " << pacoteEvento.getId() << " armazenado em "
+                              << armazemAtual << " na secao " << armazemSeguinte << std::endl; 
                     //armazena na secao correta do armazem atual
                     //logica para encontrar qual é o próximo armazem na rota
-                    //logica para armazenar o pacote na seção correta (a do próximo destino)
-                    //do armazem atual
+                    //logica para armazenar o pacote na seção correta (a do próximo destino) do armazem atual
                 }
             }
             //se for um evento de transporte
             else if(tipoEvento == 2)
             {
+                int destino = proximoEvento.getArmazemDestino();
+                int origem = proximoEvento.getArmazemOrigem();
+                int subtipo = proximoEvento.getSubtipoEvento();
+
+                //checar se a secao de destino do armazém de origem está ou não vazia
                 /*if(secao não está vazia)
                     {
                     remove pacotes do fundo até a capacidade do transporte, após ter movido todos para a pilha auxiliar
@@ -231,7 +279,7 @@ int main(int argc, char** argv)
                 */
             }
         }
-
+        //assim que sair do while, temos de liberar os vetores que foram armazenados e fazer outras "limpezas" que sejam necessárias
     }
     catch(const std::exception& e)
     {

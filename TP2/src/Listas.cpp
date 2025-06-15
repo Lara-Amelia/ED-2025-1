@@ -1,5 +1,6 @@
 #include "Listas.hpp"
 #include <iostream>
+#include <exception>
 
 //Métodos da classe ListaEncadeada e Node associado
 //Não implementamos operações de remoção pois elas não são necessárias em nosso sistema
@@ -31,8 +32,8 @@ ListaEncadeada::~ListaEncadeada()
 Node* ListaEncadeada::PosicionaAntes(int pos)
 {
     Node *p; int i;
-    /*if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception*/
+    if((pos > tamanho) || (pos < 0))
+        throw std::runtime_error("posição inválida"); //talvez usar exception
     p = head;
     for(i = 0; i < pos; i++)
     {
@@ -44,8 +45,8 @@ Node* ListaEncadeada::PosicionaAntes(int pos)
 Node* ListaEncadeada::PosicionaEm(int pos)
 {
     Node *p; int i;
-    /*if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar */
+    if((pos > tamanho) || (pos < 0))
+        throw std::runtime_error("posição inválida"); //talvez usar 
     p = head;
     for(i = 0; i <= pos; i++)
     {
@@ -132,6 +133,37 @@ int ListaEncadeada::getTamanho()
     return tamanho;
 }
 
+ListaEncadeada::ListaEncadeada(const ListaEncadeada& outra)
+{
+    tamanho = 0;
+    head = new Node();
+    tail = head;
+
+    Node* p = outra.head->prox;
+    while (p != nullptr)
+    {
+        inserePosicao(p->aresta, tamanho);
+        p = p->prox;
+    }
+}
+
+ListaEncadeada& ListaEncadeada::operator=(const ListaEncadeada& outra)
+{
+    if (this != &outra)
+    {
+        Limpa();  // limpa a lista atual
+
+        Node* p = outra.head->prox;
+        while (p != nullptr)
+        {
+            inserePosicao(p->aresta, tamanho);
+            p = p->prox;
+        }
+    }
+    return *this;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //Métodos associados à classe ListaAdjacencia e ao Node correspondente
 NodeAdj::NodeAdj()
@@ -163,8 +195,8 @@ ListaAdjacencia::~ListaAdjacencia()
 NodeAdj* ListaAdjacencia::PosicionaAntesAdj(int pos)
 {
     NodeAdj *p; int i;
-    /*if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception*/
+    if((pos > tamanho) || (pos < 0))
+        throw "Posição inválida!"; //talvez usar exception
     p = head;
     for(i = 0; i < pos; i++)
     {
@@ -176,8 +208,8 @@ NodeAdj* ListaAdjacencia::PosicionaAntesAdj(int pos)
 NodeAdj* ListaAdjacencia::PosicionaEmAdj(int pos)
 {
     NodeAdj *p; int i;
-    /*if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception*/
+    if((pos > tamanho) || (pos < 0))
+        throw "Posição inválida!"; //talvez usar exception
     p = head;
     for(i = 0; i <= pos; i++)
     {

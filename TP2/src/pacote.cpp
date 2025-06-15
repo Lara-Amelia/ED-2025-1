@@ -68,7 +68,38 @@ Pacote::Pacote(int id, int hora, int origem, int destino, int estado)
     //o construtor para a lista encadeada é chamado automaticamente
 }
 
-Pacote::Pacote()
+Pacote::Pacote() 
+{
+    identificador = 0;
+    horaPostagem = 0;
+    armazemOrigem = 0;
+    armazemDestino = 0;
+    armazemAtual = 0;
+    estadoAtual = 0;
+
+    estadosPacote = nullptr;  // ainda não alocado, pode ser alocado depois conforme necessidade
+
+    tempoArmazenado = 0;
+    tempoTransporte = 0;
+    // rota será inicializada por seu próprio construtor padrão
+}
+
+void Pacote::setDados(int id, int hora, int origem, int destino, int estado) 
+{
+    identificador = id;
+    horaPostagem = hora;
+    armazemOrigem = origem;
+    armazemDestino = destino;
+    armazemAtual = origem; // geralmente começa no armazem de origem
+    estadoAtual = estado;
+}
+
+void Pacote::setEstadoAtual(int n)
+{
+    estadoAtual = n;
+}
+
+/*Pacote::Pacote()
 {
     identificador = -1;
     horaPostagem = 0;
@@ -82,7 +113,7 @@ Pacote::Pacote()
                              // Isso evita que o destrutor tente deletar um endereço de memória lixo.
     tempoArmazenado = 0;
     tempoTransporte = 0;
-}
+}*/
 
 int Pacote::getArmDestino()
 {
@@ -106,7 +137,7 @@ int Pacote::getArmAtual()
 
 Pacote::~Pacote()
 {
-    rota.Limpa();
+    //rota.Limpa();
     delete[] estadosPacote;
 }
 
@@ -151,4 +182,36 @@ int Pacote::getProximoRota()
     //substituir por tratamento de exceções depois 
     std::cerr << "ERRO (Pacote " << identificador << "): Armazem atual (" << this->armazemAtual << ") nao encontrado na rota. Inconsistencia de dados." << std::endl;
     return -1; // Retorna -1 para indicar erro. 
+}
+
+Pacote::Pacote(const Pacote& outro)
+{
+    identificador = outro.identificador;
+    horaPostagem = outro.horaPostagem;
+    armazemOrigem = outro.armazemOrigem;
+    armazemDestino = outro.armazemDestino;
+    armazemAtual = outro.armazemAtual;
+    estadoAtual = outro.estadoAtual;
+    estadosPacote = outro.estadosPacote;
+    tempoArmazenado = outro.tempoArmazenado;
+    tempoTransporte = outro.tempoTransporte;
+    rota = outro.rota;  // agora funciona porque ListaEncadeada tem cópia profunda
+}
+
+Pacote& Pacote::operator=(const Pacote& outro)
+{
+    if (this != &outro)
+    {
+        identificador = outro.identificador;
+        horaPostagem = outro.horaPostagem;
+        armazemOrigem = outro.armazemOrigem;
+        armazemDestino = outro.armazemDestino;
+        armazemAtual = outro.armazemAtual;
+        estadoAtual = outro.estadoAtual;
+        estadosPacote = outro.estadosPacote;
+        tempoArmazenado = outro.tempoArmazenado;
+        tempoTransporte = outro.tempoTransporte;
+        rota = outro.rota;
+    }
+    return *this;
 }

@@ -33,6 +33,8 @@ class ListaEncadeada
     public:
     ListaEncadeada();
     ~ListaEncadeada();
+    ListaEncadeada(const ListaEncadeada& outra);
+    ListaEncadeada& operator=(const ListaEncadeada& outra);
     void setAresta(int pos, int novoNode);
     int getAresta(int pos);
     int getTamanho();
