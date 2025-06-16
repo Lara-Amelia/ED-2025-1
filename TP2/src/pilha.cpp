@@ -30,7 +30,7 @@ int Pilha::getTam()
     return tamanho;
 }
 
-void Pilha::Empilha(Pacote& item)
+void Pilha::Empilha(Pacote item)
 {
     tipoNo *nova;
 

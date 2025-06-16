@@ -192,7 +192,7 @@ int main(int argc, char** argv)
             std::string chave_evento_chegada = Evento::construirChavePacote(tempoChegada, idPacote); 
             
             Evento novo_evento; 
-            novo_evento.setEvento(chave_evento_chegada, 1, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, pacotes[k]);
+            novo_evento.setEvento(chave_evento_chegada, 1, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, &pacotes[k]);
             escalonador.Inserir(novo_evento);
             pacotes[k].setArmAtual(armazemInicial);
 
@@ -208,10 +208,11 @@ int main(int argc, char** argv)
         int iteracoes = 1;
         //condição de parada falsa - só será T quando a heap estiver vazia (não há mais eventos)
         //ou enquanto tamPacotes aina não tiver sido zerado, o que indica que nem todos os pacotes foram entregues
-        while(((!escalonador.Vazio()) || (tamPacotes > 0)) && (iteracoes <= numeroPacotes))
+        while(((!escalonador.Vazio()) || (tamPacotes > 0)) /*&& (iteracoes <= numeroPacotes)*/)
         {
             Evento proximoEvento = escalonador.Remover();
             relogioSimulacao = proximoEvento.getTempoInicio();
+            proximoEvento.what();
             iteracoes++;
 
             //os subtipos de evento são: 1.armazenamento, 2.remoção, 3.transporte, 4.rearmazenamento, 5.entrega
@@ -220,7 +221,7 @@ int main(int argc, char** argv)
             //5.entregue
             int tipoEvento = proximoEvento.getTipoEvento();
             int subtipo = proximoEvento.getSubtipoEvento();
-            Pacote pacoteEvento = proximoEvento.getPacotePtr();
+            Pacote* pacoteEvento = proximoEvento.getPacotePtr();
             //se o evento é pacote
             if(tipoEvento == 1)
             {
@@ -236,24 +237,21 @@ int main(int argc, char** argv)
                 if(subtipo == 5)
                 {
                     //indica que o novo estado do pacote é entregue
-                    pacoteEvento.setEstadoAtual(5);
+                    pacoteEvento->setEstadoAtual(5);
                     //decrementa a variável que checa a quantidade de pacotes ainda no sistema
-                    numeroPacotes--;
-                    std::cout << relogioSimulacao << "pacote " << pacoteEvento.getId() << " entregue em " << pacoteEvento.getArmDestino() << std::endl;
+                    tamPacotes--;
                 }
                 //se ainda não está no destino final
                 //else if(pacoteEvento->getArmAtual() != pacoteEvento->getArmDestino())
                 else if(subtipo == 1)
                 {
                     //teremos que atualizar o armazematual para o seguinte quando fizermos o escalonamento do transporte para que funcione
-                    int armazemAtual = pacoteEvento.getArmAtual();
-                    int armazemSeguinte = pacoteEvento.getProximoRota();
+                    int armazemAtual = pacoteEvento->getArmAtual();
+                    int armazemSeguinte = pacoteEvento->getProximoRota();
                     int posicaoSecao = armazens[armazemAtual].encontraSecao(armazemSeguinte);
                    
                     //CHECAR ISSO AQUI QUE PROVAVELMENTE VAI DAR PROBLEMA
-                    armazens[armazemAtual].armazenaPacote((pacoteEvento), posicaoSecao);
-                    std::cout << relogioSimulacao << " pacote " << pacoteEvento.getId() << " armazenado em "
-                              << armazemAtual << " na secao " << armazemSeguinte << std::endl; 
+                    armazens[armazemAtual].armazenaPacote((*pacoteEvento), posicaoSecao); 
                     //armazena na secao correta do armazem atual
                     //logica para encontrar qual é o próximo armazem na rota
                     //logica para armazenar o pacote na seção correta (a do próximo destino) do armazem atual
@@ -265,8 +263,60 @@ int main(int argc, char** argv)
                 int destino = proximoEvento.getArmazemDestino();
                 int origem = proximoEvento.getArmazemOrigem();
                 int subtipo = proximoEvento.getSubtipoEvento();
-
+                int posSecao = armazens[origem].encontraSecao(destino);
+                int proxRota = pacoteEvento->getProximoRota();
+                
                 //checar se a secao de destino do armazém de origem está ou não vazia
+                if(armazens[origem].checaVazia(posSecao))
+                {
+                    int tempoAntes = relogioSimulacao;
+                    //passa os lementos da pilha principal para a auxiliar
+                    for(int i = 1; i <= armazens[origem].tamSecaoPrincipal(posSecao); i++)
+                    {    
+                        //remove os elementos da principal e passa para a auxiliar na seção correspondente
+                        armazens[origem].esvaziaPrincipal(posSecao);
+                        Evento novoEvento;
+                        int tempoEvento = tempoAntes + (i*custoRemocao);
+                        std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
+                        novoEvento.setEvento(chaveEvento, 2, 4, tempoEvento, pacoteEvento->getId(), origem, destino, pacoteEvento);
+                        escalonador.Inserir(novoEvento);
+                    }
+                    //escalonar a chegada
+                    for(int i = 1; i <= capacidadeTransp; i++)
+                    {
+                        Pacote aux = armazens[origem].carregaTransporte(capacidadeTransp, destino, posSecao);
+                        armazens[destino].armazenaPacote(aux, proxRota);
+                        Evento novoEvento;
+                        int tempoEvento = tempoAntes + latenciaTransp;
+                        std::string chaveEvento = Evento::construirChavePacote(tempoEvento, aux.getId());
+                        novoEvento.setEvento(chaveEvento, 1, 1, tempoEvento, pacoteEvento->getId(), origem, destino, &aux);
+                        escalonador.Inserir(novoEvento);
+                    }
+                    
+                    //se a pilha auxiliar nãi ficou vazia após as movimentações para transporte
+                    if(!armazens[origem].checaVaziaAux(posSecao))
+                    {
+                        for(int i = 1; i <= armazens[origem].tamSecaoAux(posSecao); i++)
+                        {
+                            Pacote aux = armazens[origem].retornaPrincipal(posSecao);
+                            Evento novoEvento;
+                            int tempoEvento = tempoAntes;
+                            std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
+                            novoEvento.setEvento(chaveEvento, 2, 4, tempoEvento, pacoteEvento->getId(), origem, destino, &aux);
+                            escalonador.Inserir(novoEvento);
+                        }
+                    }
+
+                }
+                int tempoAntes = relogioSimulacao;
+                Evento novoEvento;
+                int tempoEvento = tempoAntes + intervaloTransp;
+                origem = pacoteEvento->getArmAtual();
+                destino = pacoteEvento->getProximoRota();
+                //origem == destino -> evento é entrega 
+                std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
+                pacoteEvento->setArmAtual(destino);
+                novoEvento.setEvento(chaveEvento, 2, 3, tempoEvento, pacoteEvento->getId(), origem, destino, pacoteEvento);
                 /*if(secao não está vazia)
                     {
                     remove pacotes do fundo até a capacidade do transporte, após ter movido todos para a pilha auxiliar

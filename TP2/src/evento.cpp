@@ -1,12 +1,14 @@
 #include "evento.hpp" // Inclui o cabeçalho da própria classe
 #include "pacote.hpp"
+
+#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 //TODOS OS PRINTS DEVEM SER RELIZADOS NA CLASSE EVENTO
 
 // Implementação do construtor de Evento (permanece o mesmo)
-Evento::Evento(std::string chave, int tipo, int subtipo, int t, int id_p, int a_orig, int a_dest, Pacote& ptr) :
+Evento::Evento(std::string chave, int tipo, int subtipo, int t, int id_p, int a_orig, int a_dest, Pacote* ptr) :
     chave_prioridade(chave),
     tipo_evento(tipo),
     subTipoEvento(subtipo),
@@ -65,7 +67,7 @@ int Evento::getArmazemDestino() const
     return armazem_destino_evento; 
 }
 
-Pacote Evento::getPacotePtr() const 
+Pacote* Evento::getPacotePtr() const 
 { 
     return pacote_ptr; 
 }
@@ -159,7 +161,7 @@ int Evento::decodificarDestinoTransporte(std::string chave)
 {
     if (Evento::decodificarTipoEvento(chave) == 2) 
     { 
-        return std::stoi(chave.substr(6, 3)); // 3 caracteres a partir do índice 6
+        return std::stoi(chave.substr(9, 3)); // 3 caracteres a partir do índice 6
     }
     return -1;
 }
@@ -217,7 +219,7 @@ void Evento::setEvento(
     int id_p, 
     int a_orig, 
     int a_dest, 
-    const Pacote& pacote)
+    Pacote* pacote)
 {
     chave_prioridade = chave;
     tipo_evento = tipo;
@@ -227,6 +229,44 @@ void Evento::setEvento(
     armazem_origem_evento = a_orig;
     armazem_destino_evento = a_dest;
     pacote_ptr = pacote; // supõe que Pacote tem copy constructor válido
+}
+
+void Evento::what()
+{
+    //se o evento for armazenamneto (postagem ou chegou a um novo armazém na rota)
+    if(this->subTipoEvento == 1)
+    {
+         std::cout << std::setfill('0') << std::setw(7) << this->tempoInicio << " pacote " << std::setw(3) 
+                   << this->id_pacote << " armazenado em " << std::setw(3) << this->pacote_ptr->getArmAtual() 
+                   << " na secao " << std::setw(3) << this->pacote_ptr->getProximoRota() << std::endl;
+    }
+
+    else if(this->subTipoEvento == 2)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << this->tempoInicio << " pacote " << std::setw(3) 
+                  << this->id_pacote << " removido de " << std::setw(3) << this->pacote_ptr->getArmAtual() 
+                  << " na secao " << std::setw(3) << this->pacote_ptr->getProximoRota() << std::endl;
+    }
+
+    else if(this->subTipoEvento == 3)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << this->tempoInicio << " pacote " << std::setw(3) 
+                  << this->id_pacote << " em transito de " << std::setw(3) << this->pacote_ptr->getArmAtual() 
+                  << " para " << std::setw(3) << this->pacote_ptr->getProximoRota() << std::endl;
+    }
+
+    else if(this->subTipoEvento == 4)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << this->tempoInicio << " pacote " << std::setw(3) 
+                  << this->id_pacote << " armazenado em " << std::setw(3) << this->pacote_ptr->getArmAtual() 
+                  << " na secao " << std::setw(3) << this->pacote_ptr->getProximoRota() << std::endl;
+    }
+
+    else if(this->subTipoEvento == 5)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << this->tempoInicio << " pacote " << std::setw(3) 
+                  << this->id_pacote << " entregue " << std::setw(3) << this->pacote_ptr->getArmAtual();
+    }
 }
 
 

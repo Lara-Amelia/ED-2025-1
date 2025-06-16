@@ -37,7 +37,7 @@ bool Heap::Vazio()
         return false;    
 }
 
-void Heap::Inserir(Evento eventoPtr)
+void Heap::Inserir(Evento& eventoPtr)
 {
     data[tamanho] = eventoPtr; //inserimos na última posição
     int i = tamanho;
@@ -104,4 +104,9 @@ Evento Heap::Remover()
         }
     };
     return x;
+}
+
+Evento Heap::Topo()
+{
+    return data[0];  // ou const Evento& se preferir não copiar
 }

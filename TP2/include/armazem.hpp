@@ -40,7 +40,7 @@ class Armazem
     void setArmazem(int nAdj, int idG, int custo);
     void setDestinoSecao(int destino, int posicao);
     void setVizinho(int vizinho, int posicao);
-    void armazenaPacote(Pacote& item, int posSecao); //insere o pacote na pilha principal da seção correspondente
+    void armazenaPacote(Pacote item, int posSecao); //insere o pacote na pilha principal da seção correspondente
 
     //método que definirá com qual seção estamos lidando
     //deve ser chamado antes do início de operações que utilizaram uma certa seção,
@@ -55,13 +55,17 @@ class Armazem
     //transfere os pacotes da pilha principal para a auxiliar 
     void esvaziaPrincipal(int posSecao); 
 
+    int tamSecaoAux(int posSecao);
+    bool checaVaziaAux(int posSecao);
     //retira os capacidade primeiros elementos da pilha auxiliar
-    void carregaTransporte(int capacidade, int destino, int posSecao);
+    Pacote carregaTransporte(int capacidade, int destino, int posSecao);
 
     //retorna os elementos que ficaram na pilha auxiliar para a principal - pacote rearmazenado
     //talvez o parâmetro possa ser só a seção (em todos os lugares onde passamos ambas as pilhas)
     //é melhor do que sempre buscar a seção de referência
-    void retornaPrincipal(int posSecao);
+    Pacote retornaPrincipal(int posSecao);
+    int tamSecaoPrincipal(int posSecao);
+    bool checaVazia(int posSecao);
 };
 
 #endif

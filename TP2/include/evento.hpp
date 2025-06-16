@@ -16,13 +16,13 @@ class Evento
         int armazem_origem_evento;  // Armazém de origem do evento (e.g., postagem, origem de transporte)
         int armazem_destino_evento; // Armazém de destino do evento (e.g., destino final, destino de transporte)
         
-        Pacote pacote_ptr;         // Ponteiro para o objeto Pacote real, que é afetado por este evento.
+        Pacote* pacote_ptr;         // Ponteiro para o objeto Pacote real, que é afetado por este evento.
                                     // NOTA: A classe Evento NÃO é responsável por deletar Pacote* aqui.
 
     public:
         // Construtor: Inicializa um objeto Evento com todos os seus detalhes.
         // A chave_prioridade é construída externamente ou por funções auxiliares.
-        Evento(std::string chave, int tipo, int subtipo, int t, int id_p, int a_orig, int a_dest, Pacote& ptr);
+        Evento(std::string chave, int tipo, int subtipo, int t, int id_p, int a_orig, int a_dest, Pacote* ptr);
 
         // Getters: Métodos const para acessar os valores dos atributos privados.
         Evento& operator=(const Evento& other);
@@ -30,8 +30,9 @@ class Evento
 
         Evento();
 
-        void setEvento(const std::string& chave, int tipo, int subtipo, int tInicio, int id_p, int a_orig, int a_dest, const Pacote& pacote);
+        void setEvento(const std::string& chave, int tipo, int subtipo, int tInicio, int id_p, int a_orig, int a_dest, Pacote* pacote);
 
+        void what();
         std::string getChave() const;
         int getSubtipoEvento() const;
         int getTipoEvento() const;
@@ -40,7 +41,7 @@ class Evento
         int getIdPacote() const;
         int getArmazemOrigem() const;
         int getArmazemDestino() const;
-        Pacote getPacotePtr() const; // Retorna o ponteiro para o Pacote associado.
+        Pacote* getPacotePtr() const; // Retorna o ponteiro para o Pacote associado.
 
         void setTempoFim(int n);
 

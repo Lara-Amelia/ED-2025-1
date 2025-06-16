@@ -1,5 +1,6 @@
 #include "armazem.hpp"
 #include "pilha.hpp"
+#include "evento.hpp"
 #include <iostream>
 
 Secao::Secao()
@@ -101,9 +102,19 @@ int Armazem::encontraSecao(int destino)
     return -1; 
 }
 
+bool Armazem::checaVazia(int posSecao)
+{
+    return secoes[posSecao].principal.Vazia();
+}
+
+bool Armazem::checaVaziaAux(int posSecao)
+{
+    return secoes[posSecao].auxiliar.Vazia();
+}
+
 //a seção passada será acessada no vetor secoes utilizando o índice fornecido pelo método encontraSecao
 //para qualquer operação similar, essa será a abordagem empregada
-void Armazem::armazenaPacote(Pacote& item, int posSecao)
+void Armazem::armazenaPacote(Pacote item, int posSecao)
 {
     secoes[posSecao].principal.Empilha(item);
     //insere o pacote na pilha principal da seção correspondente
@@ -113,12 +124,21 @@ void Armazem::armazenaPacote(Pacote& item, int posSecao)
     //std::cout << "pacote " << item.getId() << " armazenado em " << idGrafo << " na secao " << secao.destino << std::endl;       
 }
 
+int Armazem::tamSecaoPrincipal(int posSecao)
+{
+    return secoes[posSecao].principal.getTam();
+}
+
+int Armazem::tamSecaoAux(int posSecao)
+{
+    return secoes[posSecao].auxiliar.getTam();
+}
 
 void Armazem::esvaziaPrincipal(int posSecao)
 {
     //enquanto a pilha principal da secao não estiver vazia
-    for(int j = 0; j < secoes[posSecao].principal.getTam(); j++)
-    {
+    //for(int j = 0; j < secoes[posSecao].principal.getTam(); j++)
+    //{
         //passa todos os pacotes da pilha principal para a auxiliar
         //registrar o custo de retirada, que será a quantidade de pacotes movidos * custoRemocao
         //o valor de custo remocao deve ser incluído no CLK do sistema
@@ -127,28 +147,29 @@ void Armazem::esvaziaPrincipal(int posSecao)
         //talvez uma variável tempo para imprimir corretamente os tempos
         //o transporte só pode ocorrer após essa remoção
         //std::cout << "pacote " << aux.getId() << " removido de " << this->idGrafo << " na secao " << secao.destino << std::endl;
-    }
+    //}
 }
 
-void Armazem::carregaTransporte(int capacidade, int destino, int posSecao)
+Pacote Armazem::carregaTransporte(int capacidade, int destino, int posSecao)
 {
-    while(capacidade > 0)
-    {
-        Pacote aux = secoes[posSecao].auxiliar.Desempilha();
-        capacidade--;
+    //while(capacidade > 0)
+    //{
+        return secoes[posSecao].auxiliar.Desempilha();
+        //capacidade--;
         //nesse método também devemos atualizar o estado do pacote
         //std::cout << "pacote " << aux.getId() << " em transito de " << this->idGrafo << " para " << secao.destino << std::endl;
-    }
+    //}
 }
 
 //passa os pacotes que não puderam ser transportados de volta para a fila principal
-void Armazem::retornaPrincipal(int posSecao)
+Pacote Armazem::retornaPrincipal(int posSecao)
 {
-    for(int i = 0; i < secoes[posSecao].auxiliar.getTam(); i++)
-    {
+    //for(int i = 0; i < secoes[posSecao].auxiliar.getTam(); i++)
+    //{
         Pacote aux = secoes[posSecao].auxiliar.Desempilha();
         secoes[posSecao].principal.Empilha(aux);
+        return aux;
         //também devemos alterar o estado do pacote nesse método
         //std::cout << "pacote " << aux.getId() << "rearmazenado em " << this->idGrafo << " na secao " << secao.destino << std::endl;
-    }
+    //}
 }

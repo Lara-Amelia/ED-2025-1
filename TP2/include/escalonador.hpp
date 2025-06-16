@@ -9,10 +9,11 @@ class Heap{
         Heap(int maxsize);
         ~Heap();
 
-        void Inserir(Evento eventoPtr);
+        void Inserir(Evento& eventoPtr);
         Evento Remover();
 
         bool Vazio();
+        Evento Topo();
 
     private:
         int GetAncestral(int posicao);
