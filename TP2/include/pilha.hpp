@@ -10,11 +10,11 @@
 class tipoNo
 {
     private:
-    Pacote item;
+    Pacote* item;
     tipoNo* prox;
 
     public:
-    tipoNo(Pacote& inserido);
+    tipoNo(Pacote* inserido);
     tipoNo();
 
     friend class Pilha;
@@ -31,8 +31,8 @@ class Pilha
     ~Pilha(); //detrutor
     int getTam();
     bool Vazia();
-    void Empilha(Pacote item);
-    Pacote Desempilha();
+    void Empilha(Pacote* item);
+    Pacote* Desempilha();
     void Limpa();
 };
 

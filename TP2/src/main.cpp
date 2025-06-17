@@ -163,7 +163,7 @@ int main(int argc, char** argv)
             armazens[i] = new Armazem(nroArmazens, i, custoRemocao);
         }*/
 
-        Heap escalonador(numeroPacotes*1000);
+        Heap escalonador(200);
         for (int k = 0; k < numeroPacotes; ++k) 
         { 
             // Loop para ler cada linha de pacote 
@@ -191,8 +191,8 @@ int main(int argc, char** argv)
 
             std::string chave_evento_chegada = Evento::construirChavePacote(tempoChegada, idPacote); 
             
-            Evento novo_evento; 
-            novo_evento.setEvento(chave_evento_chegada, 1, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, &pacotes[k]);
+            Evento* novo_evento = new Evento; 
+            novo_evento->setEvento(chave_evento_chegada, 1, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, &pacotes[k]);
             escalonador.Inserir(novo_evento);
             pacotes[k].setArmAtual(armazemInicial);
 
@@ -210,18 +210,20 @@ int main(int argc, char** argv)
         //ou enquanto tamPacotes aina não tiver sido zerado, o que indica que nem todos os pacotes foram entregues
         while(((!escalonador.Vazio()) || (tamPacotes > 0)) /*&& (iteracoes <= numeroPacotes)*/)
         {
-            Evento proximoEvento = escalonador.Remover();
-            relogioSimulacao = proximoEvento.getTempoInicio();
-            proximoEvento.what();
+            if(escalonador.Vazio())
+                break;
+            Evento* proximoEvento = escalonador.Remover();
+            relogioSimulacao = proximoEvento->getTempoInicio();
+            proximoEvento->what();
             iteracoes++;
 
             //os subtipos de evento são: 1.armazenamento, 2.remoção, 3.transporte, 4.rearmazenamento, 5.entrega
             //os possíveis estados de um pacote são: 1.não postado, 2.chegada escalonada a um armazém, 
             //3.armazenado na seção do próximo destino em lagum armazém, 4.removido da seção para transporte
             //5.entregue
-            int tipoEvento = proximoEvento.getTipoEvento();
-            int subtipo = proximoEvento.getSubtipoEvento();
-            Pacote* pacoteEvento = proximoEvento.getPacotePtr();
+            int tipoEvento = proximoEvento->getTipoEvento();
+            int subtipo = proximoEvento->getSubtipoEvento();
+            Pacote* pacoteEvento = proximoEvento->getPacotePtr();
             //se o evento é pacote
             if(tipoEvento == 1)
             {
@@ -251,7 +253,7 @@ int main(int argc, char** argv)
                     int posicaoSecao = armazens[armazemAtual].encontraSecao(armazemSeguinte);
                    
                     //CHECAR ISSO AQUI QUE PROVAVELMENTE VAI DAR PROBLEMA
-                    armazens[armazemAtual].armazenaPacote((*pacoteEvento), posicaoSecao); 
+                    armazens[armazemAtual].armazenaPacote((pacoteEvento), posicaoSecao); 
                     //armazena na secao correta do armazem atual
                     //logica para encontrar qual é o próximo armazem na rota
                     //logica para armazenar o pacote na seção correta (a do próximo destino) do armazem atual
@@ -260,36 +262,36 @@ int main(int argc, char** argv)
             //se for um evento de transporte
             else if(tipoEvento == 2)
             {
-                int destino = proximoEvento.getArmazemDestino();
-                int origem = proximoEvento.getArmazemOrigem();
-                int subtipo = proximoEvento.getSubtipoEvento();
+                int destino = proximoEvento->getArmazemDestino();
+                int origem = proximoEvento->getArmazemOrigem();
+                int subtipo = proximoEvento->getSubtipoEvento();
                 int posSecao = armazens[origem].encontraSecao(destino);
                 int proxRota = pacoteEvento->getProximoRota();
                 
                 //checar se a secao de destino do armazém de origem está ou não vazia
-                if(armazens[origem].checaVazia(posSecao))
+                if(!armazens[origem].checaVazia(posSecao))
                 {
                     int tempoAntes = relogioSimulacao;
                     //passa os lementos da pilha principal para a auxiliar
                     for(int i = 1; i <= armazens[origem].tamSecaoPrincipal(posSecao); i++)
                     {    
                         //remove os elementos da principal e passa para a auxiliar na seção correspondente
-                        armazens[origem].esvaziaPrincipal(posSecao);
-                        Evento novoEvento;
+                        Pacote* aux = armazens[origem].esvaziaPrincipal(posSecao);
+                        Evento* novoEvento = new Evento;
                         int tempoEvento = tempoAntes + (i*custoRemocao);
                         std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
-                        novoEvento.setEvento(chaveEvento, 2, 4, tempoEvento, pacoteEvento->getId(), origem, destino, pacoteEvento);
+                        novoEvento->setEvento(chaveEvento, 2, 4, tempoEvento, aux->getId(), origem, destino, pacoteEvento);
                         escalonador.Inserir(novoEvento);
                     }
                     //escalonar a chegada
                     for(int i = 1; i <= capacidadeTransp; i++)
                     {
-                        Pacote aux = armazens[origem].carregaTransporte(capacidadeTransp, destino, posSecao);
+                        Pacote* aux = armazens[origem].carregaTransporte(capacidadeTransp, destino, posSecao);
                         armazens[destino].armazenaPacote(aux, proxRota);
-                        Evento novoEvento;
+                        Evento* novoEvento = new Evento;
                         int tempoEvento = tempoAntes + latenciaTransp;
-                        std::string chaveEvento = Evento::construirChavePacote(tempoEvento, aux.getId());
-                        novoEvento.setEvento(chaveEvento, 1, 1, tempoEvento, pacoteEvento->getId(), origem, destino, &aux);
+                        std::string chaveEvento = Evento::construirChavePacote(tempoEvento, aux->getId());
+                        novoEvento->setEvento(chaveEvento, 1, 1, tempoEvento, aux->getId(), origem, destino, aux);
                         escalonador.Inserir(novoEvento);
                     }
                     
@@ -298,25 +300,26 @@ int main(int argc, char** argv)
                     {
                         for(int i = 1; i <= armazens[origem].tamSecaoAux(posSecao); i++)
                         {
-                            Pacote aux = armazens[origem].retornaPrincipal(posSecao);
-                            Evento novoEvento;
+                            Pacote* aux = armazens[origem].retornaPrincipal(posSecao);
+                            Evento* novoEvento = new Evento;
                             int tempoEvento = tempoAntes;
                             std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
-                            novoEvento.setEvento(chaveEvento, 2, 4, tempoEvento, pacoteEvento->getId(), origem, destino, &aux);
+                            novoEvento->setEvento(chaveEvento, 2, 4, tempoEvento, aux->getId(), origem, destino, aux);
                             escalonador.Inserir(novoEvento);
                         }
                     }
 
                 }
                 int tempoAntes = relogioSimulacao;
-                Evento novoEvento;
+                Evento* novoEvento = new Evento;
                 int tempoEvento = tempoAntes + intervaloTransp;
                 origem = pacoteEvento->getArmAtual();
                 destino = pacoteEvento->getProximoRota();
                 //origem == destino -> evento é entrega 
                 std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
                 pacoteEvento->setArmAtual(destino);
-                novoEvento.setEvento(chaveEvento, 2, 3, tempoEvento, pacoteEvento->getId(), origem, destino, pacoteEvento);
+                novoEvento->setEvento(chaveEvento, 2, 3, tempoEvento, pacoteEvento->getId(), origem, destino, pacoteEvento);
+                escalonador.Inserir(novoEvento);
                 /*if(secao não está vazia)
                     {
                     remove pacotes do fundo até a capacidade do transporte, após ter movido todos para a pilha auxiliar
@@ -328,6 +331,7 @@ int main(int argc, char** argv)
                   }
                 */
             }
+            delete proximoEvento;
         }
         //assim que sair do while, temos de liberar os vetores que foram armazenados e fazer outras "limpezas" que sejam necessárias
     }

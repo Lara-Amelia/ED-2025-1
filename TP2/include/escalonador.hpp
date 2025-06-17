@@ -9,8 +9,8 @@ class Heap{
         Heap(int maxsize);
         ~Heap();
 
-        void Inserir(Evento& eventoPtr);
-        Evento Remover();
+        void Inserir(Evento* eventoPtr);
+        Evento* Remover();
 
         bool Vazio();
         Evento Topo();
@@ -21,7 +21,7 @@ class Heap{
         int GetSucessorDir(int posicao);
 
         int tamanho;
-        Evento* data; //vetor com a heap
+        Evento** data; //vetor com a heap
 };
 
 #endif

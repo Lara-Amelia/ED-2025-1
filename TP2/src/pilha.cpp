@@ -2,7 +2,7 @@
 #include "pacote.hpp"
 
 //talvez receber o pacote quando o inserimos
-tipoNo::tipoNo(Pacote& inserido)
+tipoNo::tipoNo(Pacote* inserido)
 {
     item = inserido;
     prox = NULL;
@@ -10,7 +10,7 @@ tipoNo::tipoNo(Pacote& inserido)
 
 tipoNo::tipoNo()
 {
-    item.setId(-1);
+    item->setId(-1);
     prox = NULL;
 }
 
@@ -30,7 +30,7 @@ int Pilha::getTam()
     return tamanho;
 }
 
-void Pilha::Empilha(Pacote item)
+void Pilha::Empilha(Pacote* item)
 {
     tipoNo *nova;
 
@@ -41,9 +41,9 @@ void Pilha::Empilha(Pacote item)
     tamanho++;
 }
 
-Pacote Pilha::Desempilha()
+Pacote* Pilha::Desempilha()
 {
-    Pacote aux;
+    Pacote* aux;
     tipoNo *p;
 
     /*if(tamanho == 0)
@@ -68,5 +68,3 @@ void Pilha::Limpa()
     while(!Vazia())
         Desempilha();
 }
-
-

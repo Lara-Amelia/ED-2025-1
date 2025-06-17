@@ -114,7 +114,7 @@ bool Armazem::checaVaziaAux(int posSecao)
 
 //a seção passada será acessada no vetor secoes utilizando o índice fornecido pelo método encontraSecao
 //para qualquer operação similar, essa será a abordagem empregada
-void Armazem::armazenaPacote(Pacote item, int posSecao)
+void Armazem::armazenaPacote(Pacote* item, int posSecao)
 {
     secoes[posSecao].principal.Empilha(item);
     //insere o pacote na pilha principal da seção correspondente
@@ -134,7 +134,7 @@ int Armazem::tamSecaoAux(int posSecao)
     return secoes[posSecao].auxiliar.getTam();
 }
 
-void Armazem::esvaziaPrincipal(int posSecao)
+Pacote* Armazem::esvaziaPrincipal(int posSecao)
 {
     //enquanto a pilha principal da secao não estiver vazia
     //for(int j = 0; j < secoes[posSecao].principal.getTam(); j++)
@@ -142,15 +142,16 @@ void Armazem::esvaziaPrincipal(int posSecao)
         //passa todos os pacotes da pilha principal para a auxiliar
         //registrar o custo de retirada, que será a quantidade de pacotes movidos * custoRemocao
         //o valor de custo remocao deve ser incluído no CLK do sistema
-        Pacote aux = secoes[posSecao].principal.Desempilha();
+        Pacote* aux = secoes[posSecao].principal.Desempilha();
         secoes[posSecao].auxiliar.Empilha(aux);
         //talvez uma variável tempo para imprimir corretamente os tempos
         //o transporte só pode ocorrer após essa remoção
         //std::cout << "pacote " << aux.getId() << " removido de " << this->idGrafo << " na secao " << secao.destino << std::endl;
-    //}
+    //} 
+    return aux;
 }
 
-Pacote Armazem::carregaTransporte(int capacidade, int destino, int posSecao)
+Pacote* Armazem::carregaTransporte(int capacidade, int destino, int posSecao)
 {
     //while(capacidade > 0)
     //{
@@ -162,11 +163,11 @@ Pacote Armazem::carregaTransporte(int capacidade, int destino, int posSecao)
 }
 
 //passa os pacotes que não puderam ser transportados de volta para a fila principal
-Pacote Armazem::retornaPrincipal(int posSecao)
+Pacote* Armazem::retornaPrincipal(int posSecao)
 {
     //for(int i = 0; i < secoes[posSecao].auxiliar.getTam(); i++)
     //{
-        Pacote aux = secoes[posSecao].auxiliar.Desempilha();
+        Pacote* aux = secoes[posSecao].auxiliar.Desempilha();
         secoes[posSecao].principal.Empilha(aux);
         return aux;
         //também devemos alterar o estado do pacote nesse método
