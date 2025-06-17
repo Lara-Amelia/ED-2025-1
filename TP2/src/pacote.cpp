@@ -184,6 +184,11 @@ int Pacote::getProximoRota()
     return -1; // Retorna -1 para indicar erro. 
 }
 
+int Pacote::getEstado()
+{
+    return estadoAtual;
+}
+
 Pacote::Pacote(const Pacote& outro)
 {
     identificador = outro.identificador;

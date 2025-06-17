@@ -62,6 +62,7 @@ class Pacote
     Pacote& operator=(const Pacote& outro);
     Pacote(const Pacote& outro);
 
+    int getEstado();
     int getId();
     //será como um "construtor" default, mas utilizaremos após alocação
     void setDados(int id, int hora, int origem, int destino, int estado);
