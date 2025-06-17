@@ -88,6 +88,7 @@ Evento* Heap::Remover()
         {
             menor = sEsq;
         }
+        
         if ((sDir < tamanho) && (data[sDir]->getChave() < data[menor]->getChave())) 
         {
             menor = sDir;
@@ -100,7 +101,9 @@ Evento* Heap::Remover()
             data[menor] = data[i];
             data[i] = aux;
             i = menor; 
-        } else 
+        } 
+
+        else 
         {
             break; //heap está em ordem
         }

@@ -258,7 +258,7 @@ void Evento::what()
     else if(this->subTipoEvento == 4)
     {
         std::cout << std::setfill('0') << std::setw(7) << this->tempoInicio << " pacote " << std::setw(3) 
-                  << this->id_pacote << " armazenado em " << std::setw(3) << this->pacote_ptr->getArmAtual() 
+                  << this->id_pacote << " rearmazenado em " << std::setw(3) << this->pacote_ptr->getArmAtual() 
                   << " na secao " << std::setw(3) << this->pacote_ptr->getProximoRota() << std::endl;
     }
 
