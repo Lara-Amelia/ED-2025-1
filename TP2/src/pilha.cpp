@@ -10,7 +10,7 @@ tipoNo::tipoNo(Pacote* inserido)
 
 tipoNo::tipoNo()
 {
-    item->setId(-1);
+    item = nullptr;
     prox = NULL;
 }
 

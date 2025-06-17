@@ -66,6 +66,8 @@ class Armazem
     Pacote* retornaPrincipal(int posSecao);
     int tamSecaoPrincipal(int posSecao);
     bool checaVazia(int posSecao);
+
+    void setAdj(int n);
 };
 
 #endif

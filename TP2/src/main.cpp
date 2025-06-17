@@ -100,7 +100,7 @@ int main(int argc, char** argv)
         for(int i = 0; i < nroArmazens; i++)
         {
             transporte.InsereVertice();
-            armazens[i].setArmazem(nroArmazens, i, custoRemocao);
+            //armazens[i].setArmazem(nroArmazens, i, custoRemocao);
         }
 
         std::string linha_matriz; // Variável para ler cada linha da matriz
@@ -120,6 +120,8 @@ int main(int argc, char** argv)
             int col_count = 0;
             int qtAdj = 0;
 
+            armazens[i].setArmazem(nroArmazens, i, custoRemocao);
+
             while (ss >> valor_celula) 
             {
                 if (col_count >= nroArmazens) 
@@ -136,7 +138,8 @@ int main(int argc, char** argv)
                 }
                 col_count++;
             }
-
+            
+            //armazens[i].setAdj(qtAdj);
             if (col_count < nroArmazens) 
             {
                 throw std::runtime_error("ERRO: Linha " + std::to_string(i) + " possui menos colunas do que o esperado (" + std::to_string(nroArmazens) + ").");
@@ -185,8 +188,20 @@ int main(int argc, char** argv)
 
             // Cria a instância do Pacote
             //estado 1 para ainda não postado
-            pacotes[k].setDados(idPacote, tempoChegada, armazemInicial, armazemFinal, 1);
+            pacotes[k].setDados(k, tempoChegada, armazemInicial, armazemFinal, 1);
             
+            if(k == 0) 
+            {
+                relogioSimulacao = tempoChegada;
+            }
+            else 
+            {
+                if(tempoChegada < relogioSimulacao) 
+                {
+                    relogioSimulacao = tempoChegada;
+                }
+            }
+
             // Calcula e armazena a rota do pacote usando BFS no grafo de transporte 
             transporte.buscaLargura(armazemInicial, armazemFinal, pacotes[k].rota);
 
@@ -196,16 +211,16 @@ int main(int argc, char** argv)
             std::string chave_evento_chegada = Evento::construirChavePacote(tempoChegada, idPacote); 
             
             Evento* novo_evento = new Evento; 
-            novo_evento->setEvento(chave_evento_chegada, 1, 1, tempoChegada, idPacote, armazemInicial, armazemFinal, &pacotes[k]);
+            novo_evento->setEvento(chave_evento_chegada, 1, 1, tempoChegada, k, armazemInicial, armazemFinal, &pacotes[k]);
             escalonador.Inserir(novo_evento);
             pacotes[k].setArmAtual(armazemInicial);
 
-            std::cout << "  Pacote lido: Tempo=" << tempoChegada << ", ID=" << idPacote << ", Origem=" << armazemInicial << ", Destino=" << armazemFinal << ". Chave: " << chave_evento_chegada << std::endl;
+            std::cout << "  Pacote lido: Tempo=" << tempoChegada << ", ID=" << pacotes[k].getId() << ", Origem=" << armazemInicial << ", Destino=" << armazemFinal << ". Chave: " << chave_evento_chegada << std::endl;
             std::cout << "  Rota calculada para Pacote " << idPacote << ": ";
             pacotes[k].rota.Imprime(); // Imprime a rota do pacote para verificação.
             //delete[] pacotes;
 
-            int tempoTransp = relogioSimulacao + latenciaTransp;
+            int tempoTransp = relogioSimulacao + intervaloTransp;
             int destino = pacotes[k].getProximoRota();
             std::string chaveTransporte = Evento::construirChaveTransporte(tempoTransp, armazemInicial, destino);
             Evento* novoTransp = new Evento;
@@ -218,8 +233,9 @@ int main(int argc, char** argv)
         int iteracoes = 1;
         //condição de parada falsa - só será T quando a heap estiver vazia (não há mais eventos)
         //ou enquanto tamPacotes aina não tiver sido zerado, o que indica que nem todos os pacotes foram entregues
-        while(((!escalonador.Vazio()) || (tamPacotes > 0)) /*&& (iteracoes <= numeroPacotes)*/)
+        while((/*(!escalonador.Vazio()) ||*/ (tamPacotes > 0)) /*&& (iteracoes <= numeroPacotes)*/)
         {
+            //std::cout << "tam. escalonador " << escalonador.getTam() << std::endl;
             if(escalonador.Vazio())
                 break;
             Evento* proximoEvento = escalonador.Remover();
@@ -235,51 +251,8 @@ int main(int argc, char** argv)
             int tipoEvento = proximoEvento->getTipoEvento();
             //int subtipo = proximoEvento->getSubtipoEvento();
             Pacote* pacoteEvento = proximoEvento->getPacotePtr();
-            //se o evento é pacote
-            if(tipoEvento == 1)
-            {
-                //se chegou ao armazém de destino
-                //isso será checado quando formos escalonar o próximo transporte de pacote
-                //se o próximo armazem for o de destino, criarems um evento com subtipo 5
-                //caso contrário, o evento terá subtipo 1 (armazenamento "simples")
-                /*if(pacoteEvento->getArmAtual() == pacoteEvento->getArmDestino())
-                {
-
-                    //registra entrega e deixa de existir no sistema
-                }*/
-               //se chegou ao destino final
-                if(proximoEvento->getPacotePtr()->getArmDestino() == proximoEvento->getArmazemOrigem())
-                {
-                    std::cout << std::setfill('0') << std::setw(7) << relogioSimulacao << " pacote " << std::setw(3) 
-                              << proximoEvento->getIdPacote() << " entregue " << std::setw(3) << proximoEvento->getArmazemDestino();
-                    //indica que o novo estado do pacote é entregue
-                    pacoteEvento->setEstadoAtual(5);
-                    tamPacotes--;
-                }
-
-                //se ainda não está no destino final
-                //else if(pacoteEvento->getArmAtual() != pacoteEvento->getArmDestino())
-                else
-                {
-                    //teremos que atualizar o armazematual para o seguinte quando fizermos o escalonamento do transporte para que funcione
-                    int armazemAtual = pacoteEvento->getArmAtual();
-                    int armazemSeguinte = pacoteEvento->getProximoRota();
-                    int posicaoSecao = armazens[armazemAtual].encontraSecao(armazemSeguinte);
-                   
-                    //MUDAR ESTADO DO PACOTE PARA 3
-
-                    //CHECAR ISSO AQUI QUE PROVAVELMENTE VAI DAR PROBLEMA
-                    armazens[armazemAtual].armazenaPacote((pacoteEvento), posicaoSecao); 
-                    //armazena na secao correta do armazem atual
-                    //logica para encontrar qual é o próximo armazem na rota
-                    //logica para armazenar o pacote na seção correta (a do próximo destino) do armazem atual
-                    std::cout << std::setfill('0') << std::setw(7) << relogioSimulacao << " pacote " << std::setw(3) 
-                              << proximoEvento->getIdPacote() << " armazenado em " << std::setw(3) << armazemAtual
-                              << " na secao " << std::setw(3) << armazemSeguinte << std::endl;
-                }
-            }
             //se for um evento de transporte
-            else if(tipoEvento == 2)
+            if(tipoEvento == 2)
             {
                 int inicioTransp = relogioSimulacao;
                 int destino = proximoEvento->getArmazemDestino();
@@ -308,12 +281,18 @@ int main(int argc, char** argv)
                                   << std::setw(3) << destino << std::endl;
                     }
                     //escalonar a chegada
-                    for(int i = 1; i <= capacidadeTransp; i++)
+                    for(int i = 0; i < capacidadeTransp; i++)
                     {
+                        if (armazens[origem].checaVaziaAux(posSecao)) 
+                        {
+                            break; // No more packages in the auxiliary stack to transport
+                        }
+
                         //remove quantos pacotes for possível da pila auxiliar e já os coloca na seção de destino
                         //do armazém seguinte
                         Pacote* aux = armazens[origem].carregaTransporte(capacidadeTransp, destino, posSecao);
                         armazens[destino].armazenaPacote(aux, proxRota);
+                        pacoteEvento->setArmAtual(destino);
 
                         //escalona o evento de chegada
                         Evento* novoEvento = new Evento;
@@ -322,7 +301,7 @@ int main(int argc, char** argv)
                         novoEvento->setEvento(chaveEvento, 1, 1, tempoEvento, aux->getId(), origem, destino, aux);
                         escalonador.Inserir(novoEvento);
 
-                         std::cout << std::setfill('0') << std::setw(7) << tempoEvento << " pacote " << std::setw(3) 
+                         std::cout << std::setfill('0') << std::setw(7) << relogioSimulacao << " pacote " << std::setw(3) 
                                    << aux->getId() << " em transito de " << std::setw(3) << origem 
                                    << " para " << std::setw(3) << destino << std::endl;
                     }
@@ -353,19 +332,45 @@ int main(int argc, char** argv)
                 destino = pacoteEvento->getProximoRota();
                 //origem == destino -> evento é entrega 
                 std::string chaveEvento = Evento::construirChaveTransporte(tempoEvento, origem, destino);
-                pacoteEvento->setArmAtual(destino);
+                //pacoteEvento->setArmAtual(destino);
                 novoEvento->setEvento(chaveEvento, 2, 3, tempoEvento, pacoteEvento->getId(), origem, destino, pacoteEvento);
                 escalonador.Inserir(novoEvento);
-                /*if(secao não está vazia)
-                    {
-                    remove pacotes do fundo até a capacidade do transporte, após ter movido todos para a pilha auxiliar
-                    escalona chegada dos removidos no próximo armazem da rota
-                    }
-                  else
-                  {
-                    escalona próximo evento de transporte 
-                  }
-                */
+            }
+
+            else if(tipoEvento == 1)
+            {
+                //se chegou no fim da rota/foi entregue
+                //std::cout << proximoEvento->getArmazemOrigem() << pacoteEvento->getArmDestino() << pacoteEvento->getProximoRota() << std::endl;
+                if(proximoEvento->getArmazemOrigem() == pacoteEvento->getArmDestino() || (pacoteEvento->getProximoRota() == -1))
+                {
+                    std::cout << std::setfill('0') << std::setw(7) << relogioSimulacao << " pacote " << std::setw(3) 
+                              << proximoEvento->getIdPacote() << " entregue em " << std::setw(3) << proximoEvento->getArmazemDestino() << std::endl;
+                    //indica que o novo estado do pacote é entregue
+                    pacoteEvento->setEstadoAtual(5);
+                    tamPacotes--;
+                    //std::cout << "qt pacotes não entregues " << tamPacotes << std::endl;
+                }
+
+                else
+                {
+                    //teremos que atualizar o armazematual para o seguinte quando fizermos o escalonamento do transporte para que funcione
+                    
+                    
+                    int armazemAtual = pacoteEvento->getArmAtual();
+                    int armazemSeguinte = pacoteEvento->getProximoRota();
+                    int posicaoSecao = armazens[armazemAtual].encontraSecao(armazemSeguinte);
+                   
+                    //MUDAR ESTADO DO PACOTE PARA 3
+
+                    //CHECAR ISSO AQUI QUE PROVAVELMENTE VAI DAR PROBLEMA
+                    //armazens[armazemAtual].armazenaPacote((pacoteEvento), posicaoSecao); 
+                    //armazena na secao correta do armazem atual
+                    //logica para encontrar qual é o próximo armazem na rota
+                    //logica para armazenar o pacote na seção correta (a do próximo destino) do armazem atual
+                    std::cout << std::setfill('0') << std::setw(7) << relogioSimulacao << " pacote " << std::setw(3) 
+                              << proximoEvento->getIdPacote() << " armazenado em " << std::setw(3) << armazemAtual
+                              << " na secao " << std::setw(3) << armazemSeguinte << std::endl;
+                }
             }
             delete proximoEvento;
         }

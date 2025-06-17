@@ -31,10 +31,12 @@ int Heap::GetSucessorEsq(int posicao)
 
 bool Heap::Vazio()
 {
-    if(tamanho == 0)
-        return true;
-    else
-        return false;    
+    return tamanho == 0;  
+}
+
+int Heap::getTam()
+{
+    return tamanho;
 }
 
 void Heap::Inserir(Evento* eventoPtr)
@@ -88,7 +90,7 @@ Evento* Heap::Remover()
         {
             menor = sEsq;
         }
-        
+
         if ((sDir < tamanho) && (data[sDir]->getChave() < data[menor]->getChave())) 
         {
             menor = sDir;

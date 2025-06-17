@@ -12,6 +12,7 @@ class Heap{
         void Inserir(Evento* eventoPtr);
         Evento* Remover();
 
+        int getTam();
         bool Vazio();
         Evento Topo();
 

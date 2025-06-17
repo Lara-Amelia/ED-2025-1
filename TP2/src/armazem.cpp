@@ -102,6 +102,11 @@ int Armazem::encontraSecao(int destino)
     return -1; 
 }
 
+void Armazem::setAdj(int n)
+{
+    nroAdj = n;
+}
+
 bool Armazem::checaVazia(int posSecao)
 {
     return secoes[posSecao].principal.Vazia();

@@ -160,7 +160,7 @@ int Pacote::getProximoRota()
         return -1; // Retorna -1 para indicar que não há próximo na rota.
     }*/
     
-    Node* p = this->rota.head->prox;
+    Node* p = this->rota.head;
     while (p != nullptr) 
     {
         if (p->aresta == this->armazemAtual) 

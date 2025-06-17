@@ -101,6 +101,7 @@ void Transporte::buscaLargura(int origem, int destino, ListaEncadeada& rota)
     if (origem == destino)  
     {
         rota.inserePosicao(origem, 0);
+        return;
     }
 
     bool* visitado = new bool[n]; // Array para marcar vértices visitados
