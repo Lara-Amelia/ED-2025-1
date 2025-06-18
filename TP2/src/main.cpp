@@ -342,6 +342,8 @@ int main(int argc, char** argv)
 
                 //TENTANDO CONSERTAR O PROBLEMA COM REARMAZENADOS 
                 Evento* novoEvento = new Evento;
+                if(pacoteEvento->getEstado() == 3)
+                    inicioTransp += intervaloTransp;
                 int tempoEvento = inicioTransp + intervaloTransp;
                 origem = pacoteEvento->getArmAtual();
                 destino = pacoteEvento->getProximoRota();
