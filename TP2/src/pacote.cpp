@@ -220,3 +220,8 @@ Pacote& Pacote::operator=(const Pacote& outro)
     }
     return *this;
 }
+
+int Pacote::getHora()
+{ 
+    return horaPostagem;
+}

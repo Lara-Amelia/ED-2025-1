@@ -110,7 +110,7 @@ $(OBJ_DIR)/evento.o: $(SRC_DIR)/evento.cpp $(INC_DIR)/evento.hpp $(INC_DIR)/paco
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # main.cpp inclui vários headers.
-$(OBJ_DIR)/main.o: $(SRC_DIR)/main.cpp $(INC_DIR)/pacote.hpp $(INC_DIR)/armazem.hpp $(INC_DIR)/transporte.hpp $(INC_DIR)/escalonador.hpp \
+$(OBJ_DIR)/main.o: $(SRC_DIR)/mainv2.cpp $(INC_DIR)/pacote.hpp $(INC_DIR)/armazem.hpp $(INC_DIR)/transporte.hpp $(INC_DIR)/escalonador.hpp \
                     $(INC_DIR)/Listas.hpp $(INC_DIR)/Fila.hpp $(INC_DIR)/evento.hpp
 # A linha abaixo DEVE começar com um TAB.
 	$(CC) $(CFLAGS) -c $< -o $@

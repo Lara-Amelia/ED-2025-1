@@ -208,6 +208,7 @@ Evento::Evento()
     id_pacote = 0;
     armazem_origem_evento = 0;
     armazem_destino_evento = 0;
+    pacote_ptr = nullptr;
     // pacote_ptr será inicializado pelo construtor padrão do Pacote automaticamente
 }
 

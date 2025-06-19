@@ -1,5 +1,8 @@
 #include "pilha.hpp"
 #include "pacote.hpp"
+#include <exception>
+#include <string>
+#include <stdexcept>
 
 //talvez receber o pacote quando o inserimos
 tipoNo::tipoNo(Pacote* inserido)
@@ -46,9 +49,9 @@ Pacote* Pilha::Desempilha()
     Pacote* aux;
     tipoNo *p;
 
-    /*if(tamanho == 0)
-       throw "A pilha está vazia" - adicionar depois taratmento de exceções
-    */
+    if(tamanho == 0)
+       throw std::runtime_error("ERRO: a pilha está vazia");
+    
     aux = head->item;
     p = head;
     head = head->prox;

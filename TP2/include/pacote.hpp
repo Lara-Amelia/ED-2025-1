@@ -58,6 +58,7 @@ class Pacote
     Pacote(int id, int hora, int origem, int destino, int estado); //construtor default
     ~Pacote();
     Pacote();
+    int getHora();
 
     Pacote& operator=(const Pacote& outro);
     Pacote(const Pacote& outro);
