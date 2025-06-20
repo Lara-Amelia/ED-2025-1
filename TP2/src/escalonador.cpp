@@ -1,19 +1,23 @@
 #include "escalonador.hpp"
 #include "evento.hpp"
 
-//talvez tenhamos de alterar para que lide com eventos em si, ou podemos utilizar somente as ids de eventos
+#include <exception>
+#include <stdexcept>
 
+//construtor para a classe
 Heap::Heap(int maxsize)
 {
     tamanho = 0; //usaremos para medir onde/quantos elementos já foram inseridos
     data = new Evento*[maxsize];
 }
 
+//destrutor para a classe
 Heap::~Heap()
 {
     delete[] data;
 }
 
+//métodos para localização de itens no vetor////////////////////////////////////////////////////////////
 int Heap::GetAncestral(int posicao)
 {
     return (posicao-1)/2;
@@ -28,7 +32,9 @@ int Heap::GetSucessorEsq(int posicao)
 {
     return 2 * posicao + 1;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//método para checar se o escalonador/heap está vazio
 bool Heap::Vazio()
 {
     return tamanho == 0;  
@@ -39,8 +45,19 @@ int Heap::getTam()
     return tamanho;
 }
 
+void Heap::setMaxSize(int n)
+{
+    maxsize = n;
+}
+
+//insere elementos (ponteiros para Evento no escalonador)
 void Heap::Inserir(Evento* eventoPtr)
 {
+    if (tamanho == maxsize) 
+    {
+        throw std::runtime_error("Heap cheia: Nao eh possivel inserir mais eventos."); //
+    }
+
     data[tamanho] = eventoPtr; //inserimos na última posição
     int i = tamanho;
     //anteriores em nível/pais
@@ -61,8 +78,14 @@ void Heap::Inserir(Evento* eventoPtr)
     tamanho++;
 }
 
+//remove elementos do heap/escalonador
 Evento* Heap::Remover()
 {
+    if (tamanho == 0) // Check if heap is empty
+    {
+        throw std::runtime_error("Escalonador vazio: Nao é possivel remover eventos."); //
+    }
+
     Evento* x = data[0];
     data[0] = data[tamanho - 1];
     tamanho--;
@@ -77,14 +100,6 @@ Evento* Heap::Remover()
     {
         sEsq = GetSucessorEsq(i);
         sDir = GetSucessorDir(i);
-        /*if(data[sDir] <= data[sEsq])
-            s = sDir;
-        else
-            s = sEsq;
-        int aux = data[s];
-        data[s] = data[i];
-        data[i] = aux;
-        i = s;*/
         //checa se ambos os filhos existem e qual é o menor deles
         if ((sEsq < tamanho) && (data[sEsq]->getChave() < data[menor]->getChave())) 
         {
@@ -112,8 +127,3 @@ Evento* Heap::Remover()
     };
     return x;
 }
-
-/*Evento Heap::Topo()
-{
-    return data[0];  // ou const Evento& se preferir não copiar
-}*/

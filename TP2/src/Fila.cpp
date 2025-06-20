@@ -1,11 +1,17 @@
 #include "Fila.hpp"
+#include <exception>
+#include <stdexcept>
 
+//implementação do TAD Fila utilizado na definição de rotas com Busca em Largura
+
+//métodos relacionados ao nó da fila////////////////////////////////////////////////////////////////////////
 TipoCelula::TipoCelula()
 {
     item = -1;
     prox = nullptr;
 }
 
+//métodos da classe Fila em si//////////////////////////////////////////////////////////////////////////////
 Fila::Fila()
 {
     tamanho = 0;
@@ -32,21 +38,10 @@ void Fila::Enfileira(int item)
 
 int Fila::Desenfileira()
 {
-    /*TipoCelula* p;
-    int aux;
-
-    //if(tamanho == 0)
-    //    throw "fila está vazia!"
-    
-    aux = frente->prox->item;
-    p = frente;
-    frente = frente->prox;
-    delete p;
-    tamanho--;
-    return aux;*/
-
-    //if(tamanho == 0)
-    //    throw std::runtime_error("Fila está vazia!");
+    if (Vazia() || (frente->prox == nullptr)) // Or if (frente->prox == nullptr)
+    {
+        throw std::out_of_range("Fila vazia: Nao eh possivel desenfileirar");
+    }
 
     TipoCelula* p = frente->prox; // nó que será removido (o primeiro elemento real)
     int aux = p->item;

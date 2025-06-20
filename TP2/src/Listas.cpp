@@ -2,8 +2,10 @@
 #include <iostream>
 #include <exception>
 
-//Métodos da classe ListaEncadeada e Node associado
+//Métodos da classe ListaEncadeada e Node associado///////////////////////////////////////////////////////////////////////
 //Não implementamos operações de remoção pois elas não são necessárias em nosso sistema
+
+//construtor default para o node 
 Node::Node()
 {
     aresta = -1;
@@ -16,6 +18,7 @@ Node::Node(int valor)
     prox = nullptr;
 }
 
+//construtor para a lista encadeada
 ListaEncadeada::ListaEncadeada()
 {
     tamanho = 0;
@@ -29,11 +32,12 @@ ListaEncadeada::~ListaEncadeada()
     delete head;
 }
 
+//método que posiciona o ponteiro no node anterior à posição desejada
 Node* ListaEncadeada::PosicionaAntes(int pos)
 {
     Node *p; int i;
     if((pos > tamanho) || (pos < 0))
-        throw std::runtime_error("posição inválida"); //talvez usar exception
+        throw std::runtime_error("posição inválida na lista encadeada"); 
     p = head;
     for(i = 0; i < pos; i++)
     {
@@ -42,11 +46,12 @@ Node* ListaEncadeada::PosicionaAntes(int pos)
     return p;
 }
 
+//método que posiciona o ponteiro na posição desejada
 Node* ListaEncadeada::PosicionaEm(int pos)
 {
     Node *p; int i;
     if((pos > tamanho) || (pos < 0))
-        throw std::runtime_error("posição inválida"); //talvez usar 
+        throw std::runtime_error("posição inválida na lista encadeada");  
     p = head;
     for(i = 0; i <= pos; i++)
     {
@@ -80,13 +85,12 @@ void ListaEncadeada::inserePosicao(int item, int pos)
     if(novo->prox == nullptr)
         tail = novo;
 }
-//nuca precisaremos de fazer remoções em nossa lista/grafo
 
 int ListaEncadeada::pesquisa(int pesquisado)
 {
     int aux = -1; Node *p;
-    /*if(tamanho == 0)
-        throw "ERRO: lista vazia!";*/
+    if(tamanho == 0)
+        throw std::out_of_range("ERRO: lista encadeada vazia!");
     p = head->prox;
     while(p != nullptr)
     {
@@ -133,6 +137,7 @@ int ListaEncadeada::getTamanho()
     return tamanho;
 }
 
+//construtor de cópia para a lista encadeada, caso seja necessário
 ListaEncadeada::ListaEncadeada(const ListaEncadeada& outra)
 {
     tamanho = 0;
@@ -147,6 +152,7 @@ ListaEncadeada::ListaEncadeada(const ListaEncadeada& outra)
     }
 }
 
+//sobrecarga do operador de igualdade para cópias
 ListaEncadeada& ListaEncadeada::operator=(const ListaEncadeada& outra)
 {
     if (this != &outra)
@@ -165,7 +171,7 @@ ListaEncadeada& ListaEncadeada::operator=(const ListaEncadeada& outra)
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-//Métodos associados à classe ListaAdjacencia e ao Node correspondente
+//Métodos associados à classe ListaAdjacencia e ao Node correspondente/////////////////////////////////////
 NodeAdj::NodeAdj()
 {
     vertice = -1;
@@ -179,6 +185,7 @@ NodeAdj::NodeAdj(int nroVer)
     prox = nullptr;
 }
 
+//construtor default para a lista de adjacência
 ListaAdjacencia::ListaAdjacencia()
 {
     tamanho = 0;
@@ -186,6 +193,7 @@ ListaAdjacencia::ListaAdjacencia()
     tail = head;
 }
 
+//destrutor para a lista de adjacência
 ListaAdjacencia::~ListaAdjacencia()
 {
     LimpaAdj();
@@ -196,7 +204,7 @@ NodeAdj* ListaAdjacencia::PosicionaAntesAdj(int pos)
 {
     NodeAdj *p; int i;
     if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception
+        throw std::out_of_range ("Posição inválida na lista de adjacência"); //talvez usar exception
     p = head;
     for(i = 0; i < pos; i++)
     {
@@ -209,7 +217,7 @@ NodeAdj* ListaAdjacencia::PosicionaEmAdj(int pos)
 {
     NodeAdj *p; int i;
     if((pos > tamanho) || (pos < 0))
-        throw "Posição inválida!"; //talvez usar exception
+        throw std::out_of_range("Posição inválida na lista de adjacência"); //talvez usar exception
     p = head;
     for(i = 0; i <= pos; i++)
     {
@@ -244,14 +252,14 @@ void ListaAdjacencia::InsereAresta(int v, int e)
 {
     NodeAdj *p = PosicionaEmAdj(v);
     int size = p->listaArestas.tamanho; 
-    p->listaArestas.inserePosicao(e, size); //conferir
+    p->listaArestas.inserePosicao(e, size); 
 }
 
 int ListaAdjacencia::pesquisaVert(int pesquisado)
 {
     int aux = -1; NodeAdj *p;
-    /*if(tamanho == 0)
-        throw "ERRO: lista vazia!";*/
+    if(tamanho == 0)
+        throw std::out_of_range("ERRO: lista vazia!");
     p = head->prox;
     while(p != nullptr)
     {
@@ -263,16 +271,6 @@ int ListaAdjacencia::pesquisaVert(int pesquisado)
         p = p->prox;
     }
     return aux;
-}
-
-void ListaAdjacencia::ImprimeAdj()
-{
-    NodeAdj* p = head;
-    for(int i = 0; i < tamanho; i++)
-    {
-        p = p->prox;
-        p->listaArestas.Imprime();
-    }
 }
 
 void ListaAdjacencia::LimpaAdj()
@@ -287,19 +285,4 @@ void ListaAdjacencia::LimpaAdj()
     }
     tail = head;
     tamanho = 0;
-}
-
-//provavelmente não necessiatremos deste método
-int* ListaAdjacencia::geraVetorTam()
-{
-    int* grauVert = new int[tamanho];
-    //lembrar de dar delete no vetor criado
-    NodeAdj* p = head; //como se fosse um iterador
-    //preenche um vetor com o tamanho de cada lista
-    for(int i = 0; i < tamanho; i++)
-    {
-        p = p->prox;
-        grauVert[i] = p->listaArestas.tamanho;
-    }
-    return grauVert;
 }

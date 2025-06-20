@@ -10,20 +10,12 @@ class Transporte{
 
         void InsereVertice();
         void InsereAresta(int v, int w);
-        //determina a rota entre 2 vértices para um certo pacote
-        //utilizaremos uma fila para obter a rota com a busca em largura e, posteriormente, inseriremos
-        //o resultado em uma Lista Encadeada
+        
         void buscaLargura(int origem, int destino, ListaEncadeada& rota);
         void insereCaminhoRec(ListaEncadeada& lista, int* pai, int atual, int origem);
-
-        //provavelmente não necessitaremos destes métodos
+        
         int QuantidadeVertices();
         int QuantidadeArestas();
-
-        int GrauMinimo();
-        int GrauMaximo();
-
-        void ImprimeVizinhos(int v);
 
         int getCapacTransp();
         int getLatTransp();
@@ -38,7 +30,6 @@ class Transporte{
         int numVertices; //número de vértices/armazéns no grafo
 
         ListaAdjacencia armazens;
-        //ListaEncadeada* rotas;
 
     friend class Armazem;
 };

@@ -12,15 +12,16 @@ class Heap{
         void Inserir(Evento* eventoPtr);
         Evento* Remover();
 
+        void setMaxSize(int n);
         int getTam();
         bool Vazio();
-        Evento Topo();
 
     private:
         int GetAncestral(int posicao);
         int GetSucessorEsq(int posicao);
         int GetSucessorDir(int posicao);
 
+        int maxsize;
         int tamanho;
         Evento** data; //vetor com a heap
 };

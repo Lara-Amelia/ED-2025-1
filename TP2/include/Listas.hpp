@@ -85,10 +85,7 @@ class ListaAdjacencia
     void InsereVert(int nroVert, int pos);
     void InsereAresta(int v, int e);
     int pesquisaVert(int pesquisado);
-    //int pesquisaAresta(int pesquisado); veremos se é útil
-    void ImprimeAdj();
     void LimpaAdj();
-    int* geraVetorTam();
 
     friend class Transporte;
 };

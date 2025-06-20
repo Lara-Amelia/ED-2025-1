@@ -3,81 +3,40 @@
 #include "Listas.hpp"
 #include <string>
 
-//talvez criar uma struct que armazene o estado e o momento em que entrou e saiu dele,
-//para facilitar a obtenção de estatísticas sobre o pacote
-class registroEstado
-{
-    private:
-    int estadoAtual;
-    int tempoInicio;
-    int tempoFim;
-    int tempoPercorrido;
-
-    public:
-    registroEstado();
-
-    void setEstado(int n); //identificadores de estado
-    void setTempoInicio(int t);
-    void setTempoFim(int t);
-    void setTempoPercorrido();
-
-    int getEstado();
-    int getTempoInicio();
-    int getTempoFim();
-    int getTempoPercorrido();
-
-    friend class Pacote;
-};
-
 class Pacote
 {
     private: 
     int identificador;
-
     int horaPostagem;
     int armazemOrigem;
     int armazemDestino;
     int armazemAtual;
     int estadoAtual;
-  
-     //rota a ser obtida via busca em largura no grafo
-
-    //no construtor do TAD Pacote, deve ser inicializado de acordo com o tamanho da rota
-    //a cada trânsito entre vértices, temos 2 estados e mais alguns extras
-    //todos são inicializados da mesma forma e depois preenchidos
-    registroEstado* estadosPacote;
-    
-    //estat´siticas a serem calculadas no fim do evento com base nos dados no vetor estadosPacote
     int tempoArmazenado;
     int tempoTransporte;
 
     public:
-    //os valores não passados como parâmetro serão inicializados como 0 e preenchidos depois (sets)
-    //construtor default oara inicialização de nós na fila - checar depois
     ListaEncadeada rota;
     Pacote(int id, int hora, int origem, int destino, int estado); //construtor default
     ~Pacote();
     Pacote();
-    int getHora();
 
     Pacote& operator=(const Pacote& outro);
     Pacote(const Pacote& outro);
 
+    int getHora();
     int getEstado();
     int getId();
-    //será como um "construtor" default, mas utilizaremos após alocação
-    void setDados(int id, int hora, int origem, int destino, int estado);
-    void setEstadoAtual(int n);
-    //ListaEncadeada* getRota();
     int getArmAtual();
-    void setArmAtual(int n);
     int getArmDestino();
     int getArmOrigem();
     int getProximoRota();
+    
+    void setDados(int id, int hora, int origem, int destino, int estado);
+    void setEstadoAtual(int n);
+    void setArmAtual(int n);
     void setRota(ListaEncadeada rotaCalculada);
     void setId(int n);
-    int calculaTempoArmazenado(registroEstado* estados);
-    int calculaTempoTransporte(registroEstado* estados);
     
     friend class Pilha;
 };

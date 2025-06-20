@@ -2,11 +2,6 @@
 #define PILHA_HPP
 #include "pacote.hpp"
 
-//a pilha utilizada é sempre de pacotes. Logo, suas células são do TAD Pacote
-//talvez possamos fazer a pilha recebendo apenas o identificador do pacote
-//(é menos custoso já que não movimentamos o registro em si, mas tem de checar se sequer há identificador)
-
-//talvez classe
 class tipoNo
 {
     private:

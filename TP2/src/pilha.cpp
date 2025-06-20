@@ -4,7 +4,7 @@
 #include <string>
 #include <stdexcept>
 
-//talvez receber o pacote quando o inserimos
+//métodos relacionados aos nós da pilha ///////////////////////////////////////////////////////////////////////////
 tipoNo::tipoNo(Pacote* inserido)
 {
     item = inserido;
@@ -17,6 +17,7 @@ tipoNo::tipoNo()
     prox = NULL;
 }
 
+//métodos da pilha em si////////////////////////////////////////////////////////////////////////////////////////
 Pilha::Pilha()
 {
     head = NULL;
@@ -61,11 +62,13 @@ Pacote* Pilha::Desempilha()
     return aux; //retorna o item desempilhado
 }
 
+//checa se a pilha está ou não vazia
 bool Pilha::Vazia()
 {
     return tamanho == 0;    
 }
 
+//faz a limpeza da pilha
 void Pilha::Limpa()
 {
     while(!Vazia())
