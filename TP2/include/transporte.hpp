@@ -2,6 +2,7 @@
 #define TRANSPORTE_HPP
 
 #include "Listas.hpp"
+#include "escalonador.hpp"
 
 class Transporte{
     public:
@@ -21,7 +22,6 @@ class Transporte{
         int getLatTransp();
         int getIntervTransp();
         int getNumVertices();
-        
     private:
         //parâmetros de transporte do sistema
         int capacidadeTransporte;
@@ -30,7 +30,6 @@ class Transporte{
         int numVertices; //número de vértices/armazéns no grafo
 
         ListaAdjacencia armazens;
-
     friend class Armazem;
 };
 

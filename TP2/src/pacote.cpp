@@ -36,6 +36,8 @@ void Pacote::setDados(int id, int hora, int origem, int destino, int estado)
     armazemDestino = destino;
     armazemAtual = origem; // geralmente começa no armazem de origem
     estadoAtual = estado;
+    tempoArmazenado = 0;
+    tempoTransporte = 0;
 }
 
 void Pacote::setEstadoAtual(int n)

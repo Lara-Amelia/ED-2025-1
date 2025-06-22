@@ -1,0 +1,76 @@
+2
+80
+100
+1
+20
+0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 1
+0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0
+0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0
+0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0
+1 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0
+0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+50
+4 pac 0 org 15 dst 16
+5 pac 1 org 19 dst 13
+8 pac 2 org 17 dst 13
+10 pac 3 org 11 dst 9
+15 pac 4 org 18 dst 5
+20 pac 5 org 12 dst 11
+22 pac 6 org 4 dst 1
+28 pac 7 org 14 dst 15
+33 pac 8 org 12 dst 7
+42 pac 9 org 11 dst 13
+42 pac 10 org 3 dst 11
+51 pac 11 org 11 dst 5
+54 pac 12 org 4 dst 16
+60 pac 13 org 11 dst 18
+62 pac 14 org 18 dst 7
+65 pac 15 org 9 dst 18
+74 pac 16 org 16 dst 6
+77 pac 17 org 11 dst 19
+86 pac 18 org 3 dst 10
+95 pac 19 org 13 dst 11
+101 pac 20 org 7 dst 19
+101 pac 21 org 16 dst 13
+102 pac 22 org 3 dst 4
+108 pac 23 org 19 dst 17
+110 pac 24 org 1 dst 16
+119 pac 25 org 14 dst 6
+128 pac 26 org 2 dst 5
+132 pac 27 org 14 dst 17
+137 pac 28 org 5 dst 8
+144 pac 29 org 10 dst 19
+146 pac 30 org 15 dst 0
+154 pac 31 org 2 dst 10
+156 pac 32 org 8 dst 13
+158 pac 33 org 5 dst 14
+161 pac 34 org 13 dst 12
+164 pac 35 org 1 dst 4
+166 pac 36 org 18 dst 10
+167 pac 37 org 12 dst 2
+173 pac 38 org 12 dst 10
+180 pac 39 org 5 dst 7
+184 pac 40 org 7 dst 16
+191 pac 41 org 14 dst 5
+194 pac 42 org 7 dst 14
+203 pac 43 org 1 dst 11
+212 pac 44 org 1 dst 5
+219 pac 45 org 17 dst 8
+224 pac 46 org 6 dst 10
+228 pac 47 org 4 dst 11
+235 pac 48 org 18 dst 4
+238 pac 49 org 7 dst 5

@@ -1,0 +1,131 @@
+2
+20
+100
+1
+25
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1
+0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0
+0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0
+0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+1 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0
+0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0
+0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0
+0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0
+0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+100
+3 pac 0 org 14 dst 12
+10 pac 1 org 2 dst 7
+16 pac 2 org 18 dst 16
+21 pac 3 org 9 dst 12
+22 pac 4 org 16 dst 23
+27 pac 5 org 14 dst 2
+29 pac 6 org 6 dst 23
+34 pac 7 org 20 dst 8
+43 pac 8 org 23 dst 16
+47 pac 9 org 9 dst 6
+55 pac 10 org 22 dst 8
+60 pac 11 org 7 dst 23
+61 pac 12 org 24 dst 9
+67 pac 13 org 13 dst 24
+70 pac 14 org 14 dst 24
+78 pac 15 org 24 dst 16
+79 pac 16 org 16 dst 1
+88 pac 17 org 5 dst 2
+88 pac 18 org 21 dst 15
+95 pac 19 org 21 dst 7
+96 pac 20 org 8 dst 24
+103 pac 21 org 6 dst 22
+105 pac 22 org 22 dst 10
+110 pac 23 org 10 dst 14
+117 pac 24 org 24 dst 17
+121 pac 25 org 0 dst 6
+126 pac 26 org 11 dst 2
+132 pac 27 org 21 dst 10
+136 pac 28 org 5 dst 10
+138 pac 29 org 7 dst 18
+141 pac 30 org 16 dst 15
+144 pac 31 org 1 dst 5
+146 pac 32 org 23 dst 13
+147 pac 33 org 16 dst 2
+153 pac 34 org 15 dst 13
+160 pac 35 org 7 dst 9
+164 pac 36 org 8 dst 20
+171 pac 37 org 18 dst 6
+174 pac 38 org 9 dst 18
+183 pac 39 org 2 dst 14
+192 pac 40 org 1 dst 6
+199 pac 41 org 21 dst 10
+204 pac 42 org 8 dst 13
+208 pac 43 org 5 dst 13
+215 pac 44 org 22 dst 6
+218 pac 45 org 8 dst 6
+223 pac 46 org 19 dst 17
+227 pac 47 org 18 dst 3
+228 pac 48 org 0 dst 7
+233 pac 49 org 18 dst 23
+241 pac 50 org 23 dst 11
+248 pac 51 org 23 dst 10
+257 pac 52 org 16 dst 8
+263 pac 53 org 22 dst 7
+263 pac 54 org 0 dst 12
+271 pac 55 org 13 dst 2
+275 pac 56 org 2 dst 21
+275 pac 57 org 11 dst 14
+278 pac 58 org 15 dst 16
+278 pac 59 org 9 dst 7
+287 pac 60 org 20 dst 0
+289 pac 61 org 4 dst 20
+293 pac 62 org 8 dst 9
+294 pac 63 org 13 dst 12
+297 pac 64 org 24 dst 22
+306 pac 65 org 13 dst 20
+315 pac 66 org 13 dst 1
+324 pac 67 org 15 dst 17
+329 pac 68 org 8 dst 12
+329 pac 69 org 3 dst 22
+334 pac 70 org 0 dst 16
+341 pac 71 org 8 dst 16
+345 pac 72 org 10 dst 2
+347 pac 73 org 18 dst 3
+347 pac 74 org 0 dst 9
+356 pac 75 org 17 dst 6
+360 pac 76 org 1 dst 11
+367 pac 77 org 20 dst 19
+371 pac 78 org 21 dst 6
+373 pac 79 org 3 dst 10
+378 pac 80 org 9 dst 5
+378 pac 81 org 4 dst 12
+384 pac 82 org 22 dst 12
+385 pac 83 org 14 dst 7
+389 pac 84 org 6 dst 16
+395 pac 85 org 8 dst 7
+397 pac 86 org 22 dst 1
+403 pac 87 org 21 dst 18
+405 pac 88 org 17 dst 15
+406 pac 89 org 3 dst 19
+409 pac 90 org 13 dst 20
+413 pac 91 org 16 dst 13
+416 pac 92 org 13 dst 12
+417 pac 93 org 18 dst 23
+425 pac 94 org 7 dst 15
+425 pac 95 org 0 dst 7
+432 pac 96 org 19 dst 10
+439 pac 97 org 2 dst 24
+446 pac 98 org 9 dst 20
+450 pac 99 org 24 dst 7

@@ -6,6 +6,7 @@
 #include <limits>
 #include <cctype>
 #include <iomanip>
+#include <chrono>
 
 #include "pacote.hpp"
 #include "armazem.hpp"
@@ -142,6 +143,8 @@ int main(int argc, char** argv)
         //deve ser decrementada sempre que marcamos um pacote como "entregue", o que indica que ele saiu do sistema
         int tamPacotes = numeroPacotes;
         
+        auto start1 = std::chrono::high_resolution_clock::now();
+
         Heap escalonador(500);
         escalonador.setMaxSize(500);
 
@@ -180,7 +183,6 @@ int main(int argc, char** argv)
         }
         arquivo.close();
 
-        //gera os primeiros eventos de transporte entre armazéns 
         for(int i = 0; i < nroArmazens; i++)
         {
             for(int j = 0; j < nroArmazens; j++)
@@ -312,6 +314,12 @@ int main(int argc, char** argv)
             }
             delete proximoEvento;
         }
+        auto end1 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration1 = end1 - start1;
+        std::cout << "Execution time: " << duration1.count() << " seconds" << std::endl;
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end1 - start1);
+        std::cout << "Execution time: " << duration_ms.count() << " ms" << std::endl;
+
     }
     catch(const std::exception& e)
     {
