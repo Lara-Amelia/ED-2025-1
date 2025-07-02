@@ -215,12 +215,12 @@ void arvoreAVL<K, V>::buscaInOrder(Node<K, V>* node, V* array, int& tam) const
         return;
     }
 
-    buscaInOrder(node->left, array, index);
+    buscaInOrder(node->left, array, tam);
     //armazena os resultados obtidos com a travessia em um vetor
     //esse vetor será instanciado antes da chamada e passado como argumento 
     //após percorrer a árvore, imprimiremos os dados conforme desejado
-    array[index++] = node->valor;
-    buscaInOrder(node->right, array, index);
+    array[tam++] = node->valor;
+    buscaInOrder(node->right, array, tam);
 }
 
 // Public in-order traversal method

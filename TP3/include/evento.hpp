@@ -34,7 +34,8 @@ class Evento
     //construtor para eventos do tipo AR, RM e UR
     Evento(int tempo, int tipo, int idPac, int armDest, int secaoDest);
     //construtor para eventos do tipo TR
-    Evento(int tempo, int tipo, int idPac, int armOrigem, int armDest);
+    //a lista de atrobutos é a mesma, mas o signficado muda - talvez seja resolvível com a implementação
+    //Evento(int tempo, int tipo, int idPac, int armOrigem, int armDest);
     //cosntrutor para eventos do tipo EN
     Evento(int tempo, int tipo, int idPac, int armDest);
 
