@@ -108,3 +108,13 @@ bool indiceCli::mudaPacote(int idPacote, int indiceFim)
     pacote->setFim(indiceFim);
     return true;
 }
+
+void indiceCli::incNroPacs(int n)
+{
+    nroPacotes += n;
+}
+
+std::string indiceCli::getNomeCli()
+{
+    return nomeCli;
+}

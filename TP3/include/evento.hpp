@@ -31,14 +31,29 @@ class Evento
     //depois eliminar construtores que façam as mesmas atribuições
     //construtor para eventos do tipo RG
     Evento(int tempo, int tipo, int idPac, std::string rem, std::string dest, int origem, int destino);
+
     //construtor para eventos do tipo AR, RM e UR
     Evento(int tempo, int tipo, int idPac, int armDest, int secaoDest);
     //construtor para eventos do tipo TR
     //a lista de atrobutos é a mesma, mas o signficado muda - talvez seja resolvível com a implementação
     //Evento(int tempo, int tipo, int idPac, int armOrigem, int armDest);
+
     //cosntrutor para eventos do tipo EN
     Evento(int tempo, int tipo, int idPac, int armDest);
 
+    int getTempo();
+    int getTipo();
+    int getId();
+    std::string getRemetente();
+    std::string getDestinatario();
+    
+
+    /*1. RG: Pacote ainda não foi postado (apenas registrado no sistema)
+    2. AR: Pacote chegou no armazém e foi armazenado na respectiva seção
+    3. RM: Pacote foi removido da seção para tentativa de transporte
+    4. UR: Pacote foi rearmazenado por não ser possível transportá-lo
+    5. TR: Pacote sendo transportado entre armazéns
+    6. EN: Pacote entregue*/
 };
 
 #endif

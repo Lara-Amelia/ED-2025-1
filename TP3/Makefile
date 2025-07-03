@@ -6,11 +6,25 @@ INC_DIR = include
 OBJ_DIR = obj
 BIN_DIR = bin
 
-indicecli.o: $(OBJ_DIR)/indicecli.o
-arvoreAVL.o: $(OBJ_DIR)/arvoreAVL.o
+EXEC = $(BIN_DIR)/tp3.out
 
-$(OBJ_DIR)/arvoreAVL.o: $(SRC_DIR)/arvoreAVL.cpp $(INC_DIR)/arvoreAVL.hpp
-	$(CC) $(CFLAGS) -c $(SRC_DIR)/arvoreAVL.cpp -o $(OBJ_DIR)/arvoreAVL.o
+# Alvo padrão
+all: $(EXEC)
+
+# Compila o executável final (agora com evento.o incluído)
+$(EXEC): $(OBJ_DIR)/main.o $(OBJ_DIR)/indicecli.o $(OBJ_DIR)/evento.o
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Regras de compilação
+$(OBJ_DIR)/main.o: $(SRC_DIR)/main.cpp $(INC_DIR)/evento.hpp $(INC_DIR)/indiceCli.hpp $(INC_DIR)/arvoreAVL.hpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/indicecli.o: $(SRC_DIR)/indiceCli.cpp $(INC_DIR)/indiceCli.hpp $(INC_DIR)/evento.hpp $(INC_DIR)/arvoreAVL.hpp
-	$(CC) $(CFLAGS) -c $(SRC_DIR)/indiceCli.cpp -o $(OBJ_DIR)/indicecli.o
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/evento.o: $(SRC_DIR)/evento.cpp $(INC_DIR)/evento.hpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Limpa arquivos gerados
+clean:
+	rm -f $(OBJ_DIR)/*.o $(EXEC)

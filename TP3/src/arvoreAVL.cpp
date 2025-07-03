@@ -12,8 +12,8 @@
 //    (e.g., template class AVLTree<int, int>;) at the end of this file.
 //    Option 1 is generally more flexible for template libraries.
 
-#include "arvoreAVL.hpp" // Include the header file with declarations
-#include "evento.hpp"   // Required for Evento struct if used in main/testing
+//#include "arvoreAVL.hpp" // Include the header file with declarations
+/*#include "evento.hpp"   // Required for Evento struct if used in main/testing
 //#include "package_info.hpp" // Required for PackageInfo struct if used in main/testing
 //#include "custom_vector.hpp" // Required for CustomVector if used in main/testing
 #include <iostream>     // For std::cout, std::endl (for testing/debugging)
@@ -29,21 +29,6 @@ T max_val(T a, T b)
 
 template <typename K, typename V>
 Node<K, V>::Node(K k, V v) : chave(k), valor(v), left(nullptr), right(nullptr), altura(1) {}
-
-// --- Node Template Class Destructor ---
-/*template <typename K, typename V>
-Node<K, V>::~Node() 
-{
-    // IMPORTANT: If V is a pointer type, and this Node owns that memory,
-    // you must delete the pointed-to object here.
-    // This requires <type_traits> for std::is_pointer and std::remove_pointer
-    // which might not be allowed in your specific C++11 environment.
-    // If not, you'll need a manual mechanism in AVLTree's delete_tree or ClientPackageList's destructor.
-    // For now, leaving it commented as per previous instructions.
-    // if constexpr (std::is_pointer_v<V>) { // C++17 feature
-    //     delete value; // Assumes Node owns the memory of V
-    // }
-}*/
 
 template <typename K, typename V>
 arvoreAVL<K, V>::arvoreAVL() : root(nullptr) {}
@@ -250,4 +235,4 @@ template <typename K, typename V>
 bool arvoreAVL<K, V>::vazia() const 
 {
     return root == nullptr;
-}
+}*/

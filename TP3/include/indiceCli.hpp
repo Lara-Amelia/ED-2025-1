@@ -23,7 +23,7 @@ class infoPacotes
     //terá de haver um mecanismo na main que acompanhe o tamanho atual do vetor e atualize este item e outros com base nele
     int inicio; //armazena um ponteiro para o evento de registro do pacote
     int fim; //armazena um ponteiro para o último evento associado ao pacote
-    //utilizar os índices é válid, já que não fazemos remoções no vetor de eventos
+    //utilizar os índices é válido, já que não fazemos remoções no vetor de eventos e ele é "naturalmente" ordenado pelo tempo
 
     public:
     infoPacotes();
@@ -49,7 +49,7 @@ class indiceCli
     std::string nomeCli;
     //árvore com indice de pacotes
     //inicializada pelo construtor padrão automaticamente
-    arvoreAVL<int, infoPacotes*> pacotes;
+    
     //deve ser incrementado sempre que inserimos um novo pacote associado ao cliente 
     //será utilizado para alocar o vetor que armazenará os dados coletados do índice de eventos
     int nroPacotes;
@@ -57,13 +57,19 @@ class indiceCli
     public:
     indiceCli();
     indiceCli(std::string nome);
-    
+    arvoreAVL<int, infoPacotes*> pacotes;
+
+    void incNroPacs(int n);
+
+
     ~indiceCli();
 
     //será chamado para alocar um vetor do tamanho correto para armazenar as informações
     int getNroPacotes();
     //recebe infos de um pacote e o adiciona na AVL do cliente
     bool addPacote(int idPacote, int indiceInicio, int indiceFim);
+
+    std::string getNomeCli();
 
     //atualiza o "ponteiro" fim caso seja registrado um novo evento para o pacote
     //será necessário percorrer a AVL interna buscando o pacote desejado e, após encontrá-lo,
