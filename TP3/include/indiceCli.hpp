@@ -38,7 +38,7 @@ class infoPacotes
     //sempre que identificamos um novo evento para um pacote, devemos atualizar
     //o ponteiro para fim
     int getFim();
-    void setFim(int fim);
+    void setFim(int novoFim);
 };
 
 //a arvore com nós indiceCli será instanciada na main

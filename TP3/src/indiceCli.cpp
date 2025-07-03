@@ -42,9 +42,9 @@ int infoPacotes::getFim()
     return fim;
 }
 
-void infoPacotes::setFim(int fim)
+void infoPacotes::setFim(int novoFim)
 {
-    fim = fim;
+    fim = novoFim;
 }
 
 indiceCli::indiceCli()

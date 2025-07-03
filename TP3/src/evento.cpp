@@ -1,5 +1,7 @@
 #include "evento.hpp"
 #include <string>
+#include <exception>
+#include <stdexcept>
 
 Evento::Evento()
 {
@@ -55,4 +57,90 @@ Evento::Evento(int tempo, int tipo, int idPac, int armDest)
     tipoEvento = tipo;
     idPacote = idPac;
     armDestino = armDest;
+}
+
+int Evento::getTempo()
+{
+    return tempoEvento;
+}
+
+int Evento::getTipo()
+{
+    return tipoEvento;
+}
+
+int Evento::getId()
+{
+    return idPacote;
+}
+
+std::string Evento::getRemetente()
+{
+    return remetente;
+}
+    
+std::string Evento::getDestinatario()
+{
+    return destinatario;
+}
+
+int Evento::getOrigem()
+{
+    return armOrigem;
+}
+
+int Evento::getDestino()
+{
+    return armDestino;
+}
+
+int Evento::getSecao()
+{
+    return secaoDestino;
+}
+
+Pacote::Pacote()
+{
+    idPac = -1;
+    remetente = "";
+    destinatario = "";
+}
+
+Pacote::Pacote(int id, std::string rem, std::string dest)
+{
+    idPac = id;
+    remetente = rem;
+    dest = dest;
+}
+
+int Pacote::getId()
+{
+    return idPac;
+}
+
+std::string Pacote::getDest()
+{
+    return destinatario;
+}
+
+std::string Pacote::getRem()
+{
+    return remetente;
+}
+
+void Pacote::setPacote(int id, std::string rem, std::string dest)
+{
+    idPac = id;
+    remetente = rem;
+    destinatario = dest;
+}
+
+int Pacote::encontraPacote(Pacote* pacotes, int tam, int id)
+{
+    for(int i = 0; i < tam; i++)
+    {
+        if(pacotes[i].idPac == id)
+            return i;
+    }
+    throw std::out_of_range("ERRO: pacote não encontrado no vetor de pacotes");
 }

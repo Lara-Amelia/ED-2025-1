@@ -46,7 +46,9 @@ class Evento
     int getId();
     std::string getRemetente();
     std::string getDestinatario();
-    
+    int getOrigem();
+    int getDestino(); 
+    int getSecao();
 
     /*1. RG: Pacote ainda não foi postado (apenas registrado no sistema)
     2. AR: Pacote chegou no armazém e foi armazenado na respectiva seção
@@ -54,6 +56,25 @@ class Evento
     4. UR: Pacote foi rearmazenado por não ser possível transportá-lo
     5. TR: Pacote sendo transportado entre armazéns
     6. EN: Pacote entregue*/
+};
+
+class Pacote
+{
+    private:
+    int idPac;
+    std::string remetente;
+    std::string destinatario;
+
+    public:
+    Pacote();
+    Pacote(int id, std::string rem, std::string dest);
+
+    std::string getRem();
+    std::string getDest();
+    int getId();
+    void setPacote(int id, std::string rem, std::string dest);
+    //encontra o índice em que um pacote se encontra em um vetor de pacotes
+    static int encontraPacote(Pacote* pacotes, int tam, int id);
 };
 
 #endif
