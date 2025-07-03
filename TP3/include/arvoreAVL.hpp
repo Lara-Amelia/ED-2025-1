@@ -3,6 +3,10 @@
 
 #include <iostream>  // para debug, se precisar
 #include <string>    // para std::string, se usar
+#include <exception>
+#include <stdexcept>
+
+#include "evento.hpp"
 
 // Função auxiliar para substituir std::max
 template <typename T>
@@ -30,6 +34,7 @@ class Node
         // Se precisar destrutor para V ponteiro, faça aqui
         // ~Node() { ... }
         friend class arvoreAVL<K, V>;
+        friend class indicePacs;
 };
 
 // Classe da Árvore AVL
@@ -38,6 +43,29 @@ class arvoreAVL
 {
     private:
         Node<K, V>* root;
+
+        void coletaApartirDe(Node<std::string, Evento*>* node, int idPacote, int tempoLimite, Evento** resultado, int& count) 
+        {
+            if (!node) return;
+
+            // Visita os menores
+            coletaApartirDe(node->left, idPacote, tempoLimite, resultado, count);
+
+            Evento* e = node->valor;
+            //como estamos processando as linhas à medida que elas são inseridas,
+            //talvez não precisemos do tempoLimite (só estarão na árvore os que tiverem inseridos até o momento)
+            if (e->getId() == idPacote /*&& e->getTempo() <= tempoLimite*/) 
+            {
+                resultado[count++] = e;
+            } 
+            else if (e->getId() != idPacote) 
+            {
+                return; // terminou
+            }
+
+            // Visita os maiores
+            coletaApartirDe(node->right, idPacote, tempoLimite, resultado, count);
+        }
 
         int altura(Node<K, V>* node) 
         {
@@ -177,6 +205,15 @@ class arvoreAVL
     public:
         arvoreAVL() : root(nullptr) {}
 
+        void coletaEventosDoPacoteAteTempo(std::string chaveInicio, int idPacote, int tempoLimite, Evento** resultado, int& count) 
+        {
+            Node<std::string, Evento*>* startNode = buscaNode(chaveInicio);
+            if (!startNode) /*return*/throw std::out_of_range("ERRO: chave não encontrada no índice pacoteTempo");
+
+            // Função auxiliar que faz inorder a partir de um nó
+            coletaApartirDe(startNode, idPacote, tempoLimite, resultado, count);
+        }
+
         ~arvoreAVL() 
         {
             deleteArvore(root);
@@ -190,12 +227,19 @@ class arvoreAVL
         V busca(K key) 
         {
             Node<K, V>* node = buscaRec(root, key);
+            //if (node == nullptr) throw std::runtime_error("Chave não encontrada na árvore");
+            //return node->valor;
             return node ? (node->valor) : nullptr;
         }
 
         bool existe(K key) const 
         {
             return buscaRec(root, key) != nullptr;
+        }
+
+        Node<K, V>* buscaNode(K key) const 
+        {
+            return buscaRec(root, key);
         }
 
         void inOrderTraversal(V* array, int& index) const 
@@ -210,6 +254,15 @@ class arvoreAVL
 
     friend class indiceCli;
     friend class infoPacotes;
+    friend class indicePacs;
 };
 
-#endif 
+template<>
+inline
+int arvoreAVL<int, int>::busca(int key)
+{
+    Node<int, int>* node = buscaRec(root, key);
+    return node ? node->valor : 0; // Retorna 0 se não encontrado
+}
+
+#endif

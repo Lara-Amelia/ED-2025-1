@@ -3,9 +3,14 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <exception>
+#include <stdexcept>
+
 #include "evento.hpp"
 #include "indiceCli.hpp"
 #include "arvoreAVL.hpp"
+#include "indicePacs.hpp"
+#include "indicePacTempo.hpp"
 
 int main(void)
 {
@@ -41,7 +46,10 @@ int main(void)
         }
 
         arvoreAVL<std::string, indiceCli*> clientes;
-        int nroArgs = 0;
+        indicePacs indexPacs;
+        indicePacTempo indexPacTempo;
+
+        //int nroArgs = 0;
         Evento* eventos[nroLinhas];
         int tipoEvento = -1;
         int qtEventos = 0;
@@ -67,6 +75,7 @@ int main(void)
                 partes[idx++] = token;
             }
 
+            //PASSAR PARA UMA FUNÇÃO
             if(partes[2] == "RG")
             {
                 tipoEvento = 1;
@@ -150,6 +159,11 @@ int main(void)
                             //mudaCli->incNroPacs(1);
                         }
                         //TAMBÉM TEMOS DE ADICIONAR A LÓGICA PARA INSERÇÃO DO EVENTO NOS DEMAIS ÍNDICES
+                        //inserção no índice de pacotes - ocorre somente no registro de pacotes
+                        indexPacs.registraPacote(idPac, tempo);
+
+                        //inserção do evento no índice de pacoteTempo
+                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
                     }
                     break;
                     //evento de armazenamento
@@ -172,6 +186,8 @@ int main(void)
 
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
+
+                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
                     }    
                     break;
                     case 3:
@@ -193,6 +209,8 @@ int main(void)
 
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
+
+                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
                     }
                     break;
                     case 4:
@@ -216,6 +234,8 @@ int main(void)
 
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
+
+                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
                     }
                     break;
                     //evento de transporte
@@ -229,6 +249,7 @@ int main(void)
                         Evento* novoEvento = new Evento(tempo, 5, idPac, origem, destino);
                         eventos[qtEventos - 1] = novoEvento;
 
+                        //atualização de ponteiros fim em clientes
                         int indexPac = Pacote::encontraPacote(pacotes, nroPacotes, idPac);
                         std::string nome1 = pacotes[indexPac].getRem();
                         std::string nome2 = pacotes[indexPac].getDest();
@@ -238,15 +259,36 @@ int main(void)
 
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
+
+                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
                     }
                     break;
                     case 6:
                     {
+                        int tempo = std::stoi(partes[0]);
+                        int idPac = std::stoi(partes[3]);
+                        int destino = std::stoi(partes[4]);
+                        
+                        Evento* novoEvento = new Evento(tempo, 6, idPac, destino);
+                        eventos[qtEventos - 1] = novoEvento;
 
+                        //atualização de ponteiros fim dos clientes associados ao pacote
+                        int indexPac = Pacote::encontraPacote(pacotes, nroPacotes, idPac);
+                        std::string nome1 = pacotes[indexPac].getRem();
+                        std::string nome2 = pacotes[indexPac].getDest();
+
+                        indiceCli* cliente1 = clientes.busca(nome1);
+                        indiceCli* cliente2 = clientes.busca(nome2);
+
+                        cliente1->mudaPacote(idPac, qtEventos-1);
+                        cliente2->mudaPacote(idPac, qtEventos-1);   
+
+                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
                     }
                     break;
                     default:
-                        break;
+                        throw std::runtime_error("ERRO: tipo inválido de evento");
+                    break;
                 }
             }
             //se for uma pesquisa por cliente
@@ -327,6 +369,64 @@ int main(void)
                         }
                     }
                 }
+            }
+            //se for uma pesquisa por pacote
+            else if(partes[1] == "PC")
+            {
+                int idPac = std::stoi(partes[2]);
+                //se o pacote com o id desejado existe na árvore
+                if(indexPacs.existePac(idPac))
+                {
+                    std::string chaveBusca = indexPacs.geraChaveParaBuscaTempo(idPac);
+                    //std::cout << "chave gerada indicePacs: " << chaveBusca << std::endl;
+                    //depois tentar um mecanismo para obter um número de eventos associados ao pacote
+                    //pode ser implmentado na classe pacote em si
+                    //passamos nroEventos por referência, de forma que seu valor é atualizado à medida
+                    //que passa pelas funções
+                    int nroEventos = 0;
+                    int tempoLim = std::stoi(partes[0]);
+                    Evento** eventosPac = new Evento*[500];
+                    indexPacTempo.eventosDoPacoteAteTempo(chaveBusca, idPac, tempoLim, eventosPac, nroEventos);
+                    
+                    std::cout << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
+                    std::cout << nroEventos << std::endl;
+                    for(int i = 0; i < nroEventos; i++)
+                    {
+                        if(eventosPac[i]->getTipo() == 1)
+                        {
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV RG " << std::setw(3) << eventosPac[i]->getId() <<
+                              " " << eventosPac[i]->getRemetente() << " " << eventosPac[i]->getDestinatario() << " " 
+                                  << std::setw(3) << eventosPac[i]->getOrigem() << " " << std::setw(3) << eventosPac[i]->getDestino() << std::endl;
+                        }
+                        else if(eventosPac[i]->getTipo() == 2)
+                        {
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV AR " << std::setw(3) << eventosPac[i]->getId() <<
+                                  " " << std::setw(3) << eventosPac[i]->getDestino() << " " << std::setw(3) << eventosPac[i]->getSecao() << std::endl;
+                        }
+                        else if(eventosPac[i]->getTipo() == 3)
+                        {
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV RM " << std::setw(3) << eventosPac[i]->getId() <<
+                                  " " << std::setw(3) << eventosPac[i]->getDestino() << " " << std::setw(3) << eventosPac[i]->getSecao() << std::endl;   
+                        }
+                        else if(eventosPac[i]->getTipo() == 4)
+                        {
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV UR" << std::setw(3) << eventosPac[i]->getId() <<
+                                  " " << std::setw(3) << eventosPac[i]->getDestino() << " " << std::setw(3) << eventosPac[i]->getSecao() << std::endl;
+                        }
+                        else if(eventosPac[i]->getTipo() == 5)
+                        {
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV TR " << std::setw(3) << eventosPac[i]->getId() <<
+                                  " " << std::setw(3) << eventosPac[i]->getOrigem() << " " << std::setw(3) << eventosPac[i]->getDestino() << std::endl;
+                        }
+                        else if(eventosPac[i]->getTipo() == 6)
+                        {
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV EN " << std::setw(3) << eventosPac[i]->getId() <<
+                                  " " << std::setw(3) << eventosPac[i]->getDestino() << std::endl;   
+                        }
+                    }
+                }
+                else
+                    throw std::runtime_error("ERRO: pacote não encontrado no índice de pacotes");
             }
         }
     }
