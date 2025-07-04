@@ -56,7 +56,9 @@ class arvoreAVL
             //talvez não precisemos do tempoLimite (só estarão na árvore os que tiverem inseridos até o momento)
             if (e->getId() == idPacote /*&& e->getTempo() <= tempoLimite*/) 
             {
+                std::cout << "id pacote em coleta a partir de "<< e->getId() << std::endl;
                 resultado[count++] = e;
+                std::cout << "idPacote parâmetro em coletaApartir de " << idPacote << std::endl;
             } 
             else if (e->getId() != idPacote) 
             {

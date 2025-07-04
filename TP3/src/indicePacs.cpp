@@ -17,7 +17,7 @@ int indicePacs::tempoRegistro(int idPac)
     return arv.busca(idPac);
 }
 
-std::string indicePacs::geraChaveParaBuscaTempo(int idPacote) 
+std::string indicePacs::geraChaveParaBuscaTempo(int idPacote, int tipo) 
 {
         Node<int, int>* node = arv.buscaNode(idPacote);
         if (!node) return "";
@@ -25,5 +25,6 @@ std::string indicePacs::geraChaveParaBuscaTempo(int idPacote)
         std::ostringstream oss;
         oss << std::setw(3) << std::setfill('0') << node->chave;
         oss << std::setw(7) << std::setfill('0') << node->valor;
+        oss << tipo;
         return oss.str();
 }

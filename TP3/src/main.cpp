@@ -112,7 +112,7 @@ int main(void)
                     {
                         nroPacotes++;
                         int tempo = std::stoi(partes[0]);
-                        std::cout << "tempo evento " << i << ": " << tempo << std::endl;
+                        //std::cout << "tempo evento " << i << ": " << tempo << std::endl;
                         int idPac = std::stoi(partes[3]);
                         //partes[3] = remetente e partes[4] = destinatário
                         int origem = std::stoi(partes[6]);
@@ -127,7 +127,7 @@ int main(void)
                         {
                             indiceCli* novoCli1 = new indiceCli(partes[4]);
                             novoCli1->addPacote(idPac, qtEventos-1, qtEventos-1);
-                            std::cout << "nome cliente add partes[4]: " << novoCli1->getNomeCli() << std::endl;
+                            //std::cout << "nome cliente add partes[4]: " << novoCli1->getNomeCli() << std::endl;
                             //novoCli1->incNroPacs(1);
                             clientes.insere(partes[4], novoCli1);
                         }    
@@ -135,7 +135,7 @@ int main(void)
                         else
                         {
                             indiceCli* mudaCli = clientes.busca(partes[4]);
-                            std::cout << "nome dliente muda partes[4]: " << mudaCli->getNomeCli() << std::endl;
+                            //std::cout << "nome dliente muda partes[4]: " << mudaCli->getNomeCli() << std::endl;
                             mudaCli->addPacote(idPac, qtEventos-1, qtEventos-1);
                             //mudaCli->incNroPacs(1);
                         }
@@ -147,14 +147,14 @@ int main(void)
                         {
                             indiceCli* novoCli1 = new indiceCli(partes[5]);
                             novoCli1->addPacote(idPac, qtEventos-1, qtEventos-1);
-                            std::cout << "nome cliente add partes[5]: " << novoCli1->getNomeCli() << std::endl;
+                            //std::cout << "nome cliente add partes[5]: " << novoCli1->getNomeCli() << std::endl;
                             //novoCli1->incNroPacs(1);
                             clientes.insere(partes[5], novoCli1);
                         }
                         else
                         {
                             indiceCli* mudaCli = clientes.busca(partes[5]);
-                            std::cout << "nome cliente muda partes[5]: " << mudaCli->getNomeCli() << std::endl;
+                            //std::cout << "nome cliente muda partes[5]: " << mudaCli->getNomeCli() << std::endl;
                             mudaCli->addPacote(idPac, qtEventos-1, qtEventos-1);
                             //mudaCli->incNroPacs(1);
                         }
@@ -163,7 +163,7 @@ int main(void)
                         indexPacs.registraPacote(idPac, tempo);
 
                         //inserção do evento no índice de pacoteTempo
-                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
+                        indexPacTempo.registraEvento(idPac, tempo, tipoEvento,novoEvento);
                     }
                     break;
                     //evento de armazenamento
@@ -187,7 +187,7 @@ int main(void)
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
 
-                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
+                        indexPacTempo.registraEvento(idPac, tempo, tipoEvento, novoEvento);
                     }    
                     break;
                     case 3:
@@ -210,7 +210,7 @@ int main(void)
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
 
-                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
+                        indexPacTempo.registraEvento(idPac, tempo, tipoEvento, novoEvento);
                     }
                     break;
                     case 4:
@@ -235,7 +235,7 @@ int main(void)
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
 
-                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
+                        indexPacTempo.registraEvento(idPac, tempo, tipoEvento, novoEvento);
                     }
                     break;
                     //evento de transporte
@@ -260,7 +260,7 @@ int main(void)
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);
 
-                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
+                        indexPacTempo.registraEvento(idPac, tempo, tipoEvento, novoEvento);
                     }
                     break;
                     case 6:
@@ -283,7 +283,7 @@ int main(void)
                         cliente1->mudaPacote(idPac, qtEventos-1);
                         cliente2->mudaPacote(idPac, qtEventos-1);   
 
-                        indexPacTempo.registraEvento(idPac, tempo, novoEvento);
+                        indexPacTempo.registraEvento(idPac, tempo, tipoEvento, novoEvento);
                     }
                     break;
                     default:
@@ -294,12 +294,13 @@ int main(void)
             //se for uma pesquisa por cliente
             else if(partes[1] == "CL")
             {
+                //ORDENAR RESULTADOS DOS CLIENTES PELO TEMPO
                 std::string nomeCli = partes[2];
                 indiceCli* cliBusca = clientes.busca(nomeCli);
                 //se o cliente buscado não existe
                 if(cliBusca == nullptr)
                 {
-                    std::cout << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
+                    std::cout << std::setfill('0') << std::setw(6) << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
                     std::cout << "0" << std::endl;
                 }
                 else
@@ -312,7 +313,7 @@ int main(void)
                     //obtem infos de todos os pacotes associados, ordenando pelo índice dos pacotes
                     cliBusca->pacotes.inOrderTraversal(packages, tam);
                     //imrpime a consulta sendo realizada
-                    std::cout << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
+                    std::cout << std::setfill('0') << std::setw(6) << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
                     //imprime o número de linhas no resultado da consulta
                     std::cout << nroPacotesCli*2 << std::endl;
                     //imrprime as infos iniciais dos pacotes 
@@ -354,7 +355,7 @@ int main(void)
                         }
                         else if(tipo == 4)
                         {
-                            std::cout << std::setfill('0') << std::setw(7) << eventos[indexFim]->getTempo() << " EV UR" << std::setw(3) << eventos[indexFim]->getId() <<
+                            std::cout << std::setfill('0') << std::setw(7) << eventos[indexFim]->getTempo() << " EV UR " << std::setw(3) << eventos[indexFim]->getId() <<
                                   " " << std::setw(3) << eventos[indexFim]->getDestino() << " " << std::setw(3) << eventos[indexFim]->getSecao() << std::endl;
                         }
                         else if(tipo == 5)
@@ -377,8 +378,9 @@ int main(void)
                 //se o pacote com o id desejado existe na árvore
                 if(indexPacs.existePac(idPac))
                 {
-                    std::string chaveBusca = indexPacs.geraChaveParaBuscaTempo(idPac);
-                    //std::cout << "chave gerada indicePacs: " << chaveBusca << std::endl;
+                    //passamos 1 porque os eventos sempre são do tipo 1 registro
+                    std::string chaveBusca = indexPacs.geraChaveParaBuscaTempo(idPac, 1);
+                    std::cout << "chave gerada indicePacs: " << chaveBusca << std::endl;
                     //depois tentar um mecanismo para obter um número de eventos associados ao pacote
                     //pode ser implmentado na classe pacote em si
                     //passamos nroEventos por referência, de forma que seu valor é atualizado à medida
@@ -410,7 +412,7 @@ int main(void)
                         }
                         else if(eventosPac[i]->getTipo() == 4)
                         {
-                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV UR" << std::setw(3) << eventosPac[i]->getId() <<
+                            std::cout << std::setfill('0') << std::setw(7) << eventosPac[i]->getTempo() << " EV UR " << std::setw(3) << eventosPac[i]->getId() <<
                                   " " << std::setw(3) << eventosPac[i]->getDestino() << " " << std::setw(3) << eventosPac[i]->getSecao() << std::endl;
                         }
                         else if(eventosPac[i]->getTipo() == 5)

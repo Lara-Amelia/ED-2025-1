@@ -13,11 +13,11 @@ class indicePacTempo
 {
     private:
     arvoreAVL<std::string, Evento*> arvPacTempo;
-    std::string geraChave(int idPacote, int tempo);
+    std::string geraChave(int idPacote, int tempo, int tipo);
 
     public:
-    void registraEvento(int idPacote, int tempo, Evento* evento);
-    Evento* buscaEvento(int idPacote, int tempo);
+    void registraEvento(int idPacote, int tempo, int tipo, Evento* evento);
+    Evento* buscaEvento(int idPacote, int tempo, int tipo);
     void eventosDoPacoteAteTempo(std::string chave, int idPac, int tempoLim, Evento** buffer, int& qtd);
 };
 
