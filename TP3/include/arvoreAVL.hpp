@@ -46,7 +46,7 @@ class arvoreAVL
 
         void coletaApartirDe(Node<std::string, Evento*>* node, int idPacote, int tempoLimite, Evento** resultado, int& count) 
         {
-            if (!node) return;
+            /*if (!node) return;
 
             // Visita os menores
             coletaApartirDe(node->left, idPacote, tempoLimite, resultado, count);
@@ -54,7 +54,7 @@ class arvoreAVL
             Evento* e = node->valor;
             //como estamos processando as linhas à medida que elas são inseridas,
             //talvez não precisemos do tempoLimite (só estarão na árvore os que tiverem inseridos até o momento)
-            if (e->getId() == idPacote /*&& e->getTempo() <= tempoLimite*/) 
+            if (e->getId() == idPacote && e->getTempo() <= tempoLimite) 
             {
                 std::cout << "id pacote em coleta a partir de "<< e->getId() << std::endl;
                 resultado[count++] = e;
@@ -66,6 +66,20 @@ class arvoreAVL
             }
 
             // Visita os maiores
+            coletaApartirDe(node->right, idPacote, tempoLimite, resultado, count);*/
+
+            if (!node) return;
+
+            coletaApartirDe(node->left, idPacote, tempoLimite, resultado, count);
+
+            Evento* e = node->valor;
+
+            if (e->getId() == idPacote /*&& e->getTempo() <= tempoLimite*/) 
+            {
+                resultado[count++] = e;
+            }
+
+            // independente do resultado do if, sempre continua para a direita
             coletaApartirDe(node->right, idPacote, tempoLimite, resultado, count);
         }
 
@@ -191,6 +205,10 @@ class arvoreAVL
 
             buscaInOrder(node->left, array, tam);
             array[tam++] = node->valor;
+            //Evento* evento = node->valor;
+            //std::cout << "VALOR ID NODE BUSCA IN ORDER: " << evento->getId() << std::endl;
+            //std::cout << "VALOR TEMPO BUSCA IN ORDER: " << evento->getTempo() << std::endl;
+            //std::cout << "VALOR CHAVE BUSCA IN ORDER: " << node->chave << std::endl;
             buscaInOrder(node->right, array, tam);
         }
 
@@ -209,11 +227,20 @@ class arvoreAVL
 
         void coletaEventosDoPacoteAteTempo(std::string chaveInicio, int idPacote, int tempoLimite, Evento** resultado, int& count) 
         {
-            Node<std::string, Evento*>* startNode = buscaNode(chaveInicio);
-            if (!startNode) /*return*/throw std::out_of_range("ERRO: chave não encontrada no índice pacoteTempo");
+            if (idPacote == 0) 
+            {
+                // Caso especial: começa da raiz, pois os eventos podem estar espalhados
+                coletaApartirDe(root, idPacote, tempoLimite, resultado, count);
+            }
+            else
+            {
+                Node<std::string, Evento*>* startNode = buscaNode(chaveInicio);
+                if (!startNode) /*return*/throw std::out_of_range("ERRO: chave não encontrada no índice pacoteTempo");
 
-            // Função auxiliar que faz inorder a partir de um nó
-            coletaApartirDe(startNode, idPacote, tempoLimite, resultado, count);
+                // Função auxiliar que faz inorder a partir de um nó
+                //std::cout << "tempo limite em coletaeventosdopacoteatetempo " << tempoLimite << std::endl;
+                coletaApartirDe(startNode, idPacote, tempoLimite, resultado, count);
+            }
         }
 
         ~arvoreAVL() 

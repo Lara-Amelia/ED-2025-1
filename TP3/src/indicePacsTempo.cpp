@@ -13,7 +13,7 @@ std::string indicePacTempo:: geraChave(int idPacote, int tempo, int tipo)
 void indicePacTempo::registraEvento(int idPacote, int tempo, int tipo, Evento* evento) 
 {
     std::string chave = geraChave(idPacote, tempo, tipo);
-    std::cout << "chave em registraEvento: " << chave << std::endl;
+    //std::cout << "chave em registraEvento: " << chave << std::endl;
     arvPacTempo.insere(chave, evento);
 }
 
@@ -26,4 +26,9 @@ Evento* indicePacTempo::buscaEvento(int idPacote, int tempo, int tipo)
 void indicePacTempo::eventosDoPacoteAteTempo(std::string chave, int idPac, int tempoLim, Evento** buffer, int& qtd)
 {
     arvPacTempo.coletaEventosDoPacoteAteTempo(chave, idPac, tempoLim, buffer, qtd);   
+}
+
+void indicePacTempo::inOrderPrint(Evento** array, int& index)
+{
+    arvPacTempo.inOrderTraversal(array, index);
 }

@@ -16,7 +16,7 @@ int main(void)
 {
     try
     {
-        std::cout << "Digite o nome do arquivo de entrada: " << std::endl;
+        //std::cout << "Digite o nome do arquivo de entrada: " << std::endl;
         std::string nomeArquivo;
         std::cin >> nomeArquivo;
 
@@ -40,10 +40,10 @@ int main(void)
 
         arquivo.close();
         //checando se os eventos foram inseridos corretamente no vetor a ser utilizado
-        for (int i = 0; i < nroLinhas; ++i) 
+        /*for (int i = 0; i < nroLinhas; ++i) 
         {
             std::cout << linhas[i] << std::endl;
-        }
+        }*/
 
         arvoreAVL<std::string, indiceCli*> clientes;
         indicePacs indexPacs;
@@ -295,12 +295,13 @@ int main(void)
             else if(partes[1] == "CL")
             {
                 //ORDENAR RESULTADOS DOS CLIENTES PELO TEMPO
+                int tempo = std::stoi(partes[0]);
                 std::string nomeCli = partes[2];
                 indiceCli* cliBusca = clientes.busca(nomeCli);
                 //se o cliente buscado não existe
                 if(cliBusca == nullptr)
                 {
-                    std::cout << std::setfill('0') << std::setw(6) << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
+                    std::cout << std::setfill('0') << std::setw(6) << tempo << " " << partes[1] << " " << partes[2] << std::endl;
                     std::cout << "0" << std::endl;
                 }
                 else
@@ -313,10 +314,26 @@ int main(void)
                     //obtem infos de todos os pacotes associados, ordenando pelo índice dos pacotes
                     cliBusca->pacotes.inOrderTraversal(packages, tam);
                     //imrpime a consulta sendo realizada
-                    std::cout << std::setfill('0') << std::setw(6) << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
+                    std::cout << std::setfill('0') << std::setw(6) << tempo << " " << partes[1] << " " << partes[2] << std::endl;
                     //imprime o número de linhas no resultado da consulta
                     std::cout << nroPacotesCli*2 << std::endl;
                     //imrprime as infos iniciais dos pacotes 
+
+                    for (int i = 0; i < nroPacotesCli; ++i) 
+                    {
+                        for (int j = 0; j < nroPacotesCli - i - 1; ++j) 
+                        {
+                            int inicioj1 = packages[j]->getInicio();
+                            int inicioj2 = packages[j+1]->getInicio();
+                            if (eventos[inicioj1]->getTempo() > eventos[inicioj2]->getTempo()) 
+                            {
+                                infoPacotes* temp = packages[j];
+                                packages[j] = packages[j + 1];
+                                packages[j + 1] = temp;
+                            }
+                        }
+                    }
+
                     for(int i = 0; i < nroPacotesCli; i++)
                     {
                         int indexInicio = packages[i]->getInicio();
@@ -329,6 +346,22 @@ int main(void)
                                   << std::setw(3) << eventos[indexInicio]->getOrigem() << " " << std::setw(3) << eventos[indexInicio]->getDestino() << std::endl;
                         //std::cout<<linhas[indexInicio] << std::endl;
                     }
+
+                    for (int i = 0; i < nroPacotesCli; ++i) 
+                    {
+                        for (int j = 0; j < nroPacotesCli - i - 1; ++j) 
+                        {
+                            int fimj1 = packages[j]->getFim();
+                            int fimj2 = packages[j+1]->getFim();
+                            if (eventos[fimj1]->getTempo() > eventos[fimj2]->getTempo()) 
+                            {
+                                infoPacotes* temp = packages[j];
+                                packages[j] = packages[j + 1];
+                                packages[j + 1] = temp;
+                            }
+                        }
+                    }
+
                     //TLAVEZ SEJA NECESSARIO ORDENAR O VETOR PELO TEMPO PARA OBTER A SAÍDA DESEJADA
                     for(int i = 0; i < nroPacotesCli; i++)
                     {
@@ -380,7 +413,7 @@ int main(void)
                 {
                     //passamos 1 porque os eventos sempre são do tipo 1 registro
                     std::string chaveBusca = indexPacs.geraChaveParaBuscaTempo(idPac, 1);
-                    std::cout << "chave gerada indicePacs: " << chaveBusca << std::endl;
+                    //std::cout << "chave gerada indicePacs: " << chaveBusca << std::endl;
                     //depois tentar um mecanismo para obter um número de eventos associados ao pacote
                     //pode ser implmentado na classe pacote em si
                     //passamos nroEventos por referência, de forma que seu valor é atualizado à medida
@@ -388,9 +421,11 @@ int main(void)
                     int nroEventos = 0;
                     int tempoLim = std::stoi(partes[0]);
                     Evento** eventosPac = new Evento*[500];
+                    //indexPacTempo.inOrderPrint(eventosPac, nroEventos);
+
                     indexPacTempo.eventosDoPacoteAteTempo(chaveBusca, idPac, tempoLim, eventosPac, nroEventos);
-                    
-                    std::cout << partes[0] << " " << partes[1] << " " << partes[2] << std::endl;
+
+                    std::cout << std::setfill('0') << std::setw(6) << tempoLim << " " << partes[1] << " " << partes[2] << std::endl;
                     std::cout << nroEventos << std::endl;
                     for(int i = 0; i < nroEventos; i++)
                     {
