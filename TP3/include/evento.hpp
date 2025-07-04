@@ -49,6 +49,9 @@ class Evento
     int getOrigem();
     int getDestino(); 
     int getSecao();
+    static void geraResposta(Evento* eventoResultado);
+    static int defineTipo(std::string tipoEv);
+    static void ordenaPorTempoId(Evento** vetor, int n);
 
     /*1. RG: Pacote ainda não foi postado (apenas registrado no sistema)
     2. AR: Pacote chegou no armazém e foi armazenado na respectiva seção

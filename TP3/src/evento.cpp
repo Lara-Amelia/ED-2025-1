@@ -2,6 +2,8 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 
 Evento::Evento()
 {
@@ -99,6 +101,71 @@ int Evento::getSecao()
     return secaoDestino;
 }
 
+void Evento::geraResposta(Evento* eventoResultado)
+{
+    if(eventoResultado->getTipo() == 1)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << eventoResultado->getTempo() << " EV RG " << std::setw(3) << eventoResultado->getId() <<
+              " " << eventoResultado->getRemetente() << " " << eventoResultado->getDestinatario() << " " 
+                  << std::setw(3) << eventoResultado->getOrigem() << " " << std::setw(3) << eventoResultado->getDestino() << std::endl;
+    }
+    else if(eventoResultado->getTipo() == 2)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << eventoResultado->getTempo() << " EV AR " << std::setw(3) << eventoResultado->getId() <<
+              " " << std::setw(3) << eventoResultado->getDestino() << " " << std::setw(3) << eventoResultado->getSecao() << std::endl;
+    }
+    else if(eventoResultado->getTipo() == 3)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << eventoResultado->getTempo() << " EV RM " << std::setw(3) << eventoResultado->getId() <<
+              " " << std::setw(3) << eventoResultado->getDestino() << " " << std::setw(3) << eventoResultado->getSecao() << std::endl;   
+    }
+    else if(eventoResultado->getTipo() == 4)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << eventoResultado->getTempo() << " EV UR " << std::setw(3) << eventoResultado->getId() <<
+              " " << std::setw(3) << eventoResultado->getDestino() << " " << std::setw(3) << eventoResultado->getSecao() << std::endl;
+    }
+    else if(eventoResultado->getTipo() == 5)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << eventoResultado->getTempo() << " EV TR " << std::setw(3) << eventoResultado->getId() <<
+              " " << std::setw(3) << eventoResultado->getOrigem() << " " << std::setw(3) << eventoResultado->getDestino() << std::endl;
+    }
+    else if(eventoResultado->getTipo() == 6)
+    {
+        std::cout << std::setfill('0') << std::setw(7) << eventoResultado->getTempo() << " EV EN " << std::setw(3) << eventoResultado->getId() <<
+              " " << std::setw(3) << eventoResultado->getDestino() << std::endl;   
+    }
+}
+
+int Evento::defineTipo(std::string tipoEv)
+{
+    int tipoEvento = -1;
+    if(tipoEv == "RG")
+    {
+        tipoEvento = 1;
+    }
+    else if(tipoEv == "AR")
+    {
+        tipoEvento = 2;
+    }
+    else if(tipoEv == "RM")
+    {
+        tipoEvento = 3;
+    }
+    else if(tipoEv == "UR")
+    {
+        tipoEvento = 4;
+    }
+    else if(tipoEv == "TR")
+    {
+        tipoEvento = 5;
+    }
+    else if(tipoEv == "EN")
+    {
+        tipoEvento = 6;
+    }
+    return tipoEvento;
+}
+
 Pacote::Pacote()
 {
     idPac = -1;
@@ -143,4 +210,29 @@ int Pacote::encontraPacote(Pacote* pacotes, int tam, int id)
             return i;
     }
     throw std::out_of_range("ERRO: pacote não encontrado no vetor de pacotes");
+}
+
+void Evento::ordenaPorTempoId(Evento** vetor, int n) 
+{
+    for (int i = 1; i < n; ++i) {
+        Evento* key = vetor[i];
+        int j = i - 1;
+
+        int tempoKey = key->getTempo();
+        int idKey = key->getId();
+
+        while (j >= 0) {
+            int tempoJ = vetor[j]->getTempo();
+            int idJ = vetor[j]->getId();
+
+            if (tempoJ > tempoKey || (tempoJ == tempoKey && idJ > idKey)) {
+                vetor[j + 1] = vetor[j];
+                j--;
+            } else {
+                break;
+            }
+        }
+
+        vetor[j + 1] = key;
+    }
 }

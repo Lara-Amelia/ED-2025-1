@@ -79,7 +79,9 @@ class indiceCli
     //pega as informações de um pacote específico
     //provavelmente não será necessário - podemos apenas percorrer a árvore in-order para
     //obter as infos de pacotes na ordem correta
-    infoPacotes* getInfoPacote(int idPacote);
+    //infoPacotes* getInfoPacote(int idPacote);
+
+    static void atualizaFim(std::string nomeAtt, arvoreAVL<std::string, indiceCli*>& clientes, int idPac, int indexFim);
 
     //podemos adicionar um contador que registra quantos pacotes foram associados ao cliente até o momento, 
     //de forma que passamos um vetor com esse tamanho na chamada de função para armazenar as informações 

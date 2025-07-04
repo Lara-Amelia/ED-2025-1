@@ -53,7 +53,6 @@ indiceCli::indiceCli()
     nroPacotes = 0;
 }
 
-/*
 indiceCli::~indiceCli()
 {
     int qtd = nroPacotes;
@@ -65,7 +64,7 @@ indiceCli::~indiceCli()
         delete vetor[i];
     }
     delete[] vetor;
-}*/
+}
 
 indiceCli::indiceCli(std::string nome)
 {
@@ -101,9 +100,9 @@ bool indiceCli::addPacote(int idPacote, int indiceInicio, int indiceFim)
 //isso será feito na main, que é onde iremos instanciar a avl com índice de clientes
 bool indiceCli::mudaPacote(int idPacote, int indiceFim)
 {
-    //talvez alterar para tratamento de exceções ao invés de apenas retornar verdadeiro ou falso
     infoPacotes* pacote = pacotes.busca(idPacote);
-    if (!pacote) return false;
+    if(pacote == nullptr)
+        throw std::out_of_range("ERRO: pacote não encontrado na busca");
 
     pacote->setFim(indiceFim);
     return true;
@@ -117,4 +116,18 @@ void indiceCli::incNroPacs(int n)
 std::string indiceCli::getNomeCli()
 {
     return nomeCli;
+}
+
+void indiceCli::atualizaFim(std::string nomeAtt, arvoreAVL<std::string, indiceCli*>& clientes, int idPac, int indexFim)
+{
+    indiceCli* clienteBusca = clientes.busca(nomeAtt);
+
+    if(clienteBusca == nullptr)
+    {
+        throw std::out_of_range("ERRO: cliente" + nomeAtt + "não encontrado na árvore para atualização");
+    }
+    else
+    {
+        clienteBusca->mudaPacote(idPac, indexFim);
+    }
 }
