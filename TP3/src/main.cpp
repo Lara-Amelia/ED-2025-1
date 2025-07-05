@@ -384,7 +384,8 @@ int main(int argc, char** argv)
                     }
                 }
                 else
-                    throw std::runtime_error("ERRO: pacote não encontrado no índice de pacotes");
+                    std::cout << "ERRO: pacote não existe" << std::endl;
+                    //throw std::runtime_error("ERRO: pacote não encontrado no índice de pacotes");
             }
         }
     }

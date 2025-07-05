@@ -48,7 +48,7 @@ int main(){
   int conncomp = nodes;
   long atime=1;
   long rtime=10;
-  int numclients = 10;
+  int numclients = 500;
   int numcl = 10;
   int numpc = 10;
   int src, dst, fsrc, fdst, sender, receiver;
