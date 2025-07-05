@@ -11,12 +11,12 @@
 #include "arvoreAVL.hpp"
 #include "indicePacs.hpp"
 #include "indicePacTempo.hpp"
+#include "pacote.hpp"
 
 int main(int argc, char** argv)
 {
     try
     {
-        //std::cout << "Digite o nome do arquivo de entrada: " << std::endl;
         if(argc < 2)
         {
             throw std::invalid_argument("ERRO: o nome do arquivo não foi fornecido na linha de comando");
@@ -53,15 +53,13 @@ int main(int argc, char** argv)
         int qtEventos = 0;
         Pacote pacotes[50];
         int nroPacotes = 0;
-        //para cada linha no vetor de linhas da entrada, separaremos cada informação presente neles 
+
+        //para cada linha no vetor de linhas da entrada, separamos cada informação presente
         //e as utilizaremos para criar os eventos e inseri-los em um vetor de eventos
         for(int i = 0; i < nroLinhas; i++)
         {
             //faz o parsing das informações, cria eventos de acordo e os insere em um vetor de eventos
-            //talvez separar a laitura e parsing, porque aqui todas as ações serão direcionadas 
             //optamos por realizar as inserções e consultas à medida que as infos. do vetor são processadas
-            //se for um evento, o inserimos no devido lugar e, se for uma consulta, fazemos as ações necessárias para tanto
-            //inicialmente, faremos as ações de consultas por clientes
             std::istringstream iss(linhas[i]);
             std::string token;
             std::string partes[8];
@@ -85,11 +83,13 @@ int main(int argc, char** argv)
                     case 1:
                     {
                         nroPacotes++;
+                        //obtém infos do evento pela linha
                         int tempo = std::stoi(partes[0]);
                         int idPac = std::stoi(partes[3]);
                         int origem = std::stoi(partes[6]);
                         int destino = std::stoi(partes[7]);
 
+                        //cria um novo objeto pacote e um novo evento
                         pacotes[nroPacotes - 1].setPacote(idPac, partes[4], partes[5]);
                         Evento* novoEvento = new Evento(tempo, 1, idPac, partes[4], partes[5], origem, destino);
                         eventos[qtEventos-1] = novoEvento;
@@ -102,29 +102,28 @@ int main(int argc, char** argv)
                             clientes.insere(partes[4], novoCli1);
                         }    
 
-                        //se o cliente já existe na árvore
+                        //se o cliente já existe na árvore, apenas insere o novo pacote
                         else
                         {
                             indiceCli* mudaCli = clientes.busca(partes[4]);
                             mudaCli->addPacote(idPac, qtEventos-1, qtEventos-1);
                         }
 
-                        //início e fim são os mesmos porque acabamos de adicionar o pacote
-                        //ainda não há outros eventos associados a ele
-
-                        //se o destinatário ainda não existe
+                        //se o destinatário ainda não existe, cria o cliente e o insere
                         if(!clientes.existe(partes[5]))
                         {
                             indiceCli* novoCli1 = new indiceCli(partes[5]);
                             novoCli1->addPacote(idPac, qtEventos-1, qtEventos-1);
                             clientes.insere(partes[5], novoCli1);
                         }
+                        //se já existe, apenas adiciona o novo pacote registrado
                         else
                         {
                             indiceCli* mudaCli = clientes.busca(partes[5]);
                             mudaCli->addPacote(idPac, qtEventos-1, qtEventos-1);
                         }
                         
+                        //registra o evento nos demais índices
                         indexPacs.registraPacote(idPac, tempo);
 
                         indexPacTempo.registraEvento(idPac, tempo, tipoEvento,novoEvento);
@@ -134,11 +133,13 @@ int main(int argc, char** argv)
                     //evento de armazenamento
                     case 2:
                     {
+                        //obtém as informações do evento pela linha
                         int tempo = std::stoi(partes[0]);
                         int idPac = std::stoi(partes[3]);
                         int armDest = std::stoi(partes[4]);
                         int secaoDest = std::stoi(partes[5]);
 
+                        //cria um novo evento e o insere no vetor de eventos
                         Evento* novoEvento = new Evento(tempo, 2, idPac, armDest, secaoDest);
                         eventos[qtEventos - 1] = novoEvento;
                         
@@ -157,10 +158,13 @@ int main(int argc, char** argv)
                     //evento de remoção
                     case 3:
                     {
+                        //obtém as informações do evento pela linha
                         int tempo = std::stoi(partes[0]);
                         int idPac = std::stoi(partes[3]);
                         int armDest = std::stoi(partes[4]);
                         int secaoDest = std::stoi(partes[5]);
+
+                        //cria novo evento e o insere no vetor de eventos
                         Evento* novoEvento = new Evento(tempo, 3, idPac, armDest, secaoDest);
                         eventos[qtEventos - 1] = novoEvento;
 
@@ -184,6 +188,7 @@ int main(int argc, char** argv)
                         int idPac = std::stoi(partes[3]);
                         int armDest = std::stoi(partes[4]);
                         int secaoDest = std::stoi(partes[5]);
+
                         //cria um novo evento e o insere no vetor principal de eventos
                         Evento* novoEvento = new Evento(tempo, 4, idPac, armDest, secaoDest);
                         eventos[qtEventos - 1] = novoEvento;
@@ -203,11 +208,13 @@ int main(int argc, char** argv)
                     //evento de transporte
                     case 5:
                     {
+                        //obtém infos do evento da linha
                         int tempo = std::stoi(partes[0]);
                         int idPac = std::stoi(partes[3]);
                         int origem = std::stoi(partes[4]);
                         int destino = std::stoi(partes[5]);
 
+                        //cria novo evento e o insere no vetor
                         Evento* novoEvento = new Evento(tempo, 5, idPac, origem, destino);
                         eventos[qtEventos - 1] = novoEvento;
 
@@ -226,10 +233,12 @@ int main(int argc, char** argv)
                     //evento de entrega
                     case 6:
                     {
+                        //obtem os infos do evento
                         int tempo = std::stoi(partes[0]);
                         int idPac = std::stoi(partes[3]);
                         int destino = std::stoi(partes[4]);
                         
+                        //cria novo evento e o insere no vetor de eventos
                         Evento* novoEvento = new Evento(tempo, 6, idPac, destino);
                         eventos[qtEventos - 1] = novoEvento;
 
@@ -254,10 +263,10 @@ int main(int argc, char** argv)
             //se for uma pesquisa por cliente
             else if(partes[1] == "CL")
             {
-                //ORDENAR RESULTADOS DOS CLIENTES PELO TEMPO
                 int tempo = std::stoi(partes[0]);
                 std::string nomeCli = partes[2];
                 indiceCli* cliBusca = clientes.busca(nomeCli);
+
                 //se o cliente buscado não existe
                 if(cliBusca == nullptr)
                 {
@@ -266,20 +275,19 @@ int main(int argc, char** argv)
                 }
                 else
                 {
-                    //std::cout << cliBusca->getNomeCli();
                     //cria um vetor de infoPacotes para armazenar os resultados obtidos ao percorrer a árvore
                     int nroPacotesCli = cliBusca->getNroPacotes();
                     infoPacotes** packages = new infoPacotes*[nroPacotesCli];
                     int tam = 0;
+
                     //obtem infos de todos os pacotes associados, ordenando pelo índice dos pacotes
                     cliBusca->pacotes.inOrderTraversal(packages, tam);
                     //imrpime a consulta sendo realizada
                     std::cout << std::setfill('0') << std::setw(6) << tempo << " " << partes[1] << " " << partes[2] << std::endl;
                     //imprime o número de linhas no resultado da consulta
                     std::cout << nroPacotesCli*2 << std::endl;
-                    //imrprime as infos iniciais dos pacotes 
-
-                    // Ordena os pacotes pelo tempo de início e, em caso de empate, pelo idPacote
+        
+                    //ordena os eventos de início pelo tempo e, em caso de empate, pelo idPacote
                     for (int i = 1; i < nroPacotesCli; ++i) 
                     {
                         infoPacotes* key = packages[i];
@@ -306,13 +314,14 @@ int main(int argc, char** argv)
                         packages[j + 1] = key;
                     }
 
+                    //imprime infos dos eventos iniciais de pacotes
                     for(int i = 0; i < nroPacotesCli; i++)
                     {
                         int indexInicio = packages[i]->getInicio();
                         Evento::geraResposta(eventos[indexInicio]);
                     }
 
-                    // Ordena os pacotes pelo tempo de fim e, em caso de empate, pelo idPacote
+                    //ordena os eventos de fim pelo tempo e, em caso de empate, pelo idPacote
                     for (int i = 1; i < nroPacotesCli; ++i) 
                     {
                         infoPacotes* key = packages[i];
@@ -339,6 +348,7 @@ int main(int argc, char** argv)
                         packages[j + 1] = key;
                     }
 
+                    //imprime os dados dos eventos de fim dos pacotes dos clientes
                     for(int i = 0; i < nroPacotesCli; i++)
                     {
                         int indexFim = packages[i]->getFim();
@@ -346,53 +356,28 @@ int main(int argc, char** argv)
                     }
                 }
             }
+
             //se for uma pesquisa por pacote
             else if(partes[1] == "PC")
             {
                 int idPac = std::stoi(partes[2]);
+
                 //se o pacote com o id desejado existe na árvore
                 if(indexPacs.existePac(idPac))
                 {
-                    //passamos 1 porque os eventos sempre são do tipo 1 registro
+                    //passamos 1 porque os eventos sempre são do tipo 1, registro
                     std::string chaveBusca = indexPacs.geraChaveParaBuscaTempo(idPac, 1);
-                    //std::cout << "chave gerada indicePacs: " << chaveBusca << std::endl;
                     int nroEventos = 0;
                     int tempoLim = std::stoi(partes[0]);
                     Evento** eventosPac = new Evento*[500];
-                    //indexPacTempo.inOrderPrint(eventosPac, nroEventos);
-
+                    
+                    //obtem os eventos percorrendo a árvore
                     indexPacTempo.eventosDoPacoteAteTempo(chaveBusca, idPac, tempoLim, eventosPac, nroEventos);
 
                     std::cout << std::setfill('0') << std::setw(6) << tempoLim << " " << partes[1] << " " << partes[2] << std::endl;
                     std::cout << nroEventos << std::endl;
 
-                    // Ordena os eventos do pacote por tempo e, em caso de empate, por idPacote
-                    /*for (int i = 1; i < nroEventos; ++i) 
-                    {
-                        Evento* key = eventosPac[i];
-                        int j = i - 1;
-
-                        int tempoKey = key->getTempo();
-                        int idKey = key->getId();
-
-                        while (j >= 0) 
-                        {
-                            int tempoJ = eventosPac[j]->getTempo();
-                            int idJ = eventosPac[j]->getId();
-
-                            if (tempoJ > tempoKey || (tempoJ == tempoKey && idJ > idKey)) 
-                            {
-                                eventosPac[j + 1] = eventosPac[j];
-                                j--;
-                            } 
-                            else 
-                            {
-                                break;
-                            }
-                        }
-                        eventosPac[j + 1] = key;
-                    }*/
-
+                    //imprime as infos do eventos coletados
                     for(int i = 0; i < nroEventos; i++)
                     {
                         Evento::geraResposta(eventosPac[i]);

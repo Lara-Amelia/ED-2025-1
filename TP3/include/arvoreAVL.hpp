@@ -44,50 +44,39 @@ class arvoreAVL
     private:
         Node<K, V>* root;
 
+        //percorre a árvore a partir de um determinado nó
         void coletaApartirDe(Node<std::string, Evento*>* node, int idPacote, int tempoLimite, Evento** resultado, int& count) 
         {
-            /*if (!node) return;
-
-            // Visita os menores
-            coletaApartirDe(node->left, idPacote, tempoLimite, resultado, count);
-
-            Evento* e = node->valor;
-            //como estamos processando as linhas à medida que elas são inseridas,
-            //talvez não precisemos do tempoLimite (só estarão na árvore os que tiverem inseridos até o momento)
-            if (e->getId() == idPacote && e->getTempo() <= tempoLimite) 
-            {
-                std::cout << "id pacote em coleta a partir de "<< e->getId() << std::endl;
-                resultado[count++] = e;
-                std::cout << "idPacote parâmetro em coletaApartir de " << idPacote << std::endl;
-            } 
-            else if (e->getId() != idPacote) 
-            {
-                return; // terminou
-            }
-
-            // Visita os maiores
-            coletaApartirDe(node->right, idPacote, tempoLimite, resultado, count);*/
-
             if (!node) return;
 
+            //visita a árvore da esquerda
             coletaApartirDe(node->left, idPacote, tempoLimite, resultado, count);
 
             Evento* e = node->valor;
 
-            if (e->getId() == idPacote /*&& e->getTempo() <= tempoLimite*/) 
+            if (e->getId() == idPacote) 
             {
                 resultado[count++] = e;
             }
 
-            // independente do resultado do if, sempre continua para a direita
+            //visita a árvore da direita
             coletaApartirDe(node->right, idPacote, tempoLimite, resultado, count);
         }
 
+        //obtem a altura de um nó
         int altura(Node<K, V>* node) 
         {
-            return node ? node->altura : 0;
+            if(node == nullptr)
+            {
+                return 0;
+            }
+            else
+            {
+                return node->altura;
+            }
         }
 
+        //atualiza a altura de um nó
         void updateAltura(Node<K, V>* node) 
         {
             if (node) 
@@ -96,11 +85,13 @@ class arvoreAVL
             }
         }
 
+        //obtém o fator de balanceamento de um nó
         int getBF(Node<K, V>* node) 
         {
             return node ? altura(node->left) - altura(node->right) : 0;
         }
 
+        //rotação a direita entre nós
         Node<K, V>* rotacaoDir(Node<K, V>* y) 
         {
             Node<K, V>* x = y->left;
@@ -115,6 +106,7 @@ class arvoreAVL
             return x;
         }
 
+        //rotação a esquerda entre nós
         Node<K, V>* rotacaoEsq(Node<K, V>* x) 
         {
             Node<K, V>* y = x->right;
@@ -129,6 +121,7 @@ class arvoreAVL
             return y;
         }
 
+        //insere um novo nó na árvore
         Node<K, V>* insereRec(Node<K, V>* node, K key, V value) 
         {
             if (node == nullptr) 
@@ -145,7 +138,8 @@ class arvoreAVL
                 node->right = insereRec(node->right, key, value);
             }
             else 
-            { // chave já existe, atualiza o valor
+            { 
+                // chave já existe, atualiza o valor
                 node->valor = value;
                 return node;
             }
@@ -153,26 +147,26 @@ class arvoreAVL
             updateAltura(node);
             int balance = getBF(node);
 
-            // Left Left Case
+            //caso esquerda esquerda
             if (balance > 1 && key < node->left->chave) 
             {
                 return rotacaoDir(node);
             }
 
-            // Right Right Case
+            //caso direita direita
             if (balance < -1 && key > node->right->chave) 
             {
                 return rotacaoEsq(node);
             }
 
-            // Left Right Case
+            //caso esquerda direita
             if (balance > 1 && key > node->left->chave) 
             {
                 node->left = rotacaoEsq(node->left);
                 return rotacaoDir(node);
             }
 
-            // Right Left Case
+            //caso direita esquerda
             if (balance < -1 && key < node->right->chave) 
             {
                 node->right = rotacaoDir(node->right);
@@ -182,6 +176,7 @@ class arvoreAVL
             return node;
         }
 
+        //faz uma busca na árvore
         Node<K, V>* buscaRec(Node<K, V>* node, K key) const 
         {
             if (node == nullptr || node->chave == key) 
@@ -191,27 +186,27 @@ class arvoreAVL
 
             if (key < node->chave) 
             {
+                //busca na árvore da esquerda
                 return buscaRec(node->left, key);
             }
             else 
             {
+                //busca na árvore da direita
                 return buscaRec(node->right, key);
             }
         }
 
+        //faz uma busca inOrder pela árvore
         void buscaInOrder(Node<K, V>* node, V* array, int& tam) const 
         {
             if (node == nullptr) return;
 
             buscaInOrder(node->left, array, tam);
             array[tam++] = node->valor;
-            //Evento* evento = node->valor;
-            //std::cout << "VALOR ID NODE BUSCA IN ORDER: " << evento->getId() << std::endl;
-            //std::cout << "VALOR TEMPO BUSCA IN ORDER: " << evento->getTempo() << std::endl;
-            //std::cout << "VALOR CHAVE BUSCA IN ORDER: " << node->chave << std::endl;
             buscaInOrder(node->right, array, tam);
         }
 
+        //limpa a árvore
         void deleteArvore(Node<K, V>* node) 
         {
             if(node) 
@@ -225,11 +220,12 @@ class arvoreAVL
     public:
         arvoreAVL() : root(nullptr) {}
 
+        //faz a busca a partir de um certo nó
         void coletaEventosDoPacoteAteTempo(std::string chaveInicio, int idPacote, int tempoLimite, Evento** resultado, int& count) 
         {
             if (idPacote == 0) 
             {
-                // Caso especial: começa da raiz, pois os eventos podem estar espalhados
+                //caso especial: começa da raiz, pois os eventos podem estar espalhados
                 coletaApartirDe(root, idPacote, tempoLimite, resultado, count);
             }
             else
@@ -238,44 +234,48 @@ class arvoreAVL
                 if (!startNode) /*return*/throw std::out_of_range("ERRO: chave não encontrada no índice pacoteTempo");
 
                 // Função auxiliar que faz inorder a partir de um nó
-                //std::cout << "tempo limite em coletaeventosdopacoteatetempo " << tempoLimite << std::endl;
                 coletaApartirDe(startNode, idPacote, tempoLimite, resultado, count);
             }
         }
 
+        //destrutor da classe
         ~arvoreAVL() 
         {
             deleteArvore(root);
         }
 
+        //método público para inserção na árvore
         void insere(K key, V value) 
         {
             root = insereRec(root, key, value);
         }
 
+        //método público para busca de uma certa chave
         V busca(K key) 
         {
             Node<K, V>* node = buscaRec(root, key);
-            //if (node == nullptr) throw std::runtime_error("Chave não encontrada na árvore");
-            //return node->valor;
             return node ? (node->valor) : nullptr;
         }
 
+        //checa se um evento existe na árvore ou não (retorna 1 se existe e 0 caso contrário)
         bool existe(K key) const 
         {
             return buscaRec(root, key) != nullptr;
         }
 
+        //busca na árvore e retorna todo o item node com a chave associada
         Node<K, V>* buscaNode(K key) const 
         {
             return buscaRec(root, key);
         }
 
+        //percorre a árvore inorder
         void inOrderTraversal(V* array, int& index) const 
         {
             buscaInOrder(root, array, index);
         }
 
+        //checa se a árvore está vazia
         bool vazia() const 
         {
             return root == nullptr;
@@ -286,12 +286,13 @@ class arvoreAVL
     friend class indicePacs;
 };
 
+//especialização de método para uso na árvore de tipo int, int 
 template<>
 inline
 int arvoreAVL<int, int>::busca(int key)
 {
     Node<int, int>* node = buscaRec(root, key);
-    return node ? node->valor : 0; // Retorna 0 se não encontrado
+    return node ? node->valor : 0; 
 }
 
 #endif

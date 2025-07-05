@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 
+//construtor default para a classe
 Evento::Evento()
 {
     tempoEvento = -1;
@@ -61,6 +62,7 @@ Evento::Evento(int tempo, int tipo, int idPac, int armDest)
     armDestino = armDest;
 }
 
+//métodos getters
 int Evento::getTempo()
 {
     return tempoEvento;
@@ -101,6 +103,7 @@ int Evento::getSecao()
     return secaoDestino;
 }
 
+//método para imprimir informações de eventos
 void Evento::geraResposta(Evento* eventoResultado)
 {
     if(eventoResultado->getTipo() == 1)
@@ -136,6 +139,7 @@ void Evento::geraResposta(Evento* eventoResultado)
     }
 }
 
+//método para obter o tipo de um evento de acordo com a string associada
 int Evento::defineTipo(std::string tipoEv)
 {
     int tipoEvento = -1;
@@ -166,52 +170,7 @@ int Evento::defineTipo(std::string tipoEv)
     return tipoEvento;
 }
 
-Pacote::Pacote()
-{
-    idPac = -1;
-    remetente = "";
-    destinatario = "";
-}
-
-Pacote::Pacote(int id, std::string rem, std::string dest)
-{
-    idPac = id;
-    remetente = rem;
-    dest = dest;
-}
-
-int Pacote::getId()
-{
-    return idPac;
-}
-
-std::string Pacote::getDest()
-{
-    return destinatario;
-}
-
-std::string Pacote::getRem()
-{
-    return remetente;
-}
-
-void Pacote::setPacote(int id, std::string rem, std::string dest)
-{
-    idPac = id;
-    remetente = rem;
-    destinatario = dest;
-}
-
-int Pacote::encontraPacote(Pacote* pacotes, int tam, int id)
-{
-    for(int i = 0; i < tam; i++)
-    {
-        if(pacotes[i].idPac == id)
-            return i;
-    }
-    throw std::out_of_range("ERRO: pacote não encontrado no vetor de pacotes");
-}
-
+//ordenador para ordenar eventos de acordo com o tempo e com o ID dos pacotes
 void Evento::ordenaPorTempoId(Evento** vetor, int n) 
 {
     for (int i = 1; i < n; ++i) {
@@ -232,7 +191,6 @@ void Evento::ordenaPorTempoId(Evento** vetor, int n)
                 break;
             }
         }
-
         vetor[j + 1] = key;
     }
 }

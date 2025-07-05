@@ -2,6 +2,7 @@
 #include "evento.hpp"
 #include "arvoreAVL.hpp"
 
+//construtor default para a classe infoPacotes
 infoPacotes::infoPacotes()
 {
     idPac = -1;
@@ -9,6 +10,7 @@ infoPacotes::infoPacotes()
     fim = -1;
 }
 
+//construtor com parâmetros para a classe infoPacotes
 infoPacotes::infoPacotes(int id, int in, int fim)
 {
     idPac = id;
@@ -16,15 +18,10 @@ infoPacotes::infoPacotes(int id, int in, int fim)
     fim = fim;
 }
 
+//getters para a classe infoPacotes
 int infoPacotes::getIdPac()
 {
     return idPac;
-}
-
-//provavelmnet nem será necessário
-void infoPacotes::setIdPac(int n)
-{
-    idPac = n;
 }
 
 int infoPacotes::getInicio()
@@ -32,14 +29,20 @@ int infoPacotes::getInicio()
     return inicio;
 }
 
-void infoPacotes::setInicio(int comeco)
-{
-    inicio = comeco;
-}
-
 int infoPacotes::getFim()
 {
     return fim;
+}
+
+//setters para a classe infoPacotes
+void infoPacotes::setIdPac(int n)
+{
+    idPac = n;
+}
+
+void infoPacotes::setInicio(int comeco)
+{
+    inicio = comeco;
 }
 
 void infoPacotes::setFim(int novoFim)
@@ -47,12 +50,14 @@ void infoPacotes::setFim(int novoFim)
     fim = novoFim;
 }
 
+//construtor default para a classe indiceCli
 indiceCli::indiceCli()
 {
     nomeCli = "";
     nroPacotes = 0;
 }
 
+//destrutor para a classe indiceCli
 indiceCli::~indiceCli()
 {
     int qtd = nroPacotes;
@@ -66,22 +71,30 @@ indiceCli::~indiceCli()
     delete[] vetor;
 }
 
+//construtor com parâmetros para a classe indiceCli
 indiceCli::indiceCli(std::string nome)
 {
     nomeCli = nome;
     nroPacotes = 0;
 }
 
+//getters para a classe indiceCli
 int indiceCli::getNroPacotes()
 {
     return nroPacotes;
 }
 
+std::string indiceCli::getNomeCli()
+{
+    return nomeCli;
+}
+
+//adiciona um pacote para um determinado cliente
 bool indiceCli::addPacote(int idPacote, int indiceInicio, int indiceFim)
 {
     //se o pacote que desejamos adicionar já foi adicionado
-    //talvez utilizar tratamento de exceções oa invés de apenas retornar falso
-    if (pacotes.existe(idPacote)) return false;
+    if (pacotes.existe(idPacote)) 
+        throw ("ERRO: o pacote ja foi inserido na árvore");
 
     infoPacotes* novo = new infoPacotes();
     novo->setIdPac(idPacote);
@@ -93,11 +106,7 @@ bool indiceCli::addPacote(int idPacote, int indiceInicio, int indiceFim)
     return true;
 }
 
-//a cada vez que inserimos um novo evento, temos de checar onde o pacote associado está (em termos de clientes)
-//e atualizar o atributo fim do índice de pacotes do cliente
-//já sabemos em quais clientes as atualizações devem ocorrer devido aos atributos de remetente e destinatário do pacote
-//para fazer essa atualização, temos, antes, de realizar a busca no índice de clientes pelos clientes desejados
-//isso será feito na main, que é onde iremos instanciar a avl com índice de clientes
+//encontra um pacote e altera  valor do "ponteiro" fim
 bool indiceCli::mudaPacote(int idPacote, int indiceFim)
 {
     infoPacotes* pacote = pacotes.busca(idPacote);
@@ -108,16 +117,8 @@ bool indiceCli::mudaPacote(int idPacote, int indiceFim)
     return true;
 }
 
-void indiceCli::incNroPacs(int n)
-{
-    nroPacotes += n;
-}
-
-std::string indiceCli::getNomeCli()
-{
-    return nomeCli;
-}
-
+//atualiza o "ponteiro" fim de um pacote quando é detectado um novo evento
+//como o índice de clientes é instanciado na main, o passamos por parâmetro para o método
 void indiceCli::atualizaFim(std::string nomeAtt, arvoreAVL<std::string, indiceCli*>& clientes, int idPac, int indexFim)
 {
     indiceCli* clienteBusca = clientes.busca(nomeAtt);
