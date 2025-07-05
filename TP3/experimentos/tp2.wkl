@@ -1,0 +1,116 @@
+2
+20
+100
+1
+10
+0 1 0 0 1 1 0 0 0 0
+1 0 0 0 0 0 0 0 0 1
+0 0 0 0 0 1 1 0 0 0
+0 0 0 0 0 1 0 1 1 0
+1 0 0 0 0 0 0 0 0 0
+1 0 1 1 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0 0
+0 1 0 0 0 0 0 0 0 0
+100
+10 pac 0 org 0 dst 5
+18 pac 1 org 5 dst 3
+19 pac 2 org 9 dst 0
+25 pac 3 org 7 dst 2
+31 pac 4 org 3 dst 4
+32 pac 5 org 9 dst 6
+36 pac 6 org 3 dst 5
+42 pac 7 org 2 dst 5
+49 pac 8 org 2 dst 7
+58 pac 9 org 5 dst 6
+60 pac 10 org 0 dst 5
+65 pac 11 org 8 dst 3
+67 pac 12 org 9 dst 3
+70 pac 13 org 3 dst 8
+71 pac 14 org 9 dst 3
+80 pac 15 org 6 dst 5
+86 pac 16 org 6 dst 8
+95 pac 17 org 2 dst 1
+97 pac 18 org 0 dst 8
+99 pac 19 org 9 dst 1
+101 pac 20 org 8 dst 4
+108 pac 21 org 5 dst 9
+112 pac 22 org 2 dst 4
+118 pac 23 org 8 dst 4
+125 pac 24 org 4 dst 2
+125 pac 25 org 6 dst 3
+127 pac 26 org 9 dst 5
+132 pac 27 org 1 dst 6
+135 pac 28 org 3 dst 7
+142 pac 29 org 7 dst 2
+147 pac 30 org 3 dst 0
+155 pac 31 org 2 dst 9
+160 pac 32 org 3 dst 5
+162 pac 33 org 4 dst 9
+169 pac 34 org 2 dst 3
+173 pac 35 org 7 dst 1
+182 pac 36 org 1 dst 7
+187 pac 37 org 4 dst 8
+193 pac 38 org 4 dst 7
+199 pac 39 org 8 dst 2
+199 pac 40 org 0 dst 5
+203 pac 41 org 8 dst 4
+211 pac 42 org 2 dst 0
+213 pac 43 org 1 dst 8
+222 pac 44 org 5 dst 1
+231 pac 45 org 5 dst 8
+238 pac 46 org 9 dst 6
+239 pac 47 org 4 dst 5
+244 pac 48 org 0 dst 6
+244 pac 49 org 7 dst 4
+244 pac 50 org 1 dst 2
+253 pac 51 org 6 dst 2
+260 pac 52 org 4 dst 8
+261 pac 53 org 2 dst 4
+266 pac 54 org 3 dst 2
+271 pac 55 org 0 dst 8
+273 pac 56 org 2 dst 1
+279 pac 57 org 3 dst 2
+286 pac 58 org 2 dst 8
+287 pac 59 org 1 dst 7
+292 pac 60 org 3 dst 6
+299 pac 61 org 4 dst 3
+307 pac 62 org 2 dst 6
+311 pac 63 org 0 dst 7
+314 pac 64 org 9 dst 7
+318 pac 65 org 9 dst 2
+325 pac 66 org 6 dst 8
+331 pac 67 org 6 dst 1
+339 pac 68 org 6 dst 0
+339 pac 69 org 2 dst 3
+340 pac 70 org 0 dst 9
+343 pac 71 org 6 dst 3
+351 pac 72 org 5 dst 6
+357 pac 73 org 8 dst 0
+358 pac 74 org 0 dst 4
+367 pac 75 org 5 dst 7
+367 pac 76 org 9 dst 4
+371 pac 77 org 3 dst 1
+373 pac 78 org 2 dst 4
+382 pac 79 org 7 dst 3
+387 pac 80 org 7 dst 4
+393 pac 81 org 1 dst 0
+400 pac 82 org 5 dst 4
+404 pac 83 org 9 dst 7
+405 pac 84 org 8 dst 1
+406 pac 85 org 0 dst 9
+410 pac 86 org 3 dst 1
+418 pac 87 org 1 dst 5
+425 pac 88 org 2 dst 8
+433 pac 89 org 6 dst 8
+435 pac 90 org 2 dst 6
+442 pac 91 org 2 dst 7
+450 pac 92 org 8 dst 4
+459 pac 93 org 7 dst 2
+463 pac 94 org 4 dst 7
+470 pac 95 org 0 dst 4
+475 pac 96 org 3 dst 0
+482 pac 97 org 4 dst 8
+487 pac 98 org 7 dst 4
+493 pac 99 org 4 dst 3
