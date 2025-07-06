@@ -10,7 +10,8 @@
 
 // Função auxiliar para substituir std::max
 template <typename T>
-T max_val(T a, T b) {
+T max_val(T a, T b) 
+{
     return (a > b) ? a : b;
 }
 
@@ -31,8 +32,6 @@ class Node
 
     public:
         Node(K k, V v) : chave(k), valor(v), left(nullptr), right(nullptr), altura(1) {}
-        // Se precisar destrutor para V ponteiro, faça aqui
-        // ~Node() { ... }
         friend class arvoreAVL<K, V>;
         friend class indicePacs;
 };
@@ -172,7 +171,6 @@ class arvoreAVL
                 node->right = rotacaoDir(node->right);
                 return rotacaoEsq(node);
             }
-
             return node;
         }
 
@@ -221,7 +219,7 @@ class arvoreAVL
         arvoreAVL() : root(nullptr) {}
 
         //faz a busca a partir de um certo nó
-        void coletaEventosDoPacoteAteTempo(std::string chaveInicio, int idPacote, int tempoLimite, Evento** resultado, int& count) 
+        void coletaEventosPacote(std::string chaveInicio, int idPacote, int tempoLimite, Evento** resultado, int& count) 
         {
             if (idPacote == 0) 
             {
@@ -270,7 +268,7 @@ class arvoreAVL
         }
 
         //percorre a árvore inorder
-        void inOrderTraversal(V* array, int& index) const 
+        void percorreInOrder(V* array, int& index) const 
         {
             buscaInOrder(root, array, index);
         }

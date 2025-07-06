@@ -18,7 +18,7 @@ class indicePacTempo
     public:
     void registraEvento(int idPacote, int tempo, int tipo, Evento* evento);
     Evento* buscaEvento(int idPacote, int tempo, int tipo);
-    void eventosDoPacoteAteTempo(std::string chave, int idPac, int tempoLim, Evento** buffer, int& qtd);
+    void eventosDoPacote(std::string chave, int idPac, int tempoLim, Evento** buffer, int& qtd);
 
     void inOrderPrint(Evento** eventos, int& index);
 };

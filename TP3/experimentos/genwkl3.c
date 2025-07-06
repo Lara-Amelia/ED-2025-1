@@ -39,16 +39,16 @@ int rndnode(int nodes){ return (int)(drand48()*nodes); }
 
 int main(){
   int seed = 1;
-  int transportcapacity = 2;
+  int transportcapacity = 25;
   int transportcost = 20;
   int transportinterval = 100;
   int retrievecost = 1;
   int nodes = 10;
-  int numpackets = 100;
+  int numpackets = 500;
   int conncomp = nodes;
   long atime=1;
   long rtime=10;
-  int numclients = 500;
+  int numclients = 50;
   int numcl = 10;
   int numpc = 10;
   int src, dst, fsrc, fdst, sender, receiver;
@@ -112,14 +112,14 @@ int main(){
       sender = rndnode(numclients);
       receiver = rndnode(numclients);
     } while (sender == receiver);
-    fprintf(out3,"%.7ld EV RG %.3d n%.5d n%.5d %.3d %.3d\n",
+    fprintf(out3,"%.7ld EV RG %.3d %.5d %.5d %.3d %.3d\n",
             atime-1,i,sender,receiver,src,dst);
   }
 
   for (int i=0; i<numcl; i++){
     qtime = (long)(drand48()*atime*nodes/2); 
     sender = rndnode(numclients);
-    fprintf(out3,"%.7ld CL n%.5d\n",qtime,sender);
+    fprintf(out3,"%.7ld CL %.5d\n",qtime,sender);
   }
 
   for (int i=0; i<numpc; i++){

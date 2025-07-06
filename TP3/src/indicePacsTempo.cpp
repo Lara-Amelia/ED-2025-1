@@ -27,13 +27,13 @@ Evento* indicePacTempo::buscaEvento(int idPacote, int tempo, int tipo)
 }
 
 //percorre a árvore do índice a partir de um certo nó e obtém os eventos associados
-void indicePacTempo::eventosDoPacoteAteTempo(std::string chave, int idPac, int tempoLim, Evento** buffer, int& qtd)
+void indicePacTempo::eventosDoPacote(std::string chave, int idPac, int tempoLim, Evento** buffer, int& qtd)
 {
-    arvPacTempo.coletaEventosDoPacoteAteTempo(chave, idPac, tempoLim, buffer, qtd);   
+    arvPacTempo.coletaEventosPacote(chave, idPac, tempoLim, buffer, qtd);   
 }
 
 //imprime infos da travessia in order no índice
 void indicePacTempo::inOrderPrint(Evento** array, int& index)
 {
-    arvPacTempo.inOrderTraversal(array, index);
+    arvPacTempo.percorreInOrder(array, index);
 }

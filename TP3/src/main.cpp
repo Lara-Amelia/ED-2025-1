@@ -32,11 +32,11 @@ int main(int argc, char** argv)
         //vetor de strings que armazenará as infos lidas do arquivo de entrada
         //serão colocadas no vetor e depois lidas sequencialmente, para facilitar consultas e 
         //reduzir o tempo gasto com operações de i/o em memória secundária
-        std::string linhas[500];
+        std::string linhas[100000];
         int nroLinhas = 0;
         std::string linha;
 
-        while (std::getline(arquivo, linha) && nroLinhas < 500)   
+        while (std::getline(arquivo, linha) && nroLinhas < 100000)   
         {
             linhas[nroLinhas++] = linha;
         }
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 
         int tipoEvento = -1;
         int qtEventos = 0;
-        Pacote pacotes[50];
+        Pacote pacotes[1500];
         int nroPacotes = 0;
 
         //para cada linha no vetor de linhas da entrada, separamos cada informação presente
@@ -281,7 +281,7 @@ int main(int argc, char** argv)
                     int tam = 0;
 
                     //obtem infos de todos os pacotes associados, ordenando pelo índice dos pacotes
-                    cliBusca->pacotes.inOrderTraversal(packages, tam);
+                    cliBusca->pacotes.percorreInOrder(packages, tam);
                     //imrpime a consulta sendo realizada
                     std::cout << std::setfill('0') << std::setw(6) << tempo << " " << partes[1] << " " << partes[2] << std::endl;
                     //imprime o número de linhas no resultado da consulta
@@ -366,13 +366,13 @@ int main(int argc, char** argv)
                 if(indexPacs.existePac(idPac))
                 {
                     //passamos 1 porque os eventos sempre são do tipo 1, registro
-                    std::string chaveBusca = indexPacs.geraChaveParaBuscaTempo(idPac, 1);
+                    std::string chaveBusca = indexPacs.geraChaveBuscaTempo(idPac, 1);
                     int nroEventos = 0;
                     int tempoLim = std::stoi(partes[0]);
                     Evento** eventosPac = new Evento*[500];
                     
                     //obtem os eventos percorrendo a árvore
-                    indexPacTempo.eventosDoPacoteAteTempo(chaveBusca, idPac, tempoLim, eventosPac, nroEventos);
+                    indexPacTempo.eventosDoPacote(chaveBusca, idPac, tempoLim, eventosPac, nroEventos);
 
                     std::cout << std::setfill('0') << std::setw(6) << tempoLim << " " << partes[1] << " " << partes[2] << std::endl;
                     std::cout << nroEventos << std::endl;
@@ -384,8 +384,9 @@ int main(int argc, char** argv)
                     }
                 }
                 else
-                    std::cout << "ERRO: pacote não existe" << std::endl;
+                {    std::cout << "Pacote não existe no sistema!" << std::endl;
                     //throw std::runtime_error("ERRO: pacote não encontrado no índice de pacotes");
+                }    
             }
         }
     }

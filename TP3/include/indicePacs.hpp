@@ -14,7 +14,7 @@ class indicePacs
     void registraPacote(int idPac, int tempoReg);
     bool existePac(int idPac);
     int tempoRegistro(int idPac);
-    std::string geraChaveParaBuscaTempo(int idPacote, int tipo);
+    std::string geraChaveBuscaTempo(int idPacote, int tipo);
 };
 
 #endif

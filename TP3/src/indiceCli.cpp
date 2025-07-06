@@ -63,7 +63,7 @@ indiceCli::~indiceCli()
     int qtd = nroPacotes;
     infoPacotes** vetor = new infoPacotes*[qtd];
     int idx = 0;
-    pacotes.inOrderTraversal(vetor, idx);  // usa a versão modificada da AVL
+    pacotes.percorreInOrder(vetor, idx);  // usa a versão modificada da AVL
     for (int i = 0; i < idx; i++) 
     {
         delete vetor[i];
