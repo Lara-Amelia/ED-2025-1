@@ -1,14 +1,6 @@
-# Define o compilador C++
 CC = g++
-
-# Define as flags de compilação:
-# -std=c++11: Usa o padrão C++11.
-# -Wall: Ativa todos os warnings úteis.
-# -g: Inclui informações de debug (útil para gdb, etc.)
-# -I$(INC_DIR): Adiciona o diretório 'include' para procurar arquivos de cabeçalho.
 CFLAGS = -std=c++11 -Wall -g -I$(INC_DIR)
 
-# Define os diretórios do projeto
 SRC_DIR = src
 INC_DIR = include
 OBJ_DIR = obj
